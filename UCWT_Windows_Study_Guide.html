@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows Study Guide — UCWT</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.12);
+      --border-strong: rgba(255,255,255,0.22);
+    }
+    .badge-purple { background: #26215C !important; color: #CECBF6 !important; }
+    .badge-teal   { background: #04342C !important; color: #9FE1CB !important; }
+    .badge-coral  { background: #4A1B0C !important; color: #F5C4B3 !important; }
+    .badge-blue   { background: #042C53 !important; color: #B5D4F4 !important; }
+    .badge-amber  { background: #412402 !important; color: #FAC775 !important; }
+    .callout-tip  { background: #04342C !important; border-color: #1D9E75 !important; }
+    .callout-trap { background: #4A1B0C !important; border-color: #D85A30 !important; }
+    .callout-key  { background: #26215C !important; border-color: #7F77DD !important; }
+    .callout-tip .callout-label  { color: #9FE1CB !important; }
+    .callout-trap .callout-label { color: #F5C4B3 !important; }
+    .callout-key .callout-label  { color: #CECBF6 !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .phase-num { background: #26215C !important; color: #CECBF6 !important; }
+    .hive-acro { background: #26215C !important; color: #AFA9EC !important; }
+    .hive-key  { color: #AFA9EC !important; }
+    .port-num  { color: #85B7EB !important; }
+    .day-btn.active { background: #3C3489 !important; color: #EEEDFE !important; border-color: #3C3489 !important; }
+    .cmd { background: #2c2c2e !important; color: #f2f2f7 !important; }
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding: 1rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header p  { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+  .day-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .day-btn {
+    padding: 5px 14px; border: 0.5px solid var(--border-strong);
+    border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; background: var(--bg); color: var(--text-muted);
+    transition: all 0.15s; font-family: var(--font);
+  }
+  .day-btn.active { background: #3C3489; color: #EEEDFE; border-color: #3C3489; }
+  .day-btn:hover:not(.active) { background: var(--bg-secondary); }
+
+  .day-section { display: none; }
+  .day-section.active { display: block; }
+
+  .section-badge {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 10px; border-radius: 20px; margin-bottom: 8px;
+  }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-coral  { background: #FAECE7; color: #712B13; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+
+  .topic-title { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .callout { border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; border-left: 3px solid; }
+  .callout-tip  { background: #E1F5EE; border-color: #0F6E56; }
+  .callout-trap { background: #FAECE7; border-color: #993C1D; }
+  .callout-key  { background: #EEEDFE; border-color: #534AB7; }
+  .callout-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .callout-tip  .callout-label { color: #0F6E56; }
+  .callout-trap .callout-label { color: #993C1D; }
+  .callout-key  .callout-label { color: #534AB7; }
+  .callout p, .callout li { font-size: 13px; }
+
+  ul.guide-list { padding-left: 1.1rem; margin: 0.5rem 0; }
+  ul.guide-list li { margin-bottom: 5px; font-size: 14px; }
+  ol.guide-list { padding-left: 1.3rem; margin: 0.5rem 0; }
+  ol.guide-list li { margin-bottom: 8px; font-size: 14px; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 0.75rem 0; }
+  .cmp-table th { padding: 7px 10px; text-align: left; font-weight: 500; font-size: 12px; border-bottom: 0.5px solid var(--border-strong); color: var(--text-muted); }
+  .cmp-table td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .cmd {
+    display: inline-block; font-family: var(--mono); font-size: 12px;
+    background: var(--bg-secondary); border: 0.5px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; color: var(--text);
+  }
+
+  h3.sh { font-size: 14px; font-weight: 500; margin: 1rem 0 0.5rem; border-bottom: 0.5px solid var(--border); padding-bottom: 4px; }
+  h4.sh4 { font-size: 13px; font-weight: 500; margin: 0.75rem 0 0.25rem; color: var(--text-muted); }
+  .kt { font-weight: 500; }
+
+  .phase-row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-num {
+    min-width: 26px; height: 26px; border-radius: 50%;
+    background: #EEEDFE; color: #3C3489;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; flex-shrink: 0;
+  }
+  .phase-name { font-size: 13px; font-weight: 500; }
+  .phase-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .port-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .port-row:last-child { border-bottom: none; }
+  .port-num { font-family: var(--mono); font-size: 12px; font-weight: 600; color: #185FA5; }
+
+  .perm-row { padding: 6px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .perm-row:last-child { border-bottom: none; }
+  .perm-label { font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+
+  .divider { height: 0.5px; background: var(--border); margin: 1.5rem 0; }
+
+  .hive-row { padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .hive-row:last-child { border-bottom: none; }
+  .hive-key  { font-family: var(--mono); font-size: 11px; font-weight: 600; color: #3C3489; }
+  .hive-acro { display: inline-block; font-size: 11px; background: #EEEDFE; color: #534AB7; border-radius: 4px; padding: 1px 6px; margin: 2px 0; }
+  .hive-type { font-size: 11px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Windows Study Guide</h1>
+  <p>UCWT — Days 1–5 | Use the buttons to navigate by day</p>
+</header>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+  <button class="day-btn" onclick="showDay(4)">Day 4</button>
+  <button class="day-btn" onclick="showDay(5)">Day 5</button>
+</div>
+
+<!-- ═══════════════ DAY 1 ═══════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-purple">1a — Windows system basics</div>
+  <div class="topic-title">Boot process</div>
+
+  <div class="card">
+    <div class="phase-row"><div class="phase-num">1</div><div><div class="phase-name">Preboot (BIOS/UEFI)</div><div class="phase-desc">UEFI runs POST → reads MBR → finds and runs <span class="cmd">bootmgr</span></div></div></div>
+    <div class="phase-row"><div class="phase-num">2</div><div><div class="phase-name">Windows Boot Manager</div><div class="phase-desc">Reads Boot Config Database → loads <span class="cmd">Winload.exe</span></div></div></div>
+    <div class="phase-row"><div class="phase-num">3</div><div><div class="phase-name">Boot Loader</div><div class="phase-desc">Winload.exe loads drivers → Boot Manager + Loader load kernel into memory</div></div></div>
+    <div class="phase-row"><div class="phase-num">4</div><div><div class="phase-name">Kernel</div><div class="phase-desc">Loads registry into memory → launches <span class="cmd">SMSS.exe</span> (Session Manager)</div></div></div>
+  </div>
+
+  <h3 class="sh">Key components</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Processor</div>Executes instructions. Runs in <span class="kt">User Mode</span> (restricted/private) or <span class="kt">Kernel Mode</span> (privileged/shared). Architectures: x86 (32-bit) or x64.</div>
+    <div class="perm-row"><div class="perm-label">API</div>Toolbox giving apps access to OS features — security, unified interface, compatibility.</div>
+    <div class="perm-row"><div class="perm-label">Kernel</div>Bridge between user and hardware. First program loaded after bootloader. Windows uses a <span class="kt">Hybrid Kernel</span>.</div>
+    <div class="perm-row"><div class="perm-label">Drivers</div>Enable OS-hardware communication. Software drivers always run in Kernel Mode.</div>
+    <div class="perm-row"><div class="perm-label">DLLs</div>Shared libraries used by multiple programs simultaneously. Run in the calling process's memory space.</div>
+  </div>
+
+  <h3 class="sh">Processes</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Services</div>Programs that run in the background. May contain multiple threads.</div>
+    <div class="perm-row"><div class="perm-label">Session (SMSS)</div>First user-mode process started by kernel → starts <span class="cmd">winlogon.exe</span> for interactive logons.</div>
+    <div class="perm-row"><div class="perm-label">System Idle</div>Keeps processor occupied to prevent freezing. CPU % in Task Manager shows <em>inverse</em> of available power.</div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>System Idle CPU % shows how much processing power is <strong>available</strong>, not how much is being used.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">1b — CLI: CMD vs PowerShell</div>
+  <div class="topic-title">Comparison</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>CMD</th><th>PowerShell</th></tr>
+      <tr><td>Output = strings/text</td><td>Output = objects</td></tr>
+      <tr><td>Batch scripts (.bat)</td><td>Scripts (.ps1 / .psm1)</td></tr>
+      <tr><td>Simpler, faster basic tasks</td><td>Complex scripting &amp; automation</td></tr>
+      <tr><td><span class="cmd">System32\cmd.exe</span></td><td><span class="cmd">System32\WindowsPowerShell</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>PowerShell can run most CMD commands, but CMD cannot run PowerShell cmdlets.</p>
+  </div>
+
+  <h3 class="sh">Common CMD commands</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">dir</span><div>Lists directory contents. Hidden, read-only, and system files are NOT shown by default.</div></div>
+    <div class="perm-row"><span class="cmd">echo</span><div>Prints to screen. Use <span class="cmd">&gt;</span> to overwrite, <span class="cmd">&gt;&gt;</span> to append.</div></div>
+    <div class="perm-row"><span class="cmd">tasklist</span><div>View running processes. <span class="cmd">/svc</span> shows services in each process.</div></div>
+    <div class="perm-row"><span class="cmd">taskkill</span><div>Kill a process by PID or image name.</div></div>
+    <div class="perm-row"><span class="cmd">sc</span><div>Manage services. Sub-commands: <span class="cmd">query</span>, <span class="cmd">start</span>, <span class="cmd">stop</span>, <span class="cmd">qc</span>, <span class="cmd">config</span>, <span class="cmd">getkeyname</span>.</div></div>
+    <div class="perm-row"><span class="cmd">net</span><div>Network resources, users, services. <span class="cmd">net start</span> uses display name; <span class="cmd">sc start</span> uses service key name.</div></div>
+    <div class="perm-row"><span class="cmd">find</span><div>Search strings in files. No regex.</div></div>
+    <div class="perm-row"><span class="cmd">findstr</span><div>Search strings in files. Supports regex.</div></div>
+    <div class="perm-row"><span class="cmd">systeminfo</span><div>Shows OS config, service packs, hotfixes.</div></div>
+    <div class="perm-row"><span class="cmd">set</span><div>Assign/view env variables. Access with <span class="cmd">%var_name%</span>.</div></div>
+  </div>
+
+  <h3 class="sh">Redirection &amp; special characters</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Symbol</th><th>Meaning</th></tr>
+      <tr><td><span class="cmd">&lt;</span></td><td>Input from file (not keyboard)</td></tr>
+      <tr><td><span class="cmd">&gt;</span></td><td>Overwrite output to file</td></tr>
+      <tr><td><span class="cmd">&gt;&gt;</span></td><td>Append output to file</td></tr>
+      <tr><td><span class="cmd">2&gt;</span></td><td>Redirect STDERR to file</td></tr>
+      <tr><td><span class="cmd">|</span></td><td>Pipe STDOUT to next command</td></tr>
+      <tr><td><span class="cmd">^</span></td><td>Escape metacharacter (literal meaning)</td></tr>
+      <tr><td><span class="cmd">*</span></td><td>Wildcard — matches any characters</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Common PS commands</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">Get-Help</span><div>Describes cmdlets, functions, scripts.</div></div>
+    <div class="perm-row"><span class="cmd">Get-Member</span><div>Discovers properties and methods of an object.</div></div>
+    <div class="perm-row"><span class="cmd">Get-Process</span><div>Returns process objects with PIDs. Filter with <span class="cmd">Where-Object</span>.</div></div>
+    <div class="perm-row"><span class="cmd">Get-Service</span><div>Returns service objects. No PID associated.</div></div>
+    <div class="perm-row"><span class="cmd">Where-Object</span><div>Filters with <span class="cmd">-EQ</span>, <span class="cmd">-LT</span>, <span class="cmd">-GT</span>, etc.</div></div>
+    <div class="perm-row"><span class="cmd">Select-Object</span><div>Isolates specific objects/properties.</div></div>
+    <div class="perm-row"><span class="cmd">Measure-Object</span><div>Counts or measures returned objects.</div></div>
+    <div class="perm-row"><span class="cmd">Format-List</span><div>Shows all property names and values.</div></div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p><span class="cmd">Get-Process</span> has a PID. <span class="cmd">Get-Service</span> does NOT.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-coral">1c — GUI tools (important!)</div>
+  <div class="topic-title">Access via <span class="cmd">Win + R</span></div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Command</th><th>Tool</th></tr>
+      <tr><td><span class="cmd">regedit</span></td><td>Registry Editor</td></tr>
+      <tr><td><span class="cmd">msconfig</span></td><td>System Configuration (startup, services, boot)</td></tr>
+      <tr><td><span class="cmd">resmon</span></td><td>Resource Monitor (CPU, Memory, Disk)</td></tr>
+      <tr><td><span class="cmd">taskmgr</span></td><td>Task Manager (processes, services, startup)</td></tr>
+      <tr><td><span class="cmd">ncpa.cpl</span></td><td>Network Configuration</td></tr>
+      <tr><td><span class="cmd">sysdm.cpl</span></td><td>System Properties (computer/domain name)</td></tr>
+      <tr><td><span class="cmd">Eventvwr.msc</span></td><td>Event Viewer (Windows event logs)</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════ DAY 2 ═══════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="section-badge badge-purple">2a — Windows Registry</div>
+  <div class="topic-title">Registry basics</div>
+
+  <div class="card">
+    <ul class="guide-list">
+      <li><span class="kt">Keys</span> — like folders in a file system</li>
+      <li><span class="kt">Values</span> — like files in a file system</li>
+      <li><span class="kt">Data</span> — content determined by the value's type</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>The registry is a central hierarchical database storing all system configuration. Access it with <span class="cmd">regedit</span>.</p>
+  </div>
+
+  <h3 class="sh">Registry hives</h3>
+  <div class="card">
+    <div class="hive-row"><div class="hive-key">HKEY_CLASSES_ROOT</div><span class="hive-acro">HKCR</span> <span class="hive-type">Linked</span><div style="font-size:13px;margin-top:3px;">App associations for opening files. → <span class="cmd">HKLM\SOFTWARE\Classes</span></div></div>
+    <div class="hive-row"><div class="hive-key">HKEY_CURRENT_USER</div><span class="hive-acro">HKCU</span> <span class="hive-type">Linked</span><div style="font-size:13px;margin-top:3px;">Profile of current logged-on user. → <span class="cmd">HKU\SID</span></div></div>
+    <div class="hive-row"><div class="hive-key">HKEY_LOCAL_MACHINE</div><span class="hive-acro">HKLM</span> <span class="hive-type">Root</span><div style="font-size:13px;margin-top:3px;">Hardware and software config info for the OS.</div></div>
+    <div class="hive-row"><div class="hive-key">HKEY_USERS</div><span class="hive-acro">HKU</span> <span class="hive-type">Root</span><div style="font-size:13px;margin-top:3px;">All loaded user profiles.</div></div>
+    <div class="hive-row"><div class="hive-key">HKEY_CURRENT_CONFIG</div><span class="hive-acro">HKCC</span> <span class="hive-type">Linked</span><div style="font-size:13px;margin-top:3px;">Hardware profile at startup. → <span class="cmd">HKLM\SYSTEM\CurrentControlSet\HardwareProfiles\Current</span></div></div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p><strong>Root hives</strong> = HKLM and HKU. HKCR, HKCU, HKCC are <strong>linked hives</strong> — just shortcuts.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">2b — File System</div>
+  <div class="topic-title">FAT vs NTFS</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>FAT</th><th>NTFS</th></tr>
+      <tr><td>Encryption</td><td>None</td><td>EFS supported</td></tr>
+      <tr><td>Permissions</td><td>None</td><td>User/Group ACLs</td></tr>
+      <tr><td>Common use</td><td>USB/SD cards</td><td>Windows drives</td></tr>
+      <tr><td>FAT32 max file</td><td>4 GB</td><td>No practical limit</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Copying a file from NTFS to FAT removes its security permissions and attributes.</p>
+  </div>
+
+  <h3 class="sh">NTFS permissions — access rules</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Local access</div>Only NTFS permissions apply.</div>
+    <div class="perm-row"><div class="perm-label">Share access</div>Both NTFS and Share permissions apply — <span class="kt">most restrictive wins</span>.</div>
+    <div class="perm-row"><div class="perm-label">Group membership</div>User permissions are cumulative with group permissions.</div>
+    <div class="perm-row"><div class="perm-label">Precedence</div><strong>Explicit Deny &gt; Explicit Allow &gt; Inherited Deny &gt; Inherited Allow</strong></div>
+  </div>
+
+  <h3 class="sh">Copy, move &amp; inheritance</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Action</th><th>Permissions result</th></tr>
+      <tr><td>Copy within partition</td><td>Inherits target folder perms</td></tr>
+      <tr><td>Move within partition</td><td>Keeps original perms</td></tr>
+      <tr><td>Move across partitions</td><td>Inherits target folder perms</td></tr>
+      <tr><td>Move NTFS → FAT</td><td>Loses all attributes &amp; security</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">File timestamps</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Action</th><th>What changes</th></tr>
+      <tr><td>Copying a file</td><td>New file: creation + access updated; write unchanged</td></tr>
+      <tr><td>Moving a file</td><td>Access time modified</td></tr>
+      <tr><td>Opening from GUI</td><td>Access time modified</td></tr>
+      <tr><td>Appending (<span class="cmd">&gt;&gt;</span>)</td><td>Access + write time modified</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Important file locations</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">User home dirs</div>Vista–Win11: <span class="cmd">C:\Users</span> | XP: <span class="cmd">C:\Documents and Settings</span></div>
+    <div class="perm-row"><div class="perm-label">System32 / SysWow64</div>x86 32-bit → System32 | x64 32-bit → SysWow64 | x64 64-bit → System32</div>
+    <div class="perm-row"><div class="perm-label">Program Files</div>x86: <span class="cmd">C:\Program Files</span> | x64: both Program Files folders</div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p><strong>x86 = 32-bit.</strong> SysWow64 holds 32-bit programs on a 64-bit system — the name is counterintuitive.</p>
+  </div>
+
+  <h3 class="sh">Common file/ACL commands</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">attrib</span><div>View/modify file attributes: D=Directory, R=Read-only, A=Archive, S=System, H=Hidden.</div></div>
+    <div class="perm-row"><span class="cmd">takeown</span><div>Force ownership change on files/folders. Used by admins to regain access.</div></div>
+    <div class="perm-row"><span class="cmd">icacls</span><div>Display or modify ACLs, edit inheritance, change ownership, save ACLs.</div></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ DAY 3 ═══════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="section-badge badge-blue">3a — Network protocols</div>
+  <div class="topic-title">Commonly tested ports</div>
+
+  <div class="card">
+    <div class="port-row"><span class="port-num">53</span><span>DNS</span></div>
+    <div class="port-row"><span class="port-num">80</span><span>HTTP</span></div>
+    <div class="port-row"><span class="port-num">88</span><span>Kerberos</span></div>
+    <div class="port-row"><span class="port-num">135</span><span>EPMAP / RPC</span></div>
+    <div class="port-row"><span class="port-num">139</span><span>NetBIOS</span></div>
+    <div class="port-row"><span class="port-num">389</span><span>LDAP</span></div>
+    <div class="port-row"><span class="port-num">443</span><span>HTTPS</span></div>
+    <div class="port-row"><span class="port-num">445</span><span>SMB</span></div>
+    <div class="port-row"><span class="port-num">636</span><span>LDAPS (Secure LDAP)</span></div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Know port numbers cold. Kerberos (88), LDAP (389), SMB (445), and LDAPS (636) are commonly tested in security contexts.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">3b — DNS &amp; hostname resolution</div>
+
+  <h3 class="sh">DNS lookup chain</h3>
+  <div class="card">
+    <div class="phase-row"><div class="phase-num">1</div><div><div class="phase-name">DNS Resolver</div><div class="phase-desc">Your computer or DC that provides DNS services.</div></div></div>
+    <div class="phase-row"><div class="phase-num">2</div><div><div class="phase-name">Root Nameserver</div><div class="phase-desc">Top of hierarchy (the "." in a URL). Refers to TLD servers.</div></div></div>
+    <div class="phase-row"><div class="phase-num">3</div><div><div class="phase-name">TLD Nameserver</div><div class="phase-desc">Handles a specific extension (.com, .org, .gov).</div></div></div>
+    <div class="phase-row"><div class="phase-num">4</div><div><div class="phase-name">Authoritative Nameserver</div><div class="phase-desc">Final step — returns the actual IP for the domain.</div></div></div>
+  </div>
+
+  <h3 class="sh">Hostname — where to look</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Purpose</th><th>Location</th></tr>
+      <tr><td>View hostname (GUI)</td><td><span class="cmd">sysdm.cpl</span></td></tr>
+      <tr><td>View hostname (CMD)</td><td><span class="cmd">hostname</span></td></tr>
+      <tr><td>Registry location</td><td><span class="cmd">HKLM\System\...\ComputerName</span></td></tr>
+      <tr><td>Hosts file cache</td><td><span class="cmd">C:\Windows\System32\drivers\etc\hosts</span></td></tr>
+      <tr><td>DNS cache</td><td><span class="cmd">ipconfig /displaydns</span></td></tr>
+      <tr><td>NetBIOS cache</td><td><span class="cmd">nbtstat -n</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p><span class="kt">NetBIOS</span> is a legacy naming system for TCP/IP. It does NOT support IPv6.</p>
+  </div>
+
+  <h3 class="sh">Networking commands — CMD vs PS</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>CMD</th><th>PowerShell</th><th>What it does</th></tr>
+      <tr><td><span class="cmd">ipconfig</span></td><td><span class="cmd">Get-NetIPAddress</span></td><td>IP, subnet, gateway</td></tr>
+      <tr><td><span class="cmd">ping</span></td><td><span class="cmd">Test-Connection</span></td><td>Sends 4 ICMP requests</td></tr>
+      <tr><td><span class="cmd">arp</span></td><td><span class="cmd">Get-NetNeighbor</span></td><td>IP-to-MAC translation</td></tr>
+      <tr><td><span class="cmd">route</span></td><td><span class="cmd">Get-NetRoute</span></td><td>Routing tables</td></tr>
+      <tr><td><span class="cmd">netstat</span></td><td><span class="cmd">Get-NetTCPConnection</span></td><td>Active TCP/IP connections</td></tr>
+      <tr><td><span class="cmd">tracert</span></td><td><span class="cmd">Test-NetConnection -TraceRoute</span></td><td>Traces each network hop</td></tr>
+      <tr><td><span class="cmd">nslookup</span></td><td><span class="cmd">Resolve-DnsName</span></td><td>DNS lookups</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Key netstat flags</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Flag</th><th>Meaning</th></tr>
+      <tr><td><span class="cmd">-a</span></td><td>Show all (listening + active)</td></tr>
+      <tr><td><span class="cmd">-b</span></td><td>Show executables</td></tr>
+      <tr><td><span class="cmd">-n</span></td><td>Show addresses numerically</td></tr>
+      <tr><td><span class="cmd">-o</span></td><td>Show owning PID</td></tr>
+      <tr><td><span class="cmd">-r</span></td><td>Show routing table</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Remoting commands</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">wmic</span><div>CMD tool to query Windows Management Instrumentation (WMI).</div></div>
+    <div class="perm-row"><span class="cmd">Enter-PSSession</span><div>Interactive <strong>one-to-one</strong> PowerShell remoting.</div></div>
+    <div class="perm-row"><span class="cmd">Invoke-Command</span><div>Non-interactive <strong>one-to-many</strong> PowerShell remoting.</div></div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p><span class="cmd">Enter-PSSession</span> = interactive (RDP-like). <span class="cmd">Invoke-Command</span> = non-interactive, runs across multiple machines.</p>
+  </div>
+
+</div>
+
+<!-- ═══════════════ DAY 4 ═══════════════ -->
+<div class="day-section" id="day4">
+
+  <div class="section-badge badge-amber">4a — Active Directory</div>
+  <div class="topic-title">AD core concepts</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Objects — two types</div><ul class="guide-list" style="margin-top:4px;"><li><span class="kt">Resources</span> — Printers</li><li><span class="kt">Security Principals</span> — Users, Computers, Groups</li></ul></div>
+    <div class="perm-row"><div class="perm-label">Global Catalog</div>Replica of all directory objects for the entire forest.</div>
+    <div class="perm-row"><div class="perm-label">Distinguished Name</div>String showing an object's exact location in AD.</div>
+    <div class="perm-row"><div class="perm-label">GUID</div>Unique number used as a persistent identifier.</div>
+  </div>
+
+  <h3 class="sh">AD structure hierarchy</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Concept</th><th>Description</th></tr>
+      <tr><td><span class="kt">Forests</span></td><td>One or more domain trees without a contiguous namespace</td></tr>
+      <tr><td><span class="kt">Domain Trees</span></td><td>Domains sharing schema/config in a contiguous namespace</td></tr>
+      <tr><td><span class="kt">OUs</span></td><td>Logically grouped objects within a domain</td></tr>
+      <tr><td><span class="kt">Roles</span></td><td>Server roles like DNS, DHCP, AD DS</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Forest &gt; Tree &gt; Domain &gt; OU. The Global Catalog is built automatically by AD DS replication.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">4b — Users &amp; Groups</div>
+
+  <h3 class="sh">Well-known local SIDs</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>SID</th><th>Name</th><th>Notes</th></tr>
+      <tr><td><span class="cmd">S-1-5-18</span></td><td>LocalSystem</td><td>Used by OS, hidden Admin member</td></tr>
+      <tr><td><span class="cmd">S-1-5-19</span></td><td>LocalService</td><td>Local services, no network auth</td></tr>
+      <tr><td><span class="cmd">S-1-5-20</span></td><td>Network Service</td><td>Needs authenticated network access</td></tr>
+      <tr><td><span class="cmd">S-1-5-32-544</span></td><td>Administrators</td><td>Cannot be deleted or locked out</td></tr>
+      <tr><td><span class="cmd">S-1-5-32-545</span></td><td>Users</td><td>Built-in group</td></tr>
+      <tr><td><span class="cmd">S-1-5-32-546</span></td><td>Guests</td><td>Disabled by default</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Well-known domain SIDs</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>SID suffix</th><th>Name</th><th>Type</th></tr>
+      <tr><td>-500</td><td>Administrator</td><td>User — can't be deleted/disabled</td></tr>
+      <tr><td>-501</td><td>Guest</td><td>User — no password required</td></tr>
+      <tr><td>-502</td><td>KRBTGT</td><td>User — KDC service, DC only</td></tr>
+      <tr><td>-512</td><td>Domain Admins</td><td>Global group — admin on ALL joined machines</td></tr>
+      <tr><td>-513</td><td>Domain Users</td><td>Global group — auto-added on user creation</td></tr>
+      <tr><td>-515</td><td>Domain Computers</td><td>Global group — all non-DC domain computers</td></tr>
+      <tr><td>-516</td><td>Domain Controllers</td><td>Global group — all DCs auto-added</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>KRBTGT only exists on Domain Controllers. Domain Controllers do NOT have local built-in accounts or groups.</p>
+  </div>
+
+  <h3 class="sh">Group scope</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Scope</th><th>Members from</th><th>Access to</th></tr>
+      <tr><td><span class="kt">Universal</span></td><td>Any domain in forest</td><td>Any domain in forest</td></tr>
+      <tr><td><span class="kt">Domain Global</span></td><td>Same domain only</td><td>Any domain in forest</td></tr>
+      <tr><td><span class="kt">Domain Local</span></td><td>Any domain/forest</td><td>Same domain only</td></tr>
+      <tr><td><span class="kt">Local</span></td><td>Local machine + own domain</td><td>Local machine only</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">AD commands</h3>
+  <div class="card">
+    <h4 class="sh4">CMD (requires AD DS role)</h4>
+    <div class="perm-row"><span class="cmd">dsquery</span><div>Query AD. e.g., <span class="cmd">dsquery user</span>, <span class="cmd">dsquery computer</span></div></div>
+    <div class="perm-row"><span class="cmd">dsget</span><div>View properties of a specific AD object.</div></div>
+    <div class="perm-row"><span class="cmd">net user /domain</span><div>Modify domain users.</div></div>
+    <div class="perm-row"><span class="cmd">net group</span><div>Manage domain groups.</div></div>
+    <div class="perm-row"><span class="cmd">net localgroup</span><div>Manage local groups on individual machines.</div></div>
+    <h4 class="sh4">PowerShell (requires AD Module)</h4>
+    <div class="perm-row"><span class="cmd">Get-ADUser</span><div>Query/manage AD users.</div></div>
+    <div class="perm-row"><span class="cmd">Get-ADComputer</span><div>Query/manage AD computers.</div></div>
+    <div class="perm-row"><span class="cmd">Get-ADDomain</span><div>Get domain info.</div></div>
+  </div>
+
+  <h3 class="sh">AD GUI tools</h3>
+  <div class="card">
+    <div class="perm-row"><span class="kt">ADAC</span><div>Active Directory Administrative Center — primary admin tool.</div></div>
+    <div class="perm-row"><span class="kt">AD Users and Computers</span><div>Create/modify/delete users and computers.</div></div>
+    <div class="perm-row"><span class="kt">MMC</span><div>Microsoft Management Console — snap-in based admin tool.</div></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ DAY 5 ═══════════════ -->
+<div class="day-section" id="day5">
+
+  <div class="section-badge badge-coral">5a — Authentication</div>
+  <div class="topic-title">LSA &amp; logon types</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">LSA</div>Handles all logons and application authentications.</div>
+    <div class="perm-row"><div class="perm-label">Local logons</div>Handled by <span class="kt">SAM</span> (Security Accounts Manager).</div>
+    <div class="perm-row"><div class="perm-label">Domain logons</div>Handled by <span class="kt">NTDS.dit</span> on the Domain Controller.</div>
+  </div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Logon type</th><th>Example</th></tr>
+      <tr><td><span class="kt">Interactive</span></td><td>RDP session, Enter-PSSession</td></tr>
+      <tr><td><span class="kt">Non-Interactive</span></td><td>Invoke-Command (PS Remoting)</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Authentication methods compared</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>NTLM</th><th>Kerberos</th></tr>
+      <tr><td>Used for</td><td>Local auth</td><td>Domain auth</td></tr>
+      <tr><td>Protocol</td><td>Challenge-response</td><td>Ticket-based</td></tr>
+      <tr><td>Key files</td><td>SAM / NTDS.dit</td><td>AS, TGS, KD</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p><span class="kt">Microsoft Negotiate</span> picks between Kerberos and NTLM automatically. Kerberos is the default when available (domain environment).</p>
+  </div>
+
+  <h3 class="sh">Credential file locations</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>What</th><th>Location</th></tr>
+      <tr><td>Local SAM file</td><td><span class="cmd">C:\Windows\System32\config\SAM</span></td></tr>
+      <tr><td>Domain NTDS</td><td><span class="cmd">C:\Windows\NTDS\NTDS.dit</span></td></tr>
+      <tr><td>Local creds (registry)</td><td><span class="cmd">HKLM\SAM</span></td></tr>
+      <tr><td>Domain creds (registry)</td><td><span class="cmd">HKLM\Security\Cache</span></td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Query logged-on users</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">quser</span><div>Shows users logged on, including interactive remote sessions. Does NOT show PS remote sessions.</div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">5b — Logging &amp; Auditing</div>
+
+  <h3 class="sh">Event log types</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Log</th><th>Contains</th><th>Message types</th></tr>
+      <tr><td><span class="kt">Application</span></td><td>Events from apps/programs</td><td>Error, Warning, Information</td></tr>
+      <tr><td><span class="kt">System</span></td><td>Windows component failures</td><td>Error, Warning, Information</td></tr>
+      <tr><td><span class="kt">Security</span></td><td>Logon attempts, resource access</td><td>Success Audit, Failure Audit</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Security logging must be <strong>manually configured</strong> — it is not on by default.</p>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Logs are stored at <span class="cmd">C:\Windows\System32\winevt\logs</span>. Configure auditing via <span class="cmd">secpol.msc</span> (Local Security Policy).</p>
+  </div>
+
+  <h3 class="sh">Scheduled tasks</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li>Enable automation of routine tasks.</li>
+      <li>Use <span class="cmd">schtasks</span> to create, delete, query, change, run, or end tasks.</li>
+      <li>Works on both local and remote systems.</li>
+      <li>Task Scheduler monitors criteria to trigger execution.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+function showDay(n) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day' + n).classList.add('active');
+  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+}
+</script>
+</body>
+</html>
