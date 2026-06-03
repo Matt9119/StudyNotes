@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linux Fundamentals — Lab Questions</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg:        #0a0e14;
+      --surface:   #0f1520;
+      --border:    #1e2d40;
+      --accent:    #00d4ff;
+      --accent2:   #00ff9d;
+      --warn:      #ffb340;
+      --danger:    #ff4757;
+      --text:      #c9d8e8;
+      --muted:     #4a6278;
+      --heading:   #e8f4ff;
+      --mono:      'IBM Plex Mono', monospace;
+      --sans:      'Rajdhani', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,212,255,0.015) 2px,
+        rgba(0,212,255,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem 2rem;
+      background: linear-gradient(135deg, #0a0e14 60%, #0d1a2a);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-meta {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    header h1 {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--heading);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    header h1 span { color: var(--accent); }
+
+    .header-sub {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-family: var(--mono);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .badge-blue  { color: var(--accent);  border-color: var(--accent);  background: rgba(0,212,255,0.06); }
+    .badge-green { color: var(--accent2); border-color: var(--accent2); background: rgba(0,255,157,0.06); }
+    .badge-warn  { color: var(--warn);    border-color: var(--warn);    background: rgba(255,179,64,0.06); }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      padding: 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+    }
+
+    .legend-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      grid-column: 1 / -1;
+    }
+
+    .legend-item {
+      font-size: 0.78rem;
+      font-family: var(--mono);
+      color: var(--muted);
+    }
+    .legend-item strong { color: var(--text); }
+
+    .question-card {
+      margin-bottom: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .question-card:hover { border-color: rgba(0,212,255,0.3); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .q-number {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--accent);
+      min-width: 2.2rem;
+      line-height: 1;
+      padding-top: 0.1rem;
+    }
+
+    .card-meta { flex: 1; }
+
+    .q-title {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--heading);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+    }
+
+    .q-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 1px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tag-day  { background: rgba(0,212,255,0.1);  color: var(--accent); }
+    .tag-obj  { background: rgba(0,255,157,0.08); color: var(--accent2); }
+    .tag-diff-easy { background: rgba(0,255,157,0.12); color: var(--accent2); }
+    .tag-diff-med  { background: rgba(255,179,64,0.12); color: var(--warn); }
+
+    .card-body { padding: 1.2rem; }
+
+    .scenario {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      line-height: 1.75;
+    }
+
+    .task-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .task-list li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      font-size: 0.875rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .task-list li::before {
+      content: '›';
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+
+    .card-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
+      justify-content: flex-end;
+    }
+
+    .systems { display: flex; gap: 0.5rem; }
+
+    .sys-chip {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .sys-rh  { background: rgba(255,71,87,0.12);  color: #ff6b7a;  border: 1px solid rgba(255,71,87,0.25); }
+    .sys-ub  { background: rgba(255,179,64,0.12); color: var(--warn); border: 1px solid rgba(255,179,64,0.25); }
+    .sys-both{ background: rgba(0,212,255,0.08);  color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: rgba(0,212,255,0.08);
+      color: var(--accent);
+      padding: 0.1em 0.35em;
+      border-radius: 2px;
+    }
+
+    .note {
+      margin-top: 0.85rem;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255,179,64,0.06);
+      border-left: 2px solid var(--warn);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #c0a060;
+      line-height: 1.6;
+    }
+
+    .note strong { color: var(--warn); }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 600px) {
+      .card-header { flex-direction: column; gap: 0.4rem; }
+      .q-number { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">// Linux Fundamentals Course &nbsp;|&nbsp; Lab Assessment</div>
+  <h1>Practical <span>Lab Questions</span></h1>
+  <p class="header-sub">wrkst01 (RedHat) &nbsp;·&nbsp; srvr01 (Ubuntu) &nbsp;·&nbsp; 1-Week Course</p>
+  <div class="badge-row">
+    <span class="badge badge-blue">10 Questions</span>
+    <span class="badge badge-green">5 Days Coverage</span>
+    <span class="badge badge-warn">Dual-System Range</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="legend">
+    <div class="legend-title">// Weekly Coverage Map</div>
+    <div class="legend-item"><strong>Day 1</strong> — Basics, FS, Boot</div>
+    <div class="legend-item"><strong>Day 2</strong> — Accounts, Env, Processes</div>
+    <div class="legend-item"><strong>Day 3</strong> — Shells, Network, Logs, Cron</div>
+    <div class="legend-item"><strong>Day 4</strong> — I/O, Search, Text, Vim, Scripts</div>
+    <div class="legend-item"><strong>Day 5</strong> — Packages, Disks, REGEX, Surveys</div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">01</div>
+      <div class="card-meta">
+        <div class="q-title">File System Hierarchy Exploration &amp; Boot Process Review</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 1</span>
+          <span class="tag tag-obj">Obj 1 · 3</span>
+          <span class="tag tag-diff-easy">Easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        You are orienting yourself to the layout of <strong>wrkst01</strong>. Your task is to explore key directories in the Linux file system hierarchy, document what lives where, and investigate which services and modules are currently loaded by the kernel.
+      </p>
+      <ul class="task-list">
+        <li>List the top-level contents of the root (<code>/</code>) filesystem and briefly note the purpose of at least five directories you see.</li>
+        <li>Display the total size of the <code>/var</code> directory and the top five largest subdirectories within it.</li>
+        <li>Display all kernel modules currently loaded on the system.</li>
+        <li>Identify which runlevel or systemd target the system booted into, and list all services that are currently active.</li>
+        <li>Locate and display the contents of the file that defines which filesystems are automatically mounted at boot.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">02</div>
+      <div class="card-meta">
+        <div class="q-title">User &amp; Group Environment Enumeration</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 2</span>
+          <span class="tag tag-obj">Obj 3 · 4 · 6</span>
+          <span class="tag tag-diff-easy">Easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        Before making any changes to <strong>wrkst01</strong>, you need a clear picture of the current user and group environment — who exists on the system, what groups they belong to, and what their session and environment look like.
+      </p>
+      <ul class="task-list">
+        <li>Display the current user's identity, including their UID, GID, and all supplementary groups they belong to.</li>
+        <li>List all groups defined on the system and identify any groups that have more than one member.</li>
+        <li>Display all currently defined environment variables for your session.</li>
+        <li>Show which shell you are currently running and display its full path on the filesystem.</li>
+        <li>Display the contents of the current user's shell configuration file (e.g. <code>.bashrc</code> or <code>.bash_profile</code>) and identify any custom aliases or environment variables defined there.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">03</div>
+      <div class="card-meta">
+        <div class="q-title">User Account Audit &amp; Failed Logon Analysis</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 2 &amp; 3</span>
+          <span class="tag tag-obj">Obj 2 · 6</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        During a system integrity check on <strong>wrkst01</strong>, you must identify all human user accounts and cross-reference them against authentication failure logs to detect any accounts that have experienced failed login attempts.
+      </p>
+      <ul class="task-list">
+        <li>Extract and display only human user accounts (UID &ge; 1000) from <code>/etc/passwd</code>, printing one username per line.</li>
+        <li>Using the appropriate log file(s) in <code>/var/log</code>, list all failed authentication attempts on the system.</li>
+        <li>Determine whether any of the human users identified in step 1 appear in the failed logon records. Document your findings.</li>
+        <li>Display the most recent login record for each user on the system.</li>
+      </ul>
+      <div class="note"><strong>Note:</strong> On RedHat, failed logins are recorded in <code>/var/log/secure</code>.</div>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">04</div>
+      <div class="card-meta">
+        <div class="q-title">Process Listing &amp; System Integrity Snapshot</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 2 &amp; 5</span>
+          <span class="tag tag-obj">Obj 2 · 6</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        You need to evaluate the running process state of <strong>srvr01</strong> after SSHing in. Your goal is to produce a comprehensive snapshot that captures the OS type, logged-on users, system uptime, and active process tree — all from a single terminal session.
+      </p>
+      <ul class="task-list">
+        <li>Display all currently logged-on users along with their login time, idle time, and the command they are running.</li>
+        <li>Show the system uptime and current load average.</li>
+        <li>Capture a full process listing showing every process on the system with its PID, PPID, owner, CPU%, MEM%, and full command path.</li>
+        <li>Display the process tree to visualize parent-child relationships between running processes.</li>
+        <li>Identify any processes running as <code>root</code> that are listening on a network port — list the PID, process name, and port number.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-ub">srvr01</span></div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">05</div>
+      <div class="card-meta">
+        <div class="q-title">File System Permissions &amp; Attribute Security Analysis</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 1 &amp; 2</span>
+          <span class="tag tag-obj">Obj 1 · 3 · 5</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        Perform a targeted file system security review on <strong>wrkst01</strong>. You are looking for files with elevated permissions, suspicious attributes, and access control configurations that could indicate privilege escalation paths or tampering.
+      </p>
+      <ul class="task-list">
+        <li>Find all SUID and SGID binaries on the system (files with special permission bits set) and save the results to <code>suid_files.txt</code>.</li>
+        <li>Create a test file named <code>immutable_test.txt</code> in <code>/tmp</code>, set it as immutable, then verify the attribute is applied.</li>
+        <li>Display the ACL entries for <code>/etc/passwd</code> and <code>/etc/shadow</code> and identify which entries grant access beyond standard permissions.</li>
+        <li>Display the full metadata (permissions, inode, timestamps) for <code>/etc/sudoers</code>.</li>
+      </ul>
+      <div class="note"><strong>Note:</strong> SUID/SGID searches across the full filesystem may take some time to complete.</div>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">06</div>
+      <div class="card-meta">
+        <div class="q-title">File Discovery, REGEX Filtering &amp; Word Frequency Count</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 4 &amp; 5</span>
+          <span class="tag tag-obj">Obj 3 · 5</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        A file containing the word <em>"license"</em> in its filename has been placed somewhere on <strong>wrkst01</strong>. You must locate it, extract specific word patterns from its content, and count how many words match the criteria.
+      </p>
+      <ul class="task-list">
+        <li>Search the entire filesystem for any file whose name contains the string <code>license</code> (case-insensitive). Document the full path of the file found.</li>
+        <li>Using REGEX, extract all words from the file that are between 4 and 6 characters in length (alphabetic characters only).</li>
+        <li>Count the total number of words that fall within that character range and display only the count.</li>
+        <li>Sort the extracted words alphabetically, remove duplicates, and redirect the unique word list to a file named <code>license_words.txt</code>.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">07</div>
+      <div class="card-meta">
+        <div class="q-title">Crontab Audit &amp; Scheduled Job Analysis</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 3</span>
+          <span class="tag tag-obj">Obj 3 · 5</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        Scheduled tasks are a common persistence mechanism. On <strong>wrkst01</strong>, perform a full audit of all cron-based scheduled jobs across every user and system-level location to determine what is configured to run automatically.
+      </p>
+      <ul class="task-list">
+        <li>Display the crontab entries for the currently logged-in user, then display the system-wide crontab file.</li>
+        <li>List the contents of all system cron directories (<code>/etc/cron.d</code>, <code>/etc/cron.daily</code>, <code>/etc/cron.weekly</code>, <code>/etc/cron.monthly</code>) and note any scripts or jobs defined there.</li>
+        <li>Determine whether any other user accounts on the system have crontab entries configured. List the usernames and their scheduled jobs.</li>
+        <li>Create a new crontab entry for the current user that would run a script called <code>~/health_check.sh</code> every day at 6:00 AM, then verify the entry was saved correctly.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">08</div>
+      <div class="card-meta">
+        <div class="q-title">Bash Scripting — User Account Reporter</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 4</span>
+          <span class="tag tag-obj">Obj 3 · 5</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        Write a Bash script on <strong>wrkst01</strong> that iterates over all human user accounts on the system and reports key information about each one — combining file parsing, conditional logic, and loops into a practical reporting tool.
+      </p>
+      <ul class="task-list">
+        <li>Create a script named <code>user_report.sh</code> in your home directory.</li>
+        <li>Using a loop, read through <code>/etc/passwd</code> and process only accounts with a UID of 1000 or greater. For each, print the username and their assigned home directory.</li>
+        <li>For each user found, add a conditional check: if their home directory exists on disk, print <code>[OK]</code> next to their entry — if it does not, print <code>[MISSING]</code>.</li>
+        <li>Make the script executable, run it, and redirect the full output to a file named <code>user_report.txt</code>.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-rh">wrkst01</span></div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">09</div>
+      <div class="card-meta">
+        <div class="q-title">Disk &amp; Package Inventory on a Remote System</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 5</span>
+          <span class="tag tag-obj">Obj 4 · 7</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        SSH into <strong>srvr01</strong> from <strong>wrkst01</strong> and perform a storage and software inventory. Understanding what is installed and how storage is allocated is a key part of assessing an unfamiliar system.
+      </p>
+      <ul class="task-list">
+        <li>Display all currently mounted filesystems along with their type, size, used space, available space, and mount point.</li>
+        <li>Identify the single directory under <code>/</code> consuming the most disk space and display its total size.</li>
+        <li>List all installed packages on srvr01 and redirect the full list to a file named <code>pkg_inventory.txt</code>. Display only the total count of installed packages.</li>
+        <li>Filter the package list to show only entries related to networking tools. Display the results.</li>
+        <li>Transfer <code>pkg_inventory.txt</code> back to the <code>~/Desktop</code> directory on <strong>wrkst01</strong> using SCP.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-both">Both Systems</span></div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question-card">
+    <div class="card-header">
+      <div class="q-number">10</div>
+      <div class="card-meta">
+        <div class="q-title">Tactical Survey — Remote System Situational Awareness</div>
+        <div class="q-tags">
+          <span class="tag tag-day">Day 2 · 3 · 5</span>
+          <span class="tag tag-obj">Obj 4 · 6 · 7</span>
+          <span class="tag tag-diff-med">Medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="scenario">
+        SSH into <strong>srvr01</strong> from <strong>wrkst01</strong> and conduct a structured situational awareness survey. Answer the key questions an analyst needs when first accessing an unfamiliar system, and transfer your findings back to your workstation.
+      </p>
+      <ul class="task-list">
+        <li><strong>Identity:</strong> Display the OS, kernel version, hostname, and current system uptime.</li>
+        <li><strong>Users:</strong> Show all currently logged-on users and the last 10 system-wide login events.</li>
+        <li><strong>Processes:</strong> Capture a full process listing showing the PID, owner, and command for every running process.</li>
+        <li><strong>Storage:</strong> Display disk usage for all mounted filesystems in human-readable format.</li>
+        <li>Redirect all of the above output into a single file named <code>survey_srvr01.txt</code> on srvr01, then transfer it to <code>~/Desktop</code> on wrkst01 using SCP.</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="systems"><span class="sys-chip sys-both">Both Systems</span></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Linux Fundamentals Lab &nbsp;|&nbsp; wrkst01 (RedHat) · srvr01 (Ubuntu) &nbsp;|&nbsp; 10 Questions across 5 Days
+</footer>
+
+</body>
+</html>
