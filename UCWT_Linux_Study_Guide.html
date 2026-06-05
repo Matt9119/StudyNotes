@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Study Guide — UCWT</title>
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── TOKENS ── */
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.10);
+      --border-strong: rgba(255,255,255,0.20);
+    }
+    .badge-green  { background:#0A3322 !important; color:#86EFAC !important; }
+    .badge-teal   { background:#042A22 !important; color:#67E8C4 !important; }
+    .badge-yellow { background:#2A1E00 !important; color:#FCD34D !important; }
+    .badge-orange { background:#2A1000 !important; color:#FCA46A !important; }
+    .badge-blue   { background:#0A1A2E !important; color:#93C5FD !important; }
+    .callout-tip  { background:#0A3322 !important; border-color:#16A34A !important; }
+    .callout-trap { background:#3A1500 !important; border-color:#EA580C !important; }
+    .callout-key  { background:#0A1A2E !important; border-color:#3B82F6 !important; }
+    .callout-tip .callout-label  { color:#86EFAC !important; }
+    .callout-trap .callout-label { color:#FCA46A !important; }
+    .callout-key .callout-label  { color:#93C5FD !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .phase-num { background:#0A3322 !important; color:#86EFAC !important; }
+    .ref-table thead th { background:#2c2c2e !important; }
+    .day-btn.active { background:#16633A !important; color:#D1FAE5 !important; border-color:#16633A !important; }
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding: 1.25rem 1rem 5rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .guide-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border-strong); }
+  .guide-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+  .guide-header p  { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-family: var(--mono); }
+
+  /* ── NAV ── */
+  .day-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .day-btn {
+    padding:5px 13px; border:0.5px solid var(--border-strong);
+    border-radius:20px; font-size:12px; font-weight:500;
+    cursor:pointer; background:var(--bg); color:var(--text-muted);
+    transition:all 0.15s; font-family:var(--font);
+  }
+  .day-btn.active { background:#16633A; color:#D1FAE5; border-color:#16633A; }
+  .day-btn:hover:not(.active) { background:var(--bg-secondary); }
+
+  /* ── DAY SECTIONS ── */
+  .day-section { display:none; }
+  .day-section.active { display:block; }
+
+  /* ── BADGES ── */
+  .section-badge {
+    display:inline-block; font-size:11px; font-weight:500;
+    padding:2px 10px; border-radius:20px; margin-bottom:8px;
+  }
+  .badge-green  { background:#DCFCE7; color:#15532A; }
+  .badge-teal   { background:#CCFBF1; color:#0F4C3A; }
+  .badge-yellow { background:#FEF9C3; color:#713F0C; }
+  .badge-orange { background:#FFEDD5; color:#7C2D12; }
+  .badge-blue   { background:#DBEAFE; color:#1E3A8A; }
+
+  .topic-title { font-size:17px; font-weight:500; margin-bottom:4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background:var(--bg); border:0.5px solid var(--border);
+    border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1rem;
+  }
+
+  /* ── CALLOUTS ── */
+  .callout { border-radius:var(--radius-md); padding:.75rem 1rem; margin-bottom:1rem; border-left:3px solid; }
+  .callout-tip  { background:#F0FDF4; border-color:#16A34A; }
+  .callout-trap { background:#FFF7ED; border-color:#EA580C; }
+  .callout-key  { background:#EFF6FF; border-color:#3B82F6; }
+  .callout-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .callout-tip  .callout-label { color:#16A34A; }
+  .callout-trap .callout-label { color:#EA580C; }
+  .callout-key  .callout-label { color:#3B82F6; }
+  .callout p, .callout li { font-size:13px; }
+  .callout ul { padding-left:1rem; margin-top:4px; }
+  .callout li { margin-bottom:2px; }
+
+  /* ── LISTS ── */
+  ul.guide-list { padding-left:1.1rem; margin:.5rem 0; }
+  ul.guide-list li { margin-bottom:5px; font-size:14px; }
+
+  /* ── COMPARISON TABLES ── */
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; margin:.75rem 0; }
+  .cmp-table th { padding:7px 10px; text-align:left; font-weight:500; font-size:12px; border-bottom:0.5px solid var(--border-strong); color:var(--text-muted); }
+  .cmp-table td { padding:7px 10px; border-bottom:0.5px solid var(--border); vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+
+  /* ── CODE PILLS ── */
+  .cmd {
+    display:inline-block; font-family:var(--mono); font-size:12px;
+    background:var(--bg-secondary); border:0.5px solid var(--border);
+    border-radius:4px; padding:1px 6px; color:var(--text);
+  }
+
+  /* ── SECTION HEADERS ── */
+  h3.sh { font-size:14px; font-weight:500; margin:1rem 0 .5rem; border-bottom:.5px solid var(--border); padding-bottom:4px; }
+  h4.sh4 { font-size:13px; font-weight:500; margin:.75rem 0 .25rem; color:var(--text-muted); }
+  .kt { font-weight:500; }
+  .divider { height:.5px; background:var(--border); margin:1.5rem 0; }
+
+  /* ── ROW PATTERNS ── */
+  .perm-row { padding:6px 0; border-bottom:.5px solid var(--border); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-label { font-weight:500; font-size:12px; margin-bottom:2px; }
+
+  .phase-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:.5px solid var(--border); }
+  .phase-row:last-child { border-bottom:none; }
+  .phase-num {
+    min-width:26px; height:26px; border-radius:50%;
+    background:#DCFCE7; color:#15532A;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:500; flex-shrink:0;
+  }
+  .phase-name { font-size:13px; font-weight:500; }
+  .phase-desc { font-size:12px; color:var(--text-muted); margin-top:2px; }
+
+  /* ── PERM BITS ── */
+  .perm-bit { display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600; padding:1px 6px; border-radius:4px; margin-right:4px; }
+  .bit-r { background:#FEF9C3; color:#713F0C; }
+  .bit-w { background:#FFEDD5; color:#7C2D12; }
+  .bit-x { background:#DCFCE7; color:#15532A; }
+  @media (prefers-color-scheme: dark) {
+    .bit-r { background:#2A1E00; color:#FCD34D; }
+    .bit-w { background:#2A1000; color:#FCA46A; }
+    .bit-x { background:#0A3322; color:#86EFAC; }
+  }
+
+  /* ── QUICK REFERENCE TABLE ── */
+  .ref-section { margin-top:1.75rem; }
+  .ref-section-title {
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.08em;
+    color:var(--text-muted); margin-bottom:.6rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .ref-section-title::after {
+    content:''; flex:1; height:.5px; background:var(--border-strong);
+  }
+  .ref-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:1.25rem; }
+  .ref-table thead th {
+    padding:6px 10px; text-align:left; font-weight:500; font-size:11px;
+    background:var(--bg-secondary); color:var(--text-muted);
+    border-bottom:.5px solid var(--border-strong);
+  }
+  .ref-table thead th:first-child { border-radius:6px 0 0 0; }
+  .ref-table thead th:last-child  { border-radius:0 6px 0 0; }
+  .ref-table tbody td { padding:6px 10px; border-bottom:.5px solid var(--border); vertical-align:top; }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
+  .ref-table .rd { font-size:12px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="guide-header">
+  <h1>Linux Study Guide</h1>
+  <p>// UCWT — Days 1–5 | Ubuntu &amp; CentOS focus</p>
+</div>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+  <button class="day-btn" onclick="showDay(4)">Day 4</button>
+  <button class="day-btn" onclick="showDay(5)">Day 5</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     DAY 1
+══════════════════════════════════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-green">1a — NIX Characteristics</div>
+  <div class="topic-title">UNIX basics</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Two distros covered</div>
+      <span class="kt">Ubuntu</span> (Debian-based) and <span class="kt">CentOS</span> (RedHat-based). Run <span class="cmd">cat /etc/*release</span> to identify which one.
+    </div>
+    <div class="perm-row"><div class="perm-label">Core OS functions</div>Runs programs, provides a UI, handles I/O and file system manipulation.</div>
+    <div class="perm-row"><div class="perm-label">File identification</div>Each file type has a unique <span class="kt">magic number</span> — bytes at the start of a file that identify its type.</div>
+    <div class="perm-row"><div class="perm-label">Key characteristics</div>Flexible, portable, <strong>case sensitive</strong>, multitasking, multi-user.</div>
+  </div>
+
+  <h3 class="sh">Hardware layer model</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Kernel</div>Core of the OS. Creates/schedules/terminates processes, manages memory, filesystem, I/O, and error handling.</div>
+    <div class="perm-row"><div class="perm-label">Shell</div>User-facing command interpreter. Passes commands to the kernel, handles I/O redirection, manages the environment.</div>
+    <div class="perm-row"><div class="perm-label">4-step flow</div><span class="cmd">User ↔ Shell ↔ Kernel ↔ Hardware</span></div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Linux is <strong>case sensitive</strong> everywhere — file names, commands, flags. <span class="cmd">Cat</span> ≠ <span class="cmd">cat</span>.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">1b — File System Hierarchy</div>
+  <div class="topic-title">Key directories</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><span class="cmd">/</span></td><td>Root of the entire file system</td></tr>
+      <tr><td><span class="cmd">/etc/</span></td><td>System-wide config files</td></tr>
+      <tr><td><span class="cmd">/tmp/</span></td><td>Temp files — wiped on reboot</td></tr>
+      <tr><td><span class="cmd">/proc/</span></td><td>Pseudo-filesystem — live process info</td></tr>
+      <tr><td><span class="cmd">/bin/</span></td><td>Core OS binaries (cat, ls)</td></tr>
+      <tr><td><span class="cmd">/sbin/</span></td><td>Superuser-only boot binaries</td></tr>
+      <tr><td><span class="cmd">/usr/bin/</span></td><td>General system-wide binaries</td></tr>
+      <tr><td><span class="cmd">/usr/sbin/</span></td><td>System-wide binaries requiring root</td></tr>
+      <tr><td><span class="cmd">/dev/</span></td><td>Hardware devices</td></tr>
+      <tr><td><span class="cmd">/opt/</span></td><td>Third-party / optional apps</td></tr>
+      <tr><td><span class="cmd">/var/</span></td><td>Variable data (logs, spool, etc.)</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Important /etc/ files</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>File</th><th>Contains</th></tr>
+      <tr><td><span class="cmd">/etc/passwd</span></td><td>User account info (username:pw:UID:GID:comment:home:shell)</td></tr>
+      <tr><td><span class="cmd">/etc/shadow</span></td><td>Hashed passwords + account age settings</td></tr>
+      <tr><td><span class="cmd">/etc/group</span></td><td>Group membership info</td></tr>
+      <tr><td><span class="cmd">/etc/gshadow</span></td><td>Secure group account info</td></tr>
+      <tr><td><span class="cmd">/etc/hosts</span></td><td>Local DNS resolution</td></tr>
+      <tr><td><span class="cmd">/etc/resolv.conf</span></td><td>DNS server settings</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Permissions</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Three permission types</div>
+      <span class="perm-bit bit-r">r=4</span> Read &nbsp;
+      <span class="perm-bit bit-w">w=2</span> Write &nbsp;
+      <span class="perm-bit bit-x">x=1</span> Execute
+    </div>
+    <div class="perm-row"><div class="perm-label">Three user categories</div><span class="kt">u</span>=User (owner) &nbsp;|&nbsp; <span class="kt">g</span>=Group &nbsp;|&nbsp; <span class="kt">o</span>=Others</div>
+    <div class="perm-row"><div class="perm-label">Octal example</div><span class="cmd">chmod 755 file</span> → rwx r-x r-x</div>
+    <div class="perm-row"><div class="perm-label">Symbolic example</div><span class="cmd">chmod u=rw,g=r,o=r file</span></div>
+    <div class="perm-row"><div class="perm-label">umask</div>Subtracted from defaults (dirs:777, files:666). umask 022 on dir → 755.</div>
+  </div>
+
+  <h3 class="sh">Special permissions</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Permission</th><th>Value</th><th>Effect</th></tr>
+      <tr><td><span class="kt">SUID</span></td><td><span class="cmd">4</span> / <span class="cmd">u+s</span></td><td>Executable runs as file <em>owner</em></td></tr>
+      <tr><td><span class="kt">SGID</span></td><td><span class="cmd">2</span> / <span class="cmd">g+s</span></td><td>Executable runs as <em>group</em> owner</td></tr>
+      <tr><td><span class="kt">Sticky</span></td><td><span class="cmd">1</span> / <span class="cmd">o+t</span></td><td>Only file/dir owner can delete files</td></tr>
+    </table>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Set with 4th octal digit: <span class="cmd">chmod 4755 file</span> — lowercase s/t = execute bit set; uppercase S/T = not set.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>SUID on <span class="cmd">/bin/passwd</span> is how a regular user can change their own password — it briefly runs as root.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">1c — Boot Process</div>
+  <div class="topic-title">4 boot stages</div>
+
+  <div class="card">
+    <div class="phase-row"><div class="phase-num">1</div><div><div class="phase-name">Firmware (BIOS/UEFI)</div><div class="phase-desc">Runs POST → discovers and loads bootloader into memory.</div></div></div>
+    <div class="phase-row"><div class="phase-num">2</div><div><div class="phase-name">Boot Loader</div><div class="phase-desc">Loads the kernel into working memory. GRUB is most common. May let user choose kernel.</div></div></div>
+    <div class="phase-row"><div class="phase-num">3</div><div><div class="phase-name">Kernel</div><div class="phase-desc">Starts <span class="cmd">/sbin/init</span> and loads processes needed for the OS.</div></div></div>
+    <div class="phase-row"><div class="phase-num">4</div><div><div class="phase-name">User Space</div><div class="phase-desc">User can now interact with the system.</div></div></div>
+  </div>
+
+  <h3 class="sh">Init versions compared</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Init type</th><th>Key traits</th></tr>
+      <tr><td><span class="kt">SysV</span></td><td>Sequential scripts in <span class="cmd">/etc/rcX.d/</span>. Run levels 0–6. Not multi-threaded.</td></tr>
+      <tr><td><span class="kt">Upstart</span></td><td>Event-based service management. Uses <span class="cmd">initctl</span>.</td></tr>
+      <tr><td><span class="kt">Systemd</span></td><td>Uses <em>targets</em> instead of run levels. Fastest. Most modern distros use this.</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Boot config files live in <span class="cmd">/boot/</span>. Systemd default target is linked from <span class="cmd">/etc/systemd/system/default.target</span>.</p>
+  </div>
+
+  <!-- ── DAY 1 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 1 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">cat /etc/*release</td><td class="rd">Identify distro/version</td></tr>
+        <tr><td class="rc">pwd</td><td class="rd">Print current working directory</td></tr>
+        <tr><td class="rc">ls / ls -la</td><td class="rd">List directory contents / show all with details</td></tr>
+        <tr><td class="rc">cd / mkdir / rmdir</td><td class="rd">Change dir / create dir / remove empty dir</td></tr>
+        <tr><td class="rc">rm / cp / mv</td><td class="rd">Remove file / copy / move or rename</td></tr>
+        <tr><td class="rc">cat / less / more</td><td class="rd">Print file / scrollable view / paged view</td></tr>
+        <tr><td class="rc">head / tail</td><td class="rd">First 10 lines / last 10 lines</td></tr>
+        <tr><td class="rc">touch</td><td class="rd">Create file or update last-accessed time</td></tr>
+        <tr><td class="rc">file</td><td class="rd">Classify file type</td></tr>
+        <tr><td class="rc">stat</td><td class="rd">Print file metadata</td></tr>
+        <tr><td class="rc">chmod 755 &lt;file&gt;</td><td class="rd">Set permissions with octal</td></tr>
+        <tr><td class="rc">chmod u+x &lt;file&gt;</td><td class="rd">Set permissions symbolically</td></tr>
+        <tr><td class="rc">umask</td><td class="rd">View or set default permission mask</td></tr>
+        <tr><td class="rc">chown user:group &lt;file&gt;</td><td class="rd">Change file ownership</td></tr>
+        <tr><td class="rc">chattr / lsattr</td><td class="rd">Change / list file attributes</td></tr>
+        <tr><td class="rc">getfacl / setfacl</td><td class="rd">View / modify ACL of a file</td></tr>
+        <tr><td class="rc">su / sudo</td><td class="rd">Switch user / execute as another user</td></tr>
+        <tr><td class="rc">newgrp</td><td class="rd">Change effective GID of current user</td></tr>
+        <tr><td class="rc">systemctl get-default</td><td class="rd">Show default systemd boot target</td></tr>
+        <tr><td class="rc">systemctl list-units</td><td class="rd">List all active systemd units</td></tr>
+        <tr><td class="rc">systemd-analyze blame</td><td class="rd">Show boot time per service</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>File / Path</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">/etc/passwd</td><td class="rd">User account info</td></tr>
+        <tr><td class="rc">/etc/shadow</td><td class="rd">Password hashes + age policy</td></tr>
+        <tr><td class="rc">/etc/group</td><td class="rd">Group membership</td></tr>
+        <tr><td class="rc">/etc/hosts</td><td class="rd">Local DNS hostname resolution</td></tr>
+        <tr><td class="rc">/etc/resolv.conf</td><td class="rd">DNS server config</td></tr>
+        <tr><td class="rc">/tmp/</td><td class="rd">Temp files, cleared on reboot</td></tr>
+        <tr><td class="rc">/proc/</td><td class="rd">Live process info pseudo-filesystem</td></tr>
+        <tr><td class="rc">/boot/</td><td class="rd">Boot config files and kernel</td></tr>
+        <tr><td class="rc">/etc/systemd/system/default.target</td><td class="rd">Systemd default boot target</td></tr>
+        <tr><td class="rc">/etc/sudoers</td><td class="rd">Sudo permissions config</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day1 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 2
+══════════════════════════════════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="section-badge badge-green">2a — Account Administration</div>
+  <div class="topic-title">Account types</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Root (Superuser)</div>UID = 0. Unrestricted access to everything on the system.</div>
+    <div class="perm-row"><div class="perm-label">System accounts</div>Run OS components (e.g., mail, sshd). Modifying privileges can break things.</div>
+    <div class="perm-row"><div class="perm-label">User accounts</div>Interactive access for humans. Low-privilege and limited access.</div>
+  </div>
+
+  <h3 class="sh">Key account files</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">/etc/passwd</div>Format: <span class="cmd">username:pw:UID:GID:comment:home:shell</span>. Defines primary group. Holds most account info.</div>
+    <div class="perm-row"><div class="perm-label">/etc/shadow</div>Holds hashed passwords + aging policy (min/max age, expiration, warning period).</div>
+    <div class="perm-row"><div class="perm-label">/etc/group</div>Additional group info per account.</div>
+    <div class="perm-row"><div class="perm-label">/etc/gshadow</div>Secure group account info. Group admin is defined here.</div>
+    <div class="perm-row"><div class="perm-label">/etc/sudoers</div>Edited with <span class="cmd">visudo</span>. Default: <span class="cmd">root ALL=(ALL) ALL</span>. Use <span class="cmd">%groupname</span> to assign sudo to a group.</div>
+    <div class="perm-row"><div class="perm-label">/etc/security</div>Security configs that restrict/limit system access.</div>
+  </div>
+
+  <h3 class="sh">Login info files (binary — use special commands)</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>File</th><th>Command</th><th>Shows</th></tr>
+      <tr><td><span class="cmd">/var/run/utmp</span></td><td><span class="cmd">w</span> or <span class="cmd">who</span></td><td>Currently logged-on users</td></tr>
+      <tr><td><span class="cmd">/var/log/wtmp</span></td><td><span class="cmd">last</span></td><td>All successful logins</td></tr>
+      <tr><td><span class="cmd">/var/log/btmp</span></td><td><span class="cmd">lastb</span></td><td>All failed login attempts</td></tr>
+      <tr><td><span class="cmd">/var/log/lastlog</span></td><td><span class="cmd">lastlog</span></td><td>Most recent login per user</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>These login files are <strong>binary</strong> — you can't read them with <span class="cmd">cat</span>. You must use the dedicated commands (<span class="cmd">last</span>, <span class="cmd">lastb</span>, etc.).</p>
+  </div>
+
+  <h3 class="sh">Environment variables</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Variable</th><th>Contains</th></tr>
+      <tr><td><span class="cmd">HOME</span></td><td>User's home directory</td></tr>
+      <tr><td><span class="cmd">PWD</span></td><td>Present working directory</td></tr>
+      <tr><td><span class="cmd">USER</span></td><td>Current username</td></tr>
+      <tr><td><span class="cmd">HOSTNAME</span></td><td>Machine's hostname</td></tr>
+      <tr><td><span class="cmd">PATH</span></td><td>Directories searched when a command is typed</td></tr>
+      <tr><td><span class="cmd">SHELL</span></td><td>Default login shell</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p><span class="cmd">export var</span> makes a variable available to child shells. Without it, the variable is only in the current session.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">2b–2f — Processes</div>
+  <div class="topic-title">Process fundamentals</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">PID</div>Every running process has a unique Process ID. <span class="cmd">init</span> is always PID 1.</div>
+    <div class="perm-row"><div class="perm-label">PPID</div>Parent Process ID — who spawned this process.</div>
+    <div class="perm-row"><div class="perm-label">/proc/</div>Pseudo-filesystem containing info on all currently running processes.</div>
+  </div>
+
+  <h3 class="sh">System calls</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Syscall</th><th>Purpose</th></tr>
+      <tr><td><span class="cmd">exec()</span></td><td>Load a program into memory and execute it</td></tr>
+      <tr><td><span class="cmd">fork()</span></td><td>Spawn a child process (copy of running process)</td></tr>
+      <tr><td><span class="cmd">exit()</span></td><td>A process terminates itself</td></tr>
+      <tr><td><span class="cmd">kill()</span></td><td>A process terminates another; typically <span class="cmd">kill -9 &lt;PID&gt;</span></td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Process states</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Zombie</div>Process has ended but still has an entry in the process table. Shows as <span class="cmd">defunct</span>.</div>
+    <div class="perm-row"><div class="perm-label">Orphan</div>Child process whose parent terminated without waiting for it. Still running.</div>
+    <div class="perm-row"><div class="perm-label">Reaping</div>Parent reads child exit info via <span class="cmd">wait()</span>. Until then, child shows as <span class="cmd">defunct</span>.</div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p><span class="cmd">kill</span> and <span class="cmd">killall</span> differ: <span class="cmd">kill</span> uses PID; <span class="cmd">killall</span> and <span class="cmd">pkill</span> use the process name.</p>
+  </div>
+
+  <h3 class="sh">Suspicious process detection</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li>Check for unusual open ports: <span class="cmd">sudo ss -tupl</span></li>
+      <li>Dump process info: <span class="cmd">sudo ls -al /proc/&lt;pid&gt;</span></li>
+      <li>Copy the binary and hash it to compare against known-good values.</li>
+    </ul>
+  </div>
+
+  <!-- ── DAY 2 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 2 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">useradd / adduser</td><td class="rd">Add a user (adduser gives prompts)</td></tr>
+        <tr><td class="rc">usermod</td><td class="rd">Modify user configuration</td></tr>
+        <tr><td class="rc">userdel</td><td class="rd">Delete a user</td></tr>
+        <tr><td class="rc">groupadd/mod/del</td><td class="rd">Add, modify, or delete groups</td></tr>
+        <tr><td class="rc">passwd / gpasswd</td><td class="rd">Change user/group password</td></tr>
+        <tr><td class="rc">gpasswd -a &lt;user&gt; &lt;grp&gt;</td><td class="rd">Add user to a group</td></tr>
+        <tr><td class="rc">chage</td><td class="rd">List or modify password age settings</td></tr>
+        <tr><td class="rc">groups</td><td class="rd">List groups a user belongs to</td></tr>
+        <tr><td class="rc">id</td><td class="rd">Print real and effective UID/GID</td></tr>
+        <tr><td class="rc">visudo</td><td class="rd">Safely edit /etc/sudoers</td></tr>
+        <tr><td class="rc">w / who</td><td class="rd">Show currently logged-on users (utmp)</td></tr>
+        <tr><td class="rc">last</td><td class="rd">Successful login history (wtmp)</td></tr>
+        <tr><td class="rc">lastb</td><td class="rd">Failed login attempts (btmp)</td></tr>
+        <tr><td class="rc">lastlog</td><td class="rd">Most recent login per user</td></tr>
+        <tr><td class="rc">env / printenv</td><td class="rd">Print all or selected env variables</td></tr>
+        <tr><td class="rc">export var</td><td class="rd">Make variable available to child shells</td></tr>
+        <tr><td class="rc">echo $VAR</td><td class="rd">Print value of variable</td></tr>
+        <tr><td class="rc">alias</td><td class="rd">Create shorthand for a command</td></tr>
+        <tr><td class="rc">which</td><td class="rd">Show path of executable; detect PATH misconfigs</td></tr>
+        <tr><td class="rc">ps -ef / ps aux</td><td class="rd">Snapshot of all running processes</td></tr>
+        <tr><td class="rc">top</td><td class="rd">Dynamic real-time process view</td></tr>
+        <tr><td class="rc">pstree</td><td class="rd">Processes in tree format</td></tr>
+        <tr><td class="rc">jobs</td><td class="rd">Status of background processes</td></tr>
+        <tr><td class="rc">kill -9 &lt;PID&gt;</td><td class="rd">Force-kill a process by PID</td></tr>
+        <tr><td class="rc">killall / pkill &lt;name&gt;</td><td class="rd">Kill process by name</td></tr>
+        <tr><td class="rc">lsof</td><td class="rd">List open files and what processes use them</td></tr>
+        <tr><td class="rc">sudo ss -tupl</td><td class="rd">Show listening ports with process info</td></tr>
+        <tr><td class="rc">sudo ls -al /proc/&lt;pid&gt;</td><td class="rd">Dump info for a specific process</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>File / Path</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">/etc/passwd</td><td class="rd">User account info</td></tr>
+        <tr><td class="rc">/etc/shadow</td><td class="rd">Password hashes + aging policy</td></tr>
+        <tr><td class="rc">/etc/group</td><td class="rd">Group memberships</td></tr>
+        <tr><td class="rc">/etc/gshadow</td><td class="rd">Secure group account info</td></tr>
+        <tr><td class="rc">/etc/sudoers</td><td class="rd">Sudo access configuration</td></tr>
+        <tr><td class="rc">/etc/security</td><td class="rd">Additional security restrictions</td></tr>
+        <tr><td class="rc">/var/run/utmp</td><td class="rd">Current logged-on users (binary)</td></tr>
+        <tr><td class="rc">/var/log/wtmp</td><td class="rd">Successful login history (binary)</td></tr>
+        <tr><td class="rc">/var/log/btmp</td><td class="rd">Failed login attempts (binary)</td></tr>
+        <tr><td class="rc">/var/log/lastlog</td><td class="rd">Most recent logins per user (binary)</td></tr>
+        <tr><td class="rc">/proc/</td><td class="rd">Live process info for all running processes</td></tr>
+        <tr><td class="rc">/proc/&lt;pid&gt;/</td><td class="rd">Per-process directory with all its details</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day2 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 3
+══════════════════════════════════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="section-badge badge-green">3a/3b — Shells</div>
+  <div class="topic-title">Shell types compared</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Shell</th><th>Binary</th><th>History file</th><th>Notes</th></tr>
+      <tr><td><span class="kt">sh</span></td><td><span class="cmd">/bin/sh</span></td><td>None</td><td>Original Bourne Shell</td></tr>
+      <tr><td><span class="kt">bash</span></td><td><span class="cmd">/bin/bash</span></td><td><span class="cmd">.bash_history</span></td><td>Most common</td></tr>
+      <tr><td><span class="kt">zsh</span></td><td><span class="cmd">/bin/zsh</span></td><td><span class="cmd">.zsh_history</span></td><td>Modern, feature-rich</td></tr>
+      <tr><td><span class="kt">ksh</span></td><td><span class="cmd">/bin/ksh</span></td><td><span class="cmd">.ksh_history</span></td><td>Korn Shell</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p><span class="cmd">$SHELL</span> = default login shell. <span class="cmd">$0</span> = currently running shell. View all available shells at <span class="cmd">/etc/shells</span>. Change your shell with <span class="cmd">chsh</span>.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">3b — Networking</div>
+  <div class="topic-title">Commands compared</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Command</th><th>Purpose</th></tr>
+      <tr><td><span class="cmd">ifconfig</span></td><td>List/configure interfaces (older)</td></tr>
+      <tr><td><span class="cmd">ip a</span></td><td>Modern replacement for ifconfig</td></tr>
+      <tr><td><span class="cmd">route / ip route</span></td><td>Routing table</td></tr>
+      <tr><td><span class="cmd">arp / ip neigh</span></td><td>ARP cache</td></tr>
+      <tr><td><span class="cmd">ping</span></td><td>Send ICMP packets to test reachability</td></tr>
+      <tr><td><span class="cmd">traceroute</span></td><td>Show hops between host and target</td></tr>
+      <tr><td><span class="cmd">netstat</span></td><td>Network info — deprecated but still found</td></tr>
+      <tr><td><span class="cmd">ss</span></td><td>Replacement for netstat — shows socket info</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Both <span class="cmd">netstat</span> and <span class="cmd">ss</span> must be run with <strong>superuser privileges</strong> to see associated PIDs/processes.</p>
+  </div>
+
+  <h3 class="sh">Networking tools</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">ssh</div>Log into a remote machine securely. Specify a command to run it remotely without an interactive shell.</div>
+    <div class="perm-row"><div class="perm-label">scp</div>Securely copy files between systems.</div>
+    <div class="perm-row"><div class="perm-label">iptables</div>Create/modify firewall rules. Chains: <span class="cmd">INPUT</span>, <span class="cmd">OUTPUT</span>, <span class="cmd">FORWARD</span>. Targets: ACCEPT, DROP, REJECT (terminating) or LOG, RETURN, GOTO (non-terminating).</div>
+    <div class="perm-row"><div class="perm-label">wget</div>Download files or web pages.</div>
+    <div class="perm-row"><div class="perm-label">curl</div>Transfer data to or from a server.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">3b — Logs</div>
+  <div class="topic-title">Log locations by distro</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Debian</th><th>RedHat</th><th>Contains</th></tr>
+      <tr><td><span class="cmd">/var/log/syslog</span></td><td><span class="cmd">/var/log/messages</span></td><td>All global system activity</td></tr>
+      <tr><td><span class="cmd">/var/log/auth.log</span></td><td><span class="cmd">/var/log/secure</span></td><td>Auth events (logins, sudo use)</td></tr>
+      <tr><td><span class="cmd">/var/log/kern.log</span></td><td><span class="cmd">/var/log/kern.log</span></td><td>Kernel events, errors, warnings</td></tr>
+      <tr><td><span class="cmd">/var/log/cron</span></td><td><span class="cmd">/var/log/cron</span></td><td>Scheduled task info</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>All logs live under <span class="cmd">/var/log/</span>. The <span class="kt">rsyslog</span> daemon routes them to the right file. Logs rotate once a file hits capacity.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">3b — Crontab</div>
+  <div class="topic-title">Scheduling tasks</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Crontab format</div><span class="cmd">Minute · Hour · Day-of-Month · Month · Day-of-Week · Command</span></div>
+    <div class="perm-row"><div class="perm-label">crontab -l</div>List scheduled tasks for current user.</div>
+    <div class="perm-row"><div class="perm-label">crontab -e</div>Edit crontab for current user.</div>
+    <div class="perm-row"><div class="perm-label">crontab -r</div>Remove crontab for current user.</div>
+    <div class="perm-row"><div class="perm-label">Access control</div><span class="cmd">/etc/cron.allow</span> and <span class="cmd">/etc/cron.deny</span> limit who can use cron.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>A scheduled task is called a <span class="kt">cron job</span>. Use an asterisk <span class="cmd">*</span> in a field to mean "every" — e.g., <span class="cmd">* * * * *</span> = every minute.</p>
+  </div>
+
+  <!-- ── DAY 3 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 3 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">history</td><td class="rd">View command history</td></tr>
+        <tr><td class="rc">chsh</td><td class="rd">Change login shell</td></tr>
+        <tr><td class="rc">echo $SHELL / $0</td><td class="rd">Show default / current shell</td></tr>
+        <tr><td class="rc">ifconfig / ip a</td><td class="rd">List network interfaces</td></tr>
+        <tr><td class="rc">ip route / route</td><td class="rd">Show routing table</td></tr>
+        <tr><td class="rc">arp / ip neigh</td><td class="rd">Show ARP cache</td></tr>
+        <tr><td class="rc">ping &lt;host&gt;</td><td class="rd">Test ICMP reachability</td></tr>
+        <tr><td class="rc">traceroute &lt;host&gt;</td><td class="rd">Trace hops to a host</td></tr>
+        <tr><td class="rc">netstat -pant</td><td class="rd">All TCP connections with PID (deprecated)</td></tr>
+        <tr><td class="rc">ss -anp / ss -tupl</td><td class="rd">Active sockets / listening sockets with process</td></tr>
+        <tr><td class="rc">ssh user@host</td><td class="rd">Remote login over SSH</td></tr>
+        <tr><td class="rc">scp src user@host:dest</td><td class="rd">Securely copy files between hosts</td></tr>
+        <tr><td class="rc">iptables -L</td><td class="rd">List firewall rules</td></tr>
+        <tr><td class="rc">wget &lt;url&gt;</td><td class="rd">Download file from URL</td></tr>
+        <tr><td class="rc">curl &lt;url&gt;</td><td class="rd">Transfer data to/from server</td></tr>
+        <tr><td class="rc">crontab -l / -e / -r</td><td class="rd">List / edit / remove crontab</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>File / Path</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">/etc/shells</td><td class="rd">List of available shells on the system</td></tr>
+        <tr><td class="rc">~/.bash_history</td><td class="rd">Bash command history</td></tr>
+        <tr><td class="rc">/etc/resolv.conf</td><td class="rd">DNS server config</td></tr>
+        <tr><td class="rc">/etc/sysconfig/network-scripts/ifcfg*</td><td class="rd">Interface configs (RedHat only)</td></tr>
+        <tr><td class="rc">/etc/network/interfaces</td><td class="rd">Interface configs (Debian only)</td></tr>
+        <tr><td class="rc">/var/log/</td><td class="rd">Root directory for all system logs</td></tr>
+        <tr><td class="rc">/var/log/syslog</td><td class="rd">Global system activity (Debian)</td></tr>
+        <tr><td class="rc">/var/log/messages</td><td class="rd">Global system activity (RedHat)</td></tr>
+        <tr><td class="rc">/var/log/auth.log</td><td class="rd">Auth events (Debian)</td></tr>
+        <tr><td class="rc">/var/log/secure</td><td class="rd">Auth events (RedHat)</td></tr>
+        <tr><td class="rc">/etc/cron.allow</td><td class="rd">Users allowed to use cron</td></tr>
+        <tr><td class="rc">/etc/cron.deny</td><td class="rd">Users denied cron access</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day3 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 4
+══════════════════════════════════════════ -->
+<div class="day-section" id="day4">
+
+  <div class="section-badge badge-green">Day 4 — Redirect I/O</div>
+  <div class="topic-title">File descriptors &amp; redirection</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>FD</th><th>Name</th><th>Default target</th></tr>
+      <tr><td><span class="cmd">0</span></td><td>STDIN</td><td>Keyboard</td></tr>
+      <tr><td><span class="cmd">1</span></td><td>STDOUT</td><td>Terminal</td></tr>
+      <tr><td><span class="cmd">2</span></td><td>STDERR</td><td>Terminal</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Redirection &amp; special characters</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Symbol</th><th>Effect</th></tr>
+      <tr><td><span class="cmd">|</span></td><td>Pipe STDOUT to next command</td></tr>
+      <tr><td><span class="cmd">|&amp;</span></td><td>Pipe STDERR to next command</td></tr>
+      <tr><td><span class="cmd">2&gt;/dev/null</span></td><td>Silently discard errors</td></tr>
+      <tr><td><span class="cmd">" "</span></td><td>Double quotes — literal except <span class="cmd">$</span></td></tr>
+      <tr><td><span class="cmd">` `</span></td><td>Backticks — command substitution</td></tr>
+      <tr><td><span class="cmd">\</span></td><td>Backslash — removes special meaning (except \n \t \r)</td></tr>
+      <tr><td><span class="cmd">!</span></td><td>History expansion (must be enabled)</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Searching</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">find</div>Search recursively from a starting path. Sees hidden files. Extremely powerful.
+      <div style="margin-top:6px;">
+        <span class="cmd">-name/-iname</span> by name &nbsp;|&nbsp; <span class="cmd">-user/-group/-perm</span> by owner/perms<br>
+        <span class="cmd">-size</span> by size &nbsp;|&nbsp; <span class="cmd">-type f/d</span> file or directory
+      </div>
+    </div>
+    <div class="perm-row"><div class="perm-label">which</div>Print full path of an executable as it would be found in <span class="cmd">$PATH</span>.</div>
+    <div class="perm-row"><div class="perm-label">whereis</div>Locate the binary, source, and man pages for a command.</div>
+    <div class="perm-row"><div class="perm-label">locate</div>Fast database lookup for files — searches an index, not live filesystem.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">Text Processing</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><span class="cmd">grep</span></td><td>Search by pattern. <span class="cmd">-v</span>=invert, <span class="cmd">-R</span>=recursive</td></tr>
+      <tr><td><span class="cmd">cut</span></td><td>Remove sections per line. <span class="cmd">-d</span>=delimiter, <span class="cmd">-f</span>=field</td></tr>
+      <tr><td><span class="cmd">tr</span></td><td>Translate/substitute/replace characters</td></tr>
+      <tr><td><span class="cmd">sort</span></td><td>Sort lines of text alphabetically or numerically</td></tr>
+      <tr><td><span class="cmd">uniq</span></td><td>Remove duplicate adjacent lines or report unique ones</td></tr>
+      <tr><td><span class="cmd">wc</span></td><td>Count newlines, words, and bytes</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">VIM</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Key</th><th>Mode</th><th>Action</th></tr>
+      <tr><td><span class="cmd">i</span></td><td>Command→Insert</td><td>Enter insert mode</td></tr>
+      <tr><td><span class="cmd">Esc</span></td><td>Insert→Command</td><td>Return to command mode</td></tr>
+      <tr><td><span class="cmd">dd</span></td><td>Command</td><td>Delete current line</td></tr>
+      <tr><td><span class="cmd">/pattern</span></td><td>Command</td><td>Search for pattern</td></tr>
+      <tr><td><span class="cmd">:w</span></td><td>Command</td><td>Write (save)</td></tr>
+      <tr><td><span class="cmd">:q</span></td><td>Command</td><td>Quit</td></tr>
+      <tr><td><span class="cmd">:wq!</span></td><td>Command</td><td>Save and force quit</td></tr>
+      <tr><td><span class="cmd">u</span></td><td>Command</td><td>Undo last action</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>On most Linux systems <span class="cmd">vi</span> is a symlink to <span class="cmd">vim</span>. Always start by checking which mode you're in — if typing enters characters instead of commands, press <span class="cmd">Esc</span> first.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Scripting</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Shebang line</div>First line of every script: <span class="cmd">#!/bin/bash</span>. Tells the OS which interpreter to use.</div>
+    <div class="perm-row"><div class="perm-label">Benefits</div>Reduces mistakes, enables reuse, saves time, adaptable to different environments.</div>
+    <div class="perm-row"><div class="perm-label">Important note</div>Do not use scripts to change weapon systems under strict version controls.</div>
+  </div>
+
+  <!-- ── DAY 4 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 4 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Command / Symbol</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">cmd | cmd2</td><td class="rd">Pipe STDOUT of cmd to cmd2</td></tr>
+        <tr><td class="rc">cmd |&amp; cmd2</td><td class="rd">Pipe STDOUT + STDERR to cmd2</td></tr>
+        <tr><td class="rc">2&gt;/dev/null</td><td class="rd">Discard error output silently</td></tr>
+        <tr><td class="rc">find / -name "file"</td><td class="rd">Search entire filesystem by name</td></tr>
+        <tr><td class="rc">find . -type f -perm /4000</td><td class="rd">Find SUID files</td></tr>
+        <tr><td class="rc">find . -size +10M</td><td class="rd">Find files larger than 10MB</td></tr>
+        <tr><td class="rc">which &lt;cmd&gt;</td><td class="rd">Full path of an executable in PATH</td></tr>
+        <tr><td class="rc">whereis &lt;cmd&gt;</td><td class="rd">Binary, source, and man page locations</td></tr>
+        <tr><td class="rc">locate &lt;pattern&gt;</td><td class="rd">Fast database search for files</td></tr>
+        <tr><td class="rc">grep "pattern" file</td><td class="rd">Search file for pattern</td></tr>
+        <tr><td class="rc">grep -v / -R</td><td class="rd">Invert match / recursive search</td></tr>
+        <tr><td class="rc">cut -d: -f1 /etc/passwd</td><td class="rd">Extract first field delimited by :</td></tr>
+        <tr><td class="rc">sort / uniq</td><td class="rd">Sort lines / remove duplicate lines</td></tr>
+        <tr><td class="rc">wc -l file</td><td class="rd">Count lines in a file</td></tr>
+        <tr><td class="rc">tr 'a-z' 'A-Z'</td><td class="rd">Translate lowercase to uppercase</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day4 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 5
+══════════════════════════════════════════ -->
+<div class="day-section" id="day5">
+
+  <div class="section-badge badge-green">5 — Package Management</div>
+  <div class="topic-title">RPM vs APT</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>RedHat (RPM/Yum)</th><th>Debian (APT/dpkg)</th></tr>
+      <tr><td>Base tool</td><td><span class="cmd">rpm</span></td><td><span class="cmd">dpkg</span></td></tr>
+      <tr><td>Repo manager</td><td><span class="cmd">yum</span></td><td><span class="cmd">apt</span></td></tr>
+      <tr><td>Config file</td><td><span class="cmd">/etc/yum.conf</span></td><td><span class="cmd">/etc/apt/</span></td></tr>
+      <tr><td>Repo dir</td><td><span class="cmd">/etc/yum.repos.d/</span></td><td><span class="cmd">/etc/apt/sources.list</span></td></tr>
+      <tr><td>Package DB</td><td><span class="cmd">/var/lib/rpm</span></td><td><span class="cmd">/var/lib/dpkg</span></td></tr>
+      <tr><td>Query all</td><td><span class="cmd">rpm -qa</span></td><td><span class="cmd">dpkg -l</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>Run <span class="cmd">sudo apt update</span> before installing anything on Debian. It updates the package index, not the packages themselves.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">5 — Disk Management</div>
+  <div class="topic-title">Key concepts</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Sector / Block</div>Sector = physical spot on drive. Block = collection of sectors the OS references.</div>
+    <div class="perm-row"><div class="perm-label">inode</div>Stores file metadata. Separate from the data blocks that hold file content.</div>
+    <div class="perm-row"><div class="perm-label">Preferred FS</div>Ext4 — most preferred and widely used Linux filesystem.</div>
+  </div>
+
+  <h3 class="sh">Hard link vs soft link</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>Hard Link</th><th>Soft (Symbolic) Link</th></tr>
+      <tr><td>Points to</td><td>Same inode</td><td>Path of target file</td></tr>
+      <tr><td>Cross-filesystem</td><td>No</td><td>Yes</td></tr>
+      <tr><td>If file moved</td><td>Still works</td><td>Breaks</td></tr>
+      <tr><td>Windows analogy</td><td>—</td><td>Shortcut / hyperlink</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Partition types</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Type</th><th>Purpose</th></tr>
+      <tr><td><span class="kt">Root</span></td><td>First/install partition on primary drive</td></tr>
+      <tr><td><span class="kt">Data</span></td><td>Holds directories and files</td></tr>
+      <tr><td><span class="kt">Swap</span></td><td>Extends physical RAM by acting as overflow cache</td></tr>
+      <tr><td><span class="kt">NFS</span></td><td>Network File System — mount remote directories. Config in <span class="cmd">/etc/exports</span></td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">5 — Regular Expressions</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Type</th><th>Example</th><th>Matches</th></tr>
+      <tr><td>Literal</td><td><span class="cmd">galaxy</span></td><td>Exact string "galaxy"</td></tr>
+      <tr><td>Metachar</td><td><span class="cmd">g..</span></td><td>"g" + any 2 characters</td></tr>
+      <tr><td>Bracket</td><td><span class="cmd">[fg]a[rl]</span></td><td>far, fal, gar, gal</td></tr>
+      <tr><td>Range</td><td><span class="cmd">[e-h]</span></td><td>Any of e, f, g, h</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Named character classes</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Class</th><th>Matches</th></tr>
+      <tr><td><span class="cmd">[:alnum:]</span></td><td>Any alphanumeric character</td></tr>
+      <tr><td><span class="cmd">[:alpha:]</span></td><td>Any letter</td></tr>
+      <tr><td><span class="cmd">[:digit:]</span></td><td>Any number</td></tr>
+      <tr><td><span class="cmd">[:lower:]</span></td><td>Lowercase letters</td></tr>
+      <tr><td><span class="cmd">[:upper:]</span></td><td>Uppercase letters</td></tr>
+      <tr><td><span class="cmd">[:space:]</span></td><td>Whitespace (space, tab, newline)</td></tr>
+      <tr><td><span class="cmd">[:punct:]</span></td><td>Punctuation characters</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Repetition &amp; anchoring</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Operator</th><th>Meaning</th></tr>
+      <tr><td><span class="cmd">?</span></td><td>Preceding item is optional (0 or 1 times)</td></tr>
+      <tr><td><span class="cmd">*</span></td><td>Preceding item 0 or more times</td></tr>
+      <tr><td><span class="cmd">+</span></td><td>Preceding item 1 or more times</td></tr>
+      <tr><td><span class="cmd">{N}</span></td><td>Exactly N times</td></tr>
+      <tr><td><span class="cmd">{N,M}</span></td><td>At least N, no more than M times</td></tr>
+      <tr><td><span class="cmd">^</span></td><td>Anchor to beginning of LINE</td></tr>
+      <tr><td><span class="cmd">$</span></td><td>Anchor to end of LINE</td></tr>
+      <tr><td><span class="cmd">\&lt;</span></td><td>Anchor to beginning of WORD</td></tr>
+      <tr><td><span class="cmd">\&gt;</span></td><td>Anchor to end of WORD</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">5 — Surveys</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Defensive</th><th>Offensive</th></tr>
+      <tr><td>Hunt for anomalous activity</td><td>Characterize a network/system</td></tr>
+      <tr><td>Establish a system baseline</td><td>Find other users on the system</td></tr>
+      <tr><td>Analyze post-compromise</td><td>Search for intel/files</td></tr>
+      <tr><td>Audit for policy compliance</td><td>Find vectors for effects</td></tr>
+    </table>
+  </div>
+
+  <!-- ── DAY 5 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 5 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">rpm -qa</td><td class="rd">Query all installed RPM packages</td></tr>
+        <tr><td class="rc">rpm -qi &lt;pkg&gt;</td><td class="rd">Query info about a package</td></tr>
+        <tr><td class="rc">rpm -qf &lt;file&gt;</td><td class="rd">Query which package owns a file</td></tr>
+        <tr><td class="rc">yum install / remove</td><td class="rd">Install or remove packages (RedHat)</td></tr>
+        <tr><td class="rc">sudo apt update</td><td class="rd">Update package index (Debian)</td></tr>
+        <tr><td class="rc">sudo apt install / remove</td><td class="rd">Install or remove packages (Debian)</td></tr>
+        <tr><td class="rc">dpkg -l</td><td class="rd">List all installed dpkg packages</td></tr>
+        <tr><td class="rc">df -h</td><td class="rd">Report disk space usage (human-readable)</td></tr>
+        <tr><td class="rc">du -sh &lt;dir&gt;</td><td class="rd">Disk usage of a directory</td></tr>
+        <tr><td class="rc">lsblk</td><td class="rd">List block devices</td></tr>
+        <tr><td class="rc">fdisk -l</td><td class="rd">List partition table info</td></tr>
+        <tr><td class="rc">parted</td><td class="rd">Partition manipulation program</td></tr>
+        <tr><td class="rc">mount / umount</td><td class="rd">Mount or unmount a device</td></tr>
+        <tr><td class="rc">lsof</td><td class="rd">List open files from processes</td></tr>
+        <tr><td class="rc">showmount -e &lt;host&gt;</td><td class="rd">Query NFS shares on a host</td></tr>
+        <tr><td class="rc">smbclient</td><td class="rd">Query SMB shares on a host</td></tr>
+        <tr><td class="rc">ln -s target link</td><td class="rd">Create a symbolic (soft) link</td></tr>
+        <tr><td class="rc">ln target link</td><td class="rd">Create a hard link</td></tr>
+        <tr><td class="rc">grep "^root" /etc/passwd</td><td class="rd">Lines starting with "root" (^ anchor)</td></tr>
+        <tr><td class="rc">grep "[[:digit:]]" file</td><td class="rd">Lines containing any digit</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>File / Path</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">/var/lib/rpm</td><td class="rd">RPM package database</td></tr>
+        <tr><td class="rc">/etc/yum.conf</td><td class="rd">Yum configuration file</td></tr>
+        <tr><td class="rc">/etc/yum.repos.d/</td><td class="rd">Yum repository definitions</td></tr>
+        <tr><td class="rc">/etc/mtab</td><td class="rd">Currently mounted partitions</td></tr>
+        <tr><td class="rc">/etc/fstab</td><td class="rd">Persistent mount configuration</td></tr>
+        <tr><td class="rc">/etc/exports</td><td class="rd">NFS export configuration</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day5 -->
+
+<script>
+function showDay(n) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day' + n).classList.add('active');
+  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
