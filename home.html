@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --bg:         #0d0f12;
+      --bg-card:    #13161b;
+      --bg-hover:   #1a1e25;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.18);
+      --text:       #e8eaf0;
+      --muted:      #5c6270;
+      --mono:       'IBM Plex Mono', monospace;
+      --sans:       'IBM Plex Sans', sans-serif;
+
+      /* Category accent colors — edit freely */
+      --win:   #3b9eff;
+      --lin:   #f5a623;
+      --port:  #a78bfa;
+      --py:    #34d399;
+      --off:   #f87171;
+      --def:   #38bdf8;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    header {
+      max-width: 860px;
+      margin: 0 auto 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .site-title {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .site-title span {
+      color: var(--def);
+    }
+
+    .site-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 4px;
+    }
+
+    .header-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* ─── GRID ───────────────────────────────────────────── */
+    .grid {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ─── CATEGORY CARD ──────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .card:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .card-body { padding: 0.6rem 0; }
+
+    /* ─── LINK ROWS ──────────────────────────────────────── */
+    /*
+     * TO ADD / EDIT LINKS:
+     * 1. Find the <ul> inside the card you want to edit.
+     * 2. Each <li> contains one <a> tag.
+     * 3. Replace href="#" with your GitHub Pages URL.
+     * 4. Replace the link text with your page title.
+     * 5. To add a new link, copy an entire <li>…</li> block and paste it.
+     * 6. To remove a link, delete the entire <li>…</li> block.
+    */
+
+    .link-list {
+      list-style: none;
+      padding: 0.25rem 0;
+    }
+
+    .link-list li a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.85rem;
+      color: #b0b8c8;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .link-list li a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .link-list li a::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--accent);
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+
+    .link-list li a:hover::before {
+      opacity: 1;
+    }
+
+    /* ─── PER-CARD ACCENT COLORS ─────────────────────────── */
+    .card-windows  { --accent: var(--win);  }
+    .card-linux    { --accent: var(--lin);  }
+    .card-ports    { --accent: var(--port); }
+    .card-python   { --accent: var(--py);   }
+    .card-offensive{ --accent: var(--off);  }
+    .card-defensive{ --accent: var(--def);  }
+
+    .card-windows   .card-title { color: var(--win);  }
+    .card-linux     .card-title { color: var(--lin);  }
+    .card-ports     .card-title { color: var(--port); }
+    .card-python    .card-title { color: var(--py);   }
+    .card-offensive .card-title { color: var(--off);  }
+    .card-defensive .card-title { color: var(--def);  }
+
+    .card-windows   .card-icon { background: rgba(59,158,255,0.12);  color: var(--win);  }
+    .card-linux     .card-icon { background: rgba(245,166,35,0.12);  color: var(--lin);  }
+    .card-ports     .card-icon { background: rgba(167,139,250,0.12); color: var(--port); }
+    .card-python    .card-icon { background: rgba(52,211,153,0.12);  color: var(--py);   }
+    .card-offensive .card-icon { background: rgba(248,113,113,0.12); color: var(--off);  }
+    .card-defensive .card-icon { background: rgba(56,189,248,0.12);  color: var(--def);  }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      max-width: 860px;
+      margin: 3rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <!--
+        EDIT YOUR NAME/TITLE BELOW
+        Change "your_username" and the subtitle to whatever you like.
+      -->
+      <div class="site-title">~/notes<span>_</span></div>
+      <div class="site-subtitle">// cybersecurity study reference</div>
+    </div>
+    <div class="header-badge">github.io</div>
+  </header>
+
+  <main class="grid">
+
+    <!-- ══════════════════════════════════════
+         WINDOWS CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-windows">
+      <div class="card-header">
+        <div class="card-icon">⊞</div>
+        <div class="card-title">Windows</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Windows Study Guide</a></li>
+          <li><a href="#">Boot Process &amp; Components</a></li>
+          <li><a href="#">CMD &amp; PowerShell Reference</a></li>
+          <li><a href="#">Registry Cheat Sheet</a></li>
+          <li><a href="#">Active Directory Notes</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         LINUX CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-linux">
+      <div class="card-header">
+        <div class="card-icon">$</div>
+        <div class="card-title">Linux</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Linux Study Guide</a></li>
+          <li><a href="#">File System &amp; Permissions</a></li>
+          <li><a href="#">Common Commands Reference</a></li>
+          <li><a href="#">Bash Scripting Notes</a></li>
+          <li><a href="#">Systemd &amp; Services</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PORTS & PROTOCOLS CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-ports">
+      <div class="card-header">
+        <div class="card-icon">⇄</div>
+        <div class="card-title">Ports &amp; Protocols</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Common Ports Reference</a></li>
+          <li><a href="#">TCP vs UDP</a></li>
+          <li><a href="#">DNS Deep Dive</a></li>
+          <li><a href="#">HTTP / HTTPS Notes</a></li>
+          <li><a href="#">SMB &amp; LDAP Notes</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PYTHON CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-python">
+      <div class="card-header">
+        <div class="card-icon">🐍</div>
+        <div class="card-title">Python</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Python Study Guide</a></li>
+          <li><a href="#">Data Types &amp; Structures</a></li>
+          <li><a href="#">File I/O &amp; OS Module</a></li>
+          <li><a href="#">Scripting for Automation</a></li>
+          <li><a href="#">Useful Libraries</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         OFFENSIVE CYBER CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-offensive">
+      <div class="card-header">
+        <div class="card-icon">⚔</div>
+        <div class="card-title">Offensive Cyber</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Recon Techniques</a></li>
+          <li><a href="#">Enumeration Notes</a></li>
+          <li><a href="#">Exploitation Basics</a></li>
+          <li><a href="#">Post-Exploitation</a></li>
+          <li><a href="#">Tool Reference</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         DEFENSIVE CYBER CARD
+         ══════════════════════════════════════ -->
+    <div class="card card-defensive">
+      <div class="card-header">
+        <div class="card-icon">🛡</div>
+        <div class="card-title">Defensive Cyber</div>
+      </div>
+      <div class="card-body">
+        <ul class="link-list">
+          <li><a href="#">Log Analysis Notes</a></li>
+          <li><a href="#">SIEM &amp; Alerting</a></li>
+          <li><a href="#">Incident Response</a></li>
+          <li><a href="#">Threat Hunting</a></li>
+          <li><a href="#">Hardening Checklists</a></li>
+          <li><a href="#">Placeholder Link</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>// study reference index</span>
+    <span>edit index.html to update links</span>
+  </footer>
+
+</body>
+</html>
