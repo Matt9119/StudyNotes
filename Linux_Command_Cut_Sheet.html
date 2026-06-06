@@ -319,6 +319,7 @@ code {
           <tr><td class="c1">ls -lh</td><td class="c2">Human-readable file sizes</td><td class="c3">ls -lh /var/log/</td></tr>
           <tr><td class="c1">cd</td><td class="c2">Change directory</td><td class="c3">cd /etc/ &nbsp;|&nbsp; cd ~</td></tr>
           <tr><td class="c1">cd ..</td><td class="c2">Go up one level</td><td class="c3">cd ../../tmp/</td></tr>
+          <tr><td class="c1">apropos</td><td class="c2">Helps you locate commands when you do not remember their exact name</td><td class="c3">apropos directory</td></tr>
         </table>
       </div>
 
@@ -361,8 +362,12 @@ code {
       </div>
 
     </div>
+    
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ</span>
+      <div><strong>Getting help:</strong> Most commands accept "--help" as a flag to provide additional context and available flag options. Example: <code>chmod --help</code> will provide additional context about the chmod command.</div>
+    </div>
   </div>
-
 
   <!-- ══════════════════════════════
        PERMISSIONS
@@ -586,6 +591,7 @@ code {
       <div class="cmd-block">
         <div class="cmd-block-header"><span class="icon">⚙</span>View Processes</div>
         <table class="cmd-table">
+          <tr><td class="c1">systemctl</td><td class="c2">List, start or stop running services</td><td class="c3">systemctl --all -t service</td></tr>
           <tr><td class="c1">ps aux</td><td class="c2">All processes, all users</td><td class="c3">ps aux | grep nginx</td></tr>
           <tr><td class="c1">ps -ef</td><td class="c2">Full format, all processes</td><td class="c3">ps -ef | grep sshd</td></tr>
           <tr><td class="c1">ps -u user</td><td class="c2">Processes owned by user</td><td class="c3">ps -u alice</td></tr>
