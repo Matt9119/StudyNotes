@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Command Cut Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── TOKENS ── */
+:root {
+  --bg:          #0e1117;
+  --bg2:         #161b22;
+  --bg3:         #1c2128;
+  --bg4:         #21262d;
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+  --text:        #e6edf3;
+  --muted:       #7d8590;
+  --green:       #3fb950;
+  --green-dim:   rgba(63,185,80,0.12);
+  --green-mid:   rgba(63,185,80,0.22);
+  --cyan:        #39d353;
+  --yellow:      #d29922;
+  --yellow-dim:  rgba(210,153,34,0.12);
+  --orange:      #f0883e;
+  --orange-dim:  rgba(240,136,62,0.12);
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.12);
+  --red:         #f85149;
+  --red-dim:     rgba(248,81,73,0.12);
+  --purple:      #bc8cff;
+  --purple-dim:  rgba(188,140,255,0.12);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.header-title {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: -0.01em;
+}
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.header-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2);
+  color: var(--muted); letter-spacing: .04em;
+}
+
+/* ── SECTION NAV ── */
+.nav-pills {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem;
+}
+.nav-pill {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border2);
+  color: var(--muted); background: var(--bg2);
+  cursor: pointer; text-decoration: none;
+  transition: all .15s;
+  letter-spacing: .02em;
+}
+.nav-pill:hover { color: var(--text); border-color: var(--green); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 2rem; }
+.section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--muted); margin-bottom: .75rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.section-label .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.dot-green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.dot-blue   { background: var(--blue);  box-shadow: 0 0 6px var(--blue); }
+.dot-yellow { background: var(--yellow);}
+.dot-orange { background: var(--orange);}
+.dot-red    { background: var(--red);   }
+.dot-purple { background: var(--purple);}
+.dot-cyan   { background: #56d364; }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 750px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+
+/* ── COMMAND BLOCK ── */
+.cmd-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cmd-block-header {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 12px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  color: var(--green);
+  letter-spacing: .04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.cmd-block-header .icon { font-size: 12px; }
+.cmd-table { width: 100%; border-collapse: collapse; }
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table tr:hover { background: rgba(255,255,255,0.02); }
+.cmd-table td { padding: 5px 10px; vertical-align: top; }
+.cmd-table .c1 {
+  font-family: var(--mono); font-size: 11.5px; color: var(--blue);
+  white-space: nowrap; width: 1%; padding-right: 12px;
+  font-weight: 500;
+}
+.cmd-table .c2 { font-size: 12px; color: var(--muted); width: 35%; }
+.cmd-table .c3 {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--green); opacity: .85;
+}
+
+/* ── EXAMPLE BLOCK ── */
+.ex {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--bg3); border-radius: 5px;
+  padding: 3px 8px; display: inline-block;
+  color: #79c0ff; border: 1px solid var(--border);
+}
+
+/* ── WIDE TABLE (file paths / logs) ── */
+.ref-wrap {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1rem;
+}
+.ref-wrap-title {
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  padding: 7px 14px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em;
+}
+.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ref-table thead th {
+  background: var(--bg4); padding: 6px 12px; text-align: left;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  color: var(--muted); border-bottom: 1px solid var(--border2);
+  letter-spacing: .03em;
+}
+.ref-table tbody td { padding: 6px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.fp  { font-family: var(--mono); font-size: 11px; color: var(--blue); white-space: nowrap; }
+.fd  { font-size: 11.5px; color: var(--muted); }
+.deb { font-family: var(--mono); font-size: 11px; color: var(--orange); }
+.rh  { font-family: var(--mono); font-size: 11px; color: var(--red); }
+.lc  { font-size: 11.5px; color: var(--text); }
+.badge {
+  display: inline-block; font-family: var(--mono); font-size: 9.5px;
+  padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 500;
+}
+.badge-deb { background: var(--orange-dim); color: var(--orange); }
+.badge-rh  { background: var(--red-dim);    color: var(--red); }
+.badge-both{ background: var(--green-dim);  color: var(--green); }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem;
+  border-left: 3px solid; font-size: 12px;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.callout-tip  { background: var(--green-dim);  border-color: var(--green);  }
+.callout-warn { background: var(--orange-dim); border-color: var(--orange); }
+.callout-info { background: var(--blue-dim);   border-color: var(--blue);   }
+
+/* ── REGEX SECTION ── */
+.regex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 700px) { .regex-grid { grid-template-columns: 1fr; } }
+
+/* ── SCRIPT SECTION ── */
+.script-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1rem;
+}
+.script-title {
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  padding: 6px 12px; font-family: var(--mono); font-size: 10.5px;
+  font-weight: 600; color: var(--purple); letter-spacing: .04em;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.script-body { padding: 12px 14px; }
+.script-step {
+  display: flex; gap: 10px; padding: 7px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.script-step:last-child { border-bottom: none; }
+.step-num {
+  min-width: 20px; height: 20px; border-radius: 50%;
+  background: var(--purple-dim); color: var(--purple);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.step-title { font-size: 12.5px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.code-line {
+  font-family: var(--mono); font-size: 11.5px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 5px; padding: 7px 12px; margin-top: 6px;
+  color: var(--green); overflow-x: auto; white-space: pre;
+}
+.code-comment { color: var(--muted); }
+.code-shebang { color: var(--orange); }
+.code-var     { color: var(--blue); }
+.code-str     { color: #a5d6ff; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+/* ── INLINE CODE ── */
+code {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 3px; padding: 1px 5px; color: var(--blue);
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">linux<span>/</span>cutsheet</div>
+      <div class="header-sub">// lab reference — commands · flags · examples · regex · scripting</div>
+    </div>
+    <div class="header-meta">
+      <span class="tag">Ubuntu</span>
+      <span class="tag">CentOS</span>
+      <span class="tag">Bash</span>
+    </div>
+  </div>
+
+  <!-- ── NAV ── -->
+  <div class="nav-pills">
+    <a class="nav-pill" href="#files">Files</a>
+    <a class="nav-pill" href="#perms">Permissions</a>
+    <a class="nav-pill" href="#accounts">Accounts</a>
+    <a class="nav-pill" href="#acct-files">Acct Files</a>
+    <a class="nav-pill" href="#processes">Processes</a>
+    <a class="nav-pill" href="#networking">Networking</a>
+    <a class="nav-pill" href="#ssh-scp">SSH / SCP</a>
+    <a class="nav-pill" href="#logs">Log Locations</a>
+    <a class="nav-pill" href="#search">Search</a>
+    <a class="nav-pill" href="#text">Text Processing</a>
+    <a class="nav-pill" href="#io">I/O & Pipes</a>
+    <a class="nav-pill" href="#packages">Packages</a>
+    <a class="nav-pill" href="#disk">Disk</a>
+    <a class="nav-pill" href="#regex">Regex</a>
+    <a class="nav-pill" href="#scripting">Scripting</a>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       FILE MANAGEMENT
+  ══════════════════════════════ -->
+  <div class="section" id="files">
+    <div class="section-label"><span class="dot dot-green"></span>File Management</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📁</span>Navigation & Listing</div>
+        <table class="cmd-table">
+          <tr><td class="c1">pwd</td><td class="c2">Print current directory</td><td class="c3">pwd</td></tr>
+          <tr><td class="c1">ls</td><td class="c2">List directory</td><td class="c3">ls -la /etc/</td></tr>
+          <tr><td class="c1">ls -la</td><td class="c2">Long list, show hidden files</td><td class="c3">ls -la ~</td></tr>
+          <tr><td class="c1">ls -lh</td><td class="c2">Human-readable file sizes</td><td class="c3">ls -lh /var/log/</td></tr>
+          <tr><td class="c1">cd</td><td class="c2">Change directory</td><td class="c3">cd /etc/ &nbsp;|&nbsp; cd ~</td></tr>
+          <tr><td class="c1">cd ..</td><td class="c2">Go up one level</td><td class="c3">cd ../../tmp/</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📄</span>Create, Copy, Move, Delete</div>
+        <table class="cmd-table">
+          <tr><td class="c1">touch</td><td class="c2">Create file / update timestamp</td><td class="c3">touch notes.txt</td></tr>
+          <tr><td class="c1">mkdir</td><td class="c2">Create directory</td><td class="c3">mkdir -p /opt/tools/bin</td></tr>
+          <tr><td class="c1">cp</td><td class="c2">Copy file or dir</td><td class="c3">cp -r /src/ /dst/</td></tr>
+          <tr><td class="c1">mv</td><td class="c2">Move or rename</td><td class="c3">mv old.txt new.txt</td></tr>
+          <tr><td class="c1">rm</td><td class="c2">Delete file</td><td class="c3">rm -rf /tmp/junk/</td></tr>
+          <tr><td class="c1">rmdir</td><td class="c2">Remove empty directory</td><td class="c3">rmdir emptydir/</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👁</span>View File Contents</div>
+        <table class="cmd-table">
+          <tr><td class="c1">cat</td><td class="c2">Print entire file</td><td class="c3">cat /etc/passwd</td></tr>
+          <tr><td class="c1">less</td><td class="c2">Scrollable view (q to quit)</td><td class="c3">less /var/log/syslog</td></tr>
+          <tr><td class="c1">more</td><td class="c2">Paged view</td><td class="c3">more /etc/hosts</td></tr>
+          <tr><td class="c1">head</td><td class="c2">First 10 lines (or -n N)</td><td class="c3">head -n 20 file.txt</td></tr>
+          <tr><td class="c1">tail</td><td class="c2">Last 10 lines; -f to follow</td><td class="c3">tail -f /var/log/auth.log</td></tr>
+          <tr><td class="c1">file</td><td class="c2">Identify file type by magic bytes</td><td class="c3">file mystery.bin</td></tr>
+          <tr><td class="c1">stat</td><td class="c2">Full file metadata</td><td class="c3">stat /etc/passwd</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔗</span>Links & Attributes</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ln -s</td><td class="c2">Create symbolic (soft) link</td><td class="c3">ln -s /opt/tool /usr/bin/tool</td></tr>
+          <tr><td class="c1">ln</td><td class="c2">Create hard link</td><td class="c3">ln file.txt hardlink.txt</td></tr>
+          <tr><td class="c1">chattr +i</td><td class="c2">Make file immutable (even root)</td><td class="c3">chattr +i /etc/hosts</td></tr>
+          <tr><td class="c1">chattr +a</td><td class="c2">Append-only (can't overwrite)</td><td class="c3">chattr +a logfile.log</td></tr>
+          <tr><td class="c1">lsattr</td><td class="c2">List file attributes</td><td class="c3">lsattr /etc/passwd</td></tr>
+          <tr><td class="c1">getfacl</td><td class="c2">View ACL of file/folder</td><td class="c3">getfacl /var/www/</td></tr>
+          <tr><td class="c1">setfacl -m</td><td class="c2">Add ACL entry</td><td class="c3">setfacl -m u:bob:r file</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       PERMISSIONS
+  ══════════════════════════════ -->
+  <div class="section" id="perms">
+    <div class="section-label"><span class="dot dot-yellow"></span>Permissions & Ownership</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔒</span>chmod</div>
+        <table class="cmd-table">
+          <tr><td class="c1">chmod 755</td><td class="c2">rwx r-x r-x (owner full, others read/exec)</td><td class="c3">chmod 755 script.sh</td></tr>
+          <tr><td class="c1">chmod 644</td><td class="c2">rw- r-- r-- (typical file)</td><td class="c3">chmod 644 config.conf</td></tr>
+          <tr><td class="c1">chmod 600</td><td class="c2">rw- --- --- (private key perms)</td><td class="c3">chmod 600 id_rsa</td></tr>
+          <tr><td class="c1">chmod 777</td><td class="c2">rwx rwx rwx (all perms — avoid)</td><td class="c3">chmod 777 /tmp/share/</td></tr>
+          <tr><td class="c1">chmod u+x</td><td class="c2">Add execute for owner</td><td class="c3">chmod u+x myscript.sh</td></tr>
+          <tr><td class="c1">chmod +x</td><td class="c2">Add execute for all</td><td class="c3">chmod +x run.sh</td></tr>
+          <tr><td class="c1">chmod -R</td><td class="c2">Apply recursively to directory</td><td class="c3">chmod -R 755 /var/www/</td></tr>
+          <tr><td class="c1">chmod 4755</td><td class="c2">SUID + rwx r-x r-x</td><td class="c3">chmod 4755 binary</td></tr>
+          <tr><td class="c1">chmod 1777</td><td class="c2">Sticky bit + rwx for all</td><td class="c3">chmod 1777 /tmp/</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👤</span>Ownership & Special</div>
+        <table class="cmd-table">
+          <tr><td class="c1">chown user</td><td class="c2">Change file owner</td><td class="c3">chown alice file.txt</td></tr>
+          <tr><td class="c1">chown user:grp</td><td class="c2">Change owner and group</td><td class="c3">chown alice:dev file.txt</td></tr>
+          <tr><td class="c1">chown -R</td><td class="c2">Recursive ownership change</td><td class="c3">chown -R www-data /var/www/</td></tr>
+          <tr><td class="c1">umask</td><td class="c2">View/set default permission mask</td><td class="c3">umask 022</td></tr>
+          <tr><td class="c1">newgrp</td><td class="c2">Change effective group ID</td><td class="c3">newgrp developers</td></tr>
+          <tr><td class="c1">su</td><td class="c2">Switch user (needs target pw)</td><td class="c3">su - root</td></tr>
+          <tr><td class="c1">sudo</td><td class="c2">Run cmd as another user (needs own pw)</td><td class="c3">sudo cat /etc/shadow</td></tr>
+          <tr><td class="c1">sudo -l</td><td class="c2">List allowed sudo commands</td><td class="c3">sudo -l</td></tr>
+          <tr><td class="c1">sudo -u</td><td class="c2">Run as specific user</td><td class="c3">sudo -u bob whoami</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ</span>
+      <div><strong>Octal quick ref:</strong> r=4, w=2, x=1 — add them per category (user/group/other). Example: <code>chmod 764</code> = user:rwx (7) group:rw (6) other:r (4). Special bits prepend a 4th digit: SUID=4, SGID=2, Sticky=1.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       ACCOUNT ADMINISTRATION
+  ══════════════════════════════ -->
+  <div class="section" id="accounts">
+    <div class="section-label"><span class="dot dot-blue"></span>Account Administration Commands</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👤</span>User Management</div>
+        <table class="cmd-table">
+          <tr><td class="c1">useradd</td><td class="c2">Add user (minimal prompts)</td><td class="c3">useradd -m -s /bin/bash alice</td></tr>
+          <tr><td class="c1">adduser</td><td class="c2">Add user (interactive prompts)</td><td class="c3">adduser bob</td></tr>
+          <tr><td class="c1">usermod -aG</td><td class="c2">Append user to group</td><td class="c3">usermod -aG sudo alice</td></tr>
+          <tr><td class="c1">usermod -s</td><td class="c2">Change login shell</td><td class="c3">usermod -s /bin/zsh alice</td></tr>
+          <tr><td class="c1">usermod -L</td><td class="c2">Lock a user account</td><td class="c3">usermod -L bob</td></tr>
+          <tr><td class="c1">userdel</td><td class="c2">Delete user</td><td class="c3">userdel -r bob</td></tr>
+          <tr><td class="c1">passwd</td><td class="c2">Change user password</td><td class="c3">passwd alice</td></tr>
+          <tr><td class="c1">chage -l</td><td class="c2">List password age settings</td><td class="c3">chage -l alice</td></tr>
+          <tr><td class="c1">chage -E</td><td class="c2">Set account expiry date</td><td class="c3">chage -E 2025-12-31 alice</td></tr>
+          <tr><td class="c1">whoami</td><td class="c2">Print current username</td><td class="c3">whoami</td></tr>
+          <tr><td class="c1">id</td><td class="c2">Print UID, GID, groups</td><td class="c3">id alice</td></tr>
+          <tr><td class="c1">w / who</td><td class="c2">Who is logged on now</td><td class="c3">w</td></tr>
+          <tr><td class="c1">last</td><td class="c2">Successful login history</td><td class="c3">last -n 20</td></tr>
+          <tr><td class="c1">lastb</td><td class="c2">Failed login attempts</td><td class="c3">sudo lastb</td></tr>
+          <tr><td class="c1">lastlog</td><td class="c2">Most recent login per user</td><td class="c3">lastlog -u alice</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👥</span>Group Management & Env</div>
+        <table class="cmd-table">
+          <tr><td class="c1">groupadd</td><td class="c2">Create a group</td><td class="c3">groupadd developers</td></tr>
+          <tr><td class="c1">groupmod</td><td class="c2">Modify group config</td><td class="c3">groupmod -n newname old</td></tr>
+          <tr><td class="c1">groupdel</td><td class="c2">Delete a group</td><td class="c3">groupdel oldgroup</td></tr>
+          <tr><td class="c1">gpasswd -a</td><td class="c2">Add user to group</td><td class="c3">gpasswd -a alice developers</td></tr>
+          <tr><td class="c1">gpasswd -d</td><td class="c2">Remove user from group</td><td class="c3">gpasswd -d alice developers</td></tr>
+          <tr><td class="c1">groups</td><td class="c2">List groups a user belongs to</td><td class="c3">groups alice</td></tr>
+          <tr><td class="c1">visudo</td><td class="c2">Safely edit /etc/sudoers</td><td class="c3">sudo visudo</td></tr>
+          <tr><td class="c1">env</td><td class="c2">Print all env variables</td><td class="c3">env</td></tr>
+          <tr><td class="c1">printenv</td><td class="c2">Print specific env var</td><td class="c3">printenv PATH</td></tr>
+          <tr><td class="c1">export</td><td class="c2">Make var available to child shells</td><td class="c3">export MYVAR="hello"</td></tr>
+          <tr><td class="c1">echo $VAR</td><td class="c2">Print a variable's value</td><td class="c3">echo $HOME</td></tr>
+          <tr><td class="c1">alias</td><td class="c2">Create command shorthand</td><td class="c3">alias ll='ls -la'</td></tr>
+          <tr><td class="c1">which</td><td class="c2">Full path of an executable</td><td class="c3">which python3</td></tr>
+          <tr><td class="c1">chsh</td><td class="c2">Change your login shell</td><td class="c3">chsh -s /bin/zsh</td></tr>
+          <tr><td class="c1">history</td><td class="c2">View command history</td><td class="c3">history | grep ssh</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       ACCOUNT ADMINISTRATION FILES
+  ══════════════════════════════ -->
+  <div class="section" id="acct-files">
+    <div class="section-label"><span class="dot dot-yellow"></span>Important Account &amp; Config File Paths</div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color: var(--yellow);">📂 Account Administration Files</div>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>File Path</th>
+            <th>Format / Key Fields</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fp">/etc/passwd</td>
+            <td class="fd"><code>user:x:UID:GID:comment:home:shell</code></td>
+            <td class="lc">User account info. Readable by all. The <code>x</code> means password is in shadow.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/shadow</td>
+            <td class="fd"><code>user:hash:lastchg:min:max:warn:inactive:expire</code></td>
+            <td class="lc">Hashed passwords + aging policy. Root-readable only. Use <code>lastb / chage</code> to inspect.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/group</td>
+            <td class="fd"><code>groupname:x:GID:members</code></td>
+            <td class="lc">Group membership. Add users with <code>usermod -aG</code> or <code>gpasswd -a</code>.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/gshadow</td>
+            <td class="fd"><code>group:pw:admins:members</code></td>
+            <td class="lc">Secure group account info. Defines group admins. Root-only.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/sudoers</td>
+            <td class="fd"><code>user HOST=(runas) cmds</code></td>
+            <td class="lc">Sudo permissions. <strong>Always edit with <code>visudo</code></strong> to prevent syntax errors. Use <code>%group</code> to assign sudo to a group.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/sudoers.d/</td>
+            <td class="fd">Drop-in config files</td>
+            <td class="lc">Place additional sudoers rules here instead of editing the main file.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/shells</td>
+            <td class="fd">One shell path per line</td>
+            <td class="lc">Lists valid login shells. <code>chsh</code> only accepts shells listed here.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/security/</td>
+            <td class="fd">Multiple config files</td>
+            <td class="lc">PAM security restrictions — login limits, time-based access, etc.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/hosts</td>
+            <td class="fd"><code>IP  hostname  alias</code></td>
+            <td class="lc">Local DNS resolution. Checked before DNS queries.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/resolv.conf</td>
+            <td class="fd"><code>nameserver IP</code></td>
+            <td class="lc">DNS server addresses the system queries.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/hostname</td>
+            <td class="fd">Plain text hostname</td>
+            <td class="lc">Sets the machine hostname. Apply with <code>hostnamectl set-hostname</code>.</td>
+          </tr>
+          <tr>
+            <td class="fp">/home/user/.ssh/authorized_keys</td>
+            <td class="fd">One public key per line</td>
+            <td class="lc">SSH public keys allowed to log in as this user. Must be <code>chmod 600</code>.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/cron.allow</td>
+            <td class="fd">One username per line</td>
+            <td class="lc">Whitelist of users allowed to use cron.</td>
+          </tr>
+          <tr>
+            <td class="fp">/etc/cron.deny</td>
+            <td class="fd">One username per line</td>
+            <td class="lc">Blacklist of users blocked from cron.</td>
+          </tr>
+          <tr>
+            <td class="fp">/var/run/utmp</td>
+            <td class="fd">Binary — use <code>w</code> or <code>who</code></td>
+            <td class="lc">Currently logged-on users.</td>
+          </tr>
+          <tr>
+            <td class="fp">/var/log/wtmp</td>
+            <td class="fd">Binary — use <code>last</code></td>
+            <td class="lc">Successful login/logout history.</td>
+          </tr>
+          <tr>
+            <td class="fp">/var/log/btmp</td>
+            <td class="fd">Binary — use <code>lastb</code></td>
+            <td class="lc">All failed (bad) login attempts.</td>
+          </tr>
+          <tr>
+            <td class="fp">/var/log/lastlog</td>
+            <td class="fd">Binary — use <code>lastlog</code></td>
+            <td class="lc">Most recent login timestamp per user.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       PROCESSES
+  ══════════════════════════════ -->
+  <div class="section" id="processes">
+    <div class="section-label"><span class="dot dot-orange"></span>Process Management</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">⚙</span>View Processes</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ps aux</td><td class="c2">All processes, all users</td><td class="c3">ps aux | grep nginx</td></tr>
+          <tr><td class="c1">ps -ef</td><td class="c2">Full format, all processes</td><td class="c3">ps -ef | grep sshd</td></tr>
+          <tr><td class="c1">ps -u user</td><td class="c2">Processes owned by user</td><td class="c3">ps -u alice</td></tr>
+          <tr><td class="c1">ps --ppid</td><td class="c2">Filter by parent PID</td><td class="c3">ps --ppid 1234</td></tr>
+          <tr><td class="c1">top</td><td class="c2">Dynamic real-time process view</td><td class="c3">top</td></tr>
+          <tr><td class="c1">pstree</td><td class="c2">Process tree (parent→child)</td><td class="c3">pstree -p</td></tr>
+          <tr><td class="c1">jobs</td><td class="c2">Background job status</td><td class="c3">jobs</td></tr>
+          <tr><td class="c1">lsof</td><td class="c2">List open files by process</td><td class="c3">lsof -u alice</td></tr>
+          <tr><td class="c1">lsof -i</td><td class="c2">Processes with network connections</td><td class="c3">lsof -i :80</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🗡</span>Control Processes</div>
+        <table class="cmd-table">
+          <tr><td class="c1">kill -9</td><td class="c2">Force kill by PID</td><td class="c3">kill -9 1234</td></tr>
+          <tr><td class="c1">kill -15</td><td class="c2">Graceful terminate (default)</td><td class="c3">kill -15 1234</td></tr>
+          <tr><td class="c1">killall</td><td class="c2">Kill all by process name</td><td class="c3">killall firefox</td></tr>
+          <tr><td class="c1">pkill</td><td class="c2">Kill by name (supports patterns)</td><td class="c3">pkill -u alice</td></tr>
+          <tr><td class="c1">cmd &amp;</td><td class="c2">Run in background</td><td class="c3">./scan.sh &amp;</td></tr>
+          <tr><td class="c1">fg</td><td class="c2">Bring job to foreground</td><td class="c3">fg %1</td></tr>
+          <tr><td class="c1">bg</td><td class="c2">Send suspended job to background</td><td class="c3">bg %1</td></tr>
+          <tr><td class="c1">Ctrl+Z</td><td class="c2">Suspend current process</td><td class="c3">—</td></tr>
+          <tr><td class="c1">Ctrl+C</td><td class="c2">Interrupt / stop process</td><td class="c3">—</td></tr>
+        </table>
+      </div>
+
+    </div>
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <div><strong>Suspicious process check:</strong> <code>sudo ss -tupl</code> (open ports + owning process) · <code>sudo ls -al /proc/&lt;PID&gt;</code> (dump process info) · Hash the binary with <code>md5sum /proc/&lt;PID&gt;/exe</code> and compare to known good.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       NETWORKING
+  ══════════════════════════════ -->
+  <div class="section" id="networking">
+    <div class="section-label"><span class="dot dot-blue"></span>Networking Commands</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🌐</span>Interface & Routes</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ip a</td><td class="c2">List all interfaces + IPs</td><td class="c3">ip a show eth0</td></tr>
+          <tr><td class="c1">ip link</td><td class="c2">Manage network interfaces</td><td class="c3">ip link set eth0 up</td></tr>
+          <tr><td class="c1">ip route</td><td class="c2">Show / modify routing table</td><td class="c3">ip route show</td></tr>
+          <tr><td class="c1">ip neigh</td><td class="c2">Show ARP cache</td><td class="c3">ip neigh show</td></tr>
+          <tr><td class="c1">ifconfig</td><td class="c2">Interface config (older)</td><td class="c3">ifconfig eth0</td></tr>
+          <tr><td class="c1">route -n</td><td class="c2">Routing table (no DNS lookup)</td><td class="c3">route -n</td></tr>
+          <tr><td class="c1">arp -a</td><td class="c2">ARP cache</td><td class="c3">arp -a</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📡</span>Connectivity & Sockets</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ping</td><td class="c2">ICMP reachability test</td><td class="c3">ping -c 4 8.8.8.8</td></tr>
+          <tr><td class="c1">traceroute</td><td class="c2">Trace hops to host</td><td class="c3">traceroute google.com</td></tr>
+          <tr><td class="c1">ss -tupl</td><td class="c2">Listening ports + processes</td><td class="c3">sudo ss -tupl</td></tr>
+          <tr><td class="c1">ss -anp</td><td class="c2">All sockets, no name resolution</td><td class="c3">sudo ss -anp</td></tr>
+          <tr><td class="c1">netstat -pant</td><td class="c2">TCP connections + PIDs (old)</td><td class="c3">sudo netstat -pant</td></tr>
+          <tr><td class="c1">netstat -r</td><td class="c2">Routing info</td><td class="c3">netstat -r</td></tr>
+          <tr><td class="c1">wget</td><td class="c2">Download a file from URL</td><td class="c3">wget -O out.zip http://url</td></tr>
+          <tr><td class="c1">curl</td><td class="c2">Transfer data to/from server</td><td class="c3">curl -O http://url/file</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       SSH & SCP
+  ══════════════════════════════ -->
+  <div class="section" id="ssh-scp">
+    <div class="section-label"><span class="dot dot-cyan"></span>SSH &amp; SCP — Remote Access</div>
+
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔐</span>SSH — Secure Shell</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ssh user@host</td><td class="c2">Basic login</td><td class="c3">ssh alice@192.168.1.10</td></tr>
+          <tr><td class="c1">ssh -p</td><td class="c2">Specify port</td><td class="c3">ssh -p 2222 alice@host</td></tr>
+          <tr><td class="c1">ssh -i</td><td class="c2">Use private key instead of password</td><td class="c3">ssh -i ~/.ssh/id_rsa alice@host</td></tr>
+          <tr><td class="c1">ssh -i key cmd</td><td class="c2">Run remote command (no shell)</td><td class="c3">ssh -i key alice@host 'ls /tmp'</td></tr>
+          <tr><td class="c1">ssh -L</td><td class="c2">Local port forwarding</td><td class="c3">ssh -L 8080:localhost:80 alice@host</td></tr>
+          <tr><td class="c1">ssh -D</td><td class="c2">Dynamic (SOCKS) proxy</td><td class="c3">ssh -D 1080 alice@host</td></tr>
+          <tr><td class="c1">ssh-keygen</td><td class="c2">Generate key pair</td><td class="c3">ssh-keygen -t rsa -b 4096</td></tr>
+          <tr><td class="c1">ssh-copy-id</td><td class="c2">Push pub key to remote host</td><td class="c3">ssh-copy-id alice@host</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📦</span>SCP — Secure Copy</div>
+        <table class="cmd-table">
+          <tr><td class="c1">scp src user@host:dst</td><td class="c2">Upload a file</td><td class="c3">scp file.txt alice@host:/tmp/</td></tr>
+          <tr><td class="c1">scp user@host:src dst</td><td class="c2">Download a file</td><td class="c3">scp alice@host:/etc/hosts ./</td></tr>
+          <tr><td class="c1">scp -r</td><td class="c2">Copy entire directory</td><td class="c3">scp -r /data/ alice@host:~/</td></tr>
+          <tr><td class="c1">scp -i key src dst</td><td class="c2">Use private key auth</td><td class="c3">scp -i ~/.ssh/id_rsa file.txt alice@host:/tmp/</td></tr>
+          <tr><td class="c1">scp -P</td><td class="c2">Specify port (capital P)</td><td class="c3">scp -P 2222 file.txt alice@host:~/</td></tr>
+          <tr><td class="c1">scp -i + -r</td><td class="c2">Key + recursive combined</td><td class="c3">scp -i id_rsa -r /tools/ alice@host:~/</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Key-based auth flow:</strong><br>
+        1. Generate keys: <code>ssh-keygen -t rsa -b 4096 -f ~/.ssh/mykey</code><br>
+        2. Protect private key: <code>chmod 600 ~/.ssh/mykey</code><br>
+        3. Push public key to target: <code>ssh-copy-id -i ~/.ssh/mykey.pub alice@host</code>  — or manually append to <code>~/.ssh/authorized_keys</code><br>
+        4. Connect: <code>ssh -i ~/.ssh/mykey alice@host</code>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <div>Private key file must be <code>chmod 600</code> or SSH will refuse to use it. Public key on the remote server goes in <code>~/.ssh/authorized_keys</code> and should be <code>chmod 600</code> as well.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       LOG LOCATIONS
+  ══════════════════════════════ -->
+  <div class="section" id="logs">
+    <div class="section-label"><span class="dot dot-orange"></span>Important Log Locations</div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color: var(--orange);">📋 System Log Files — Debian vs RedHat</div>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>Debian Path <span class="badge badge-deb">DEB</span></th>
+            <th>RedHat Path <span class="badge badge-rh">RH</span></th>
+            <th>Contains</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="deb">/var/log/syslog</td>
+            <td class="rh">/var/log/messages</td>
+            <td class="lc">All global system activity — the main catch-all log</td>
+          </tr>
+          <tr>
+            <td class="deb">/var/log/auth.log</td>
+            <td class="rh">/var/log/secure</td>
+            <td class="lc">Authentication events — logins, sudo use, SSH, PAM</td>
+          </tr>
+          <tr>
+            <td class="deb">/var/log/kern.log</td>
+            <td class="rh">/var/log/kern.log</td>
+            <td class="lc">Kernel events, driver errors, hardware warnings <span class="badge badge-both">BOTH</span></td>
+          </tr>
+          <tr>
+            <td class="deb">/var/log/cron</td>
+            <td class="rh">/var/log/cron</td>
+            <td class="lc">Cron job execution and scheduling events <span class="badge badge-both">BOTH</span></td>
+          </tr>
+          <tr>
+            <td class="deb">/var/log/dpkg.log</td>
+            <td class="rh">/var/log/yum.log</td>
+            <td class="lc">Package install / remove history</td>
+          </tr>
+          <tr>
+            <td class="deb">/var/log/apache2/</td>
+            <td class="rh">/var/log/httpd/</td>
+            <td class="lc">Apache web server access and error logs</td>
+          </tr>
+          <tr>
+            <td class="deb" colspan="2" style="text-align:center;">/var/log/</td>
+            <td class="lc">Root directory for all logs on all distros <span class="badge badge-both">BOTH</span></td>
+          </tr>
+          <tr>
+            <td class="deb" colspan="2" style="text-align:center;">/var/log/faillog</td>
+            <td class="lc">Failed login tracking (binary — view with <code>faillog</code>) <span class="badge badge-both">BOTH</span></td>
+          </tr>
+          <tr>
+            <td class="deb" colspan="2" style="text-align:center;">/var/log/lastlog</td>
+            <td class="lc">Most recent login per user (binary — use <code>lastlog</code>) <span class="badge badge-both">BOTH</span></td>
+          </tr>
+          <tr>
+            <td class="deb" colspan="2" style="text-align:center;">journalctl (systemd)</td>
+            <td class="lc">Query systemd journal: <code>journalctl -u sshd</code> · <code>journalctl --since "1 hour ago"</code> <span class="badge badge-both">BOTH</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Live log monitoring:</strong> <code>tail -f /var/log/auth.log</code> — follow in real-time<br>
+        <strong>Filter logs fast:</strong> <code>grep "Failed" /var/log/auth.log</code> &nbsp;·&nbsp; <code>grep "sudo" /var/log/secure</code><br>
+        <strong>Rsyslog</strong> is the daemon routing logs to the right file. Logs rotate once a file hits capacity.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       SEARCHING
+  ══════════════════════════════ -->
+  <div class="section" id="search">
+    <div class="section-label"><span class="dot dot-green"></span>Searching</div>
+    <div class="cmd-block">
+      <div class="cmd-block-header"><span class="icon">🔍</span>find, locate, which, whereis</div>
+      <table class="cmd-table">
+        <tr><td class="c1">find / -name</td><td class="c2">Search by filename (case-sensitive)</td><td class="c3">find / -name "passwd"</td></tr>
+        <tr><td class="c1">find / -iname</td><td class="c2">Case-insensitive name search</td><td class="c3">find /home -iname "*.sh"</td></tr>
+        <tr><td class="c1">find / -user</td><td class="c2">Files owned by user</td><td class="c3">find / -user root</td></tr>
+        <tr><td class="c1">find / -perm</td><td class="c2">Files with specific permissions</td><td class="c3">find / -perm /4000</td></tr>
+        <tr><td class="c1">find / -perm /4000</td><td class="c2">Find ALL SUID files (common CTF/audit)</td><td class="c3">find / -perm /4000 2>/dev/null</td></tr>
+        <tr><td class="c1">find / -type f</td><td class="c2">Files only</td><td class="c3">find /tmp -type f</td></tr>
+        <tr><td class="c1">find / -type d</td><td class="c2">Directories only</td><td class="c3">find / -type d -name "log"</td></tr>
+        <tr><td class="c1">find / -size +10M</td><td class="c2">Files larger than 10 MB</td><td class="c3">find / -size +100M 2>/dev/null</td></tr>
+        <tr><td class="c1">find / -mtime -1</td><td class="c2">Modified in last 1 day</td><td class="c3">find /etc -mtime -7</td></tr>
+        <tr><td class="c1">which</td><td class="c2">Location of executable in $PATH</td><td class="c3">which python3</td></tr>
+        <tr><td class="c1">whereis</td><td class="c2">Binary, source, and man page</td><td class="c3">whereis ssh</td></tr>
+        <tr><td class="c1">locate</td><td class="c2">Fast DB index search (run updatedb first)</td><td class="c3">locate authorized_keys</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       TEXT PROCESSING
+  ══════════════════════════════ -->
+  <div class="section" id="text">
+    <div class="section-label"><span class="dot dot-purple"></span>Text Processing</div>
+    <div class="cmd-block">
+      <div class="cmd-block-header"><span class="icon">📝</span>grep, cut, sort, uniq, wc, tr</div>
+      <table class="cmd-table">
+        <tr><td class="c1">grep "pat" file</td><td class="c2">Lines matching pattern</td><td class="c3">grep "Failed" /var/log/auth.log</td></tr>
+        <tr><td class="c1">grep -v</td><td class="c2">Invert — lines NOT matching</td><td class="c3">grep -v "^#" /etc/ssh/sshd_config</td></tr>
+        <tr><td class="c1">grep -i</td><td class="c2">Case-insensitive match</td><td class="c3">grep -i "error" syslog</td></tr>
+        <tr><td class="c1">grep -r</td><td class="c2">Recursive search in directory</td><td class="c3">grep -r "password" /etc/</td></tr>
+        <tr><td class="c1">grep -n</td><td class="c2">Show line numbers</td><td class="c3">grep -n "root" /etc/passwd</td></tr>
+        <tr><td class="c1">grep -E</td><td class="c2">Extended regex</td><td class="c3">grep -E "^(root|alice)" /etc/passwd</td></tr>
+        <tr><td class="c1">grep -c</td><td class="c2">Count matching lines</td><td class="c3">grep -c "Failed" auth.log</td></tr>
+        <tr><td class="c1">cut -d: -f1</td><td class="c2">Cut field 1 with : delimiter</td><td class="c3">cut -d: -f1 /etc/passwd</td></tr>
+        <tr><td class="c1">cut -d: -f1,3</td><td class="c2">Cut fields 1 and 3</td><td class="c3">cut -d: -f1,3 /etc/passwd</td></tr>
+        <tr><td class="c1">sort</td><td class="c2">Sort lines alphabetically</td><td class="c3">sort names.txt</td></tr>
+        <tr><td class="c1">sort -n</td><td class="c2">Sort numerically</td><td class="c3">sort -n numbers.txt</td></tr>
+        <tr><td class="c1">sort -r</td><td class="c2">Reverse sort</td><td class="c3">sort -r file.txt</td></tr>
+        <tr><td class="c1">uniq</td><td class="c2">Remove adjacent duplicates</td><td class="c3">sort users.txt | uniq</td></tr>
+        <tr><td class="c1">uniq -c</td><td class="c2">Count occurrences</td><td class="c3">sort file | uniq -c | sort -rn</td></tr>
+        <tr><td class="c1">wc -l</td><td class="c2">Count lines</td><td class="c3">wc -l /etc/passwd</td></tr>
+        <tr><td class="c1">wc -w</td><td class="c2">Count words</td><td class="c3">cat file | wc -w</td></tr>
+        <tr><td class="c1">tr 'a-z' 'A-Z'</td><td class="c2">Translate chars (lowercase→upper)</td><td class="c3">echo "hello" | tr 'a-z' 'A-Z'</td></tr>
+        <tr><td class="c1">tr -d</td><td class="c2">Delete specified characters</td><td class="c3">echo "h3ll0" | tr -d '0-9'</td></tr>
+        <tr><td class="c1">echo</td><td class="c2">Print text / write to file</td><td class="c3">echo "text" >> file.txt</td></tr>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Power combo:</strong> Extract usernames with UID &gt; 999 (regular users): <code>awk -F: '$3 > 999 {print $1}' /etc/passwd</code> &nbsp;|&nbsp; Count failed logins per IP: <code>grep "Failed" auth.log | awk '{print $11}' | sort | uniq -c | sort -rn</code></div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       I/O & PIPES
+  ══════════════════════════════ -->
+  <div class="section" id="io">
+    <div class="section-label"><span class="dot dot-yellow"></span>I/O Redirection &amp; Pipes</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">↔</span>Redirection</div>
+        <table class="cmd-table">
+          <tr><td class="c1">&gt;</td><td class="c2">STDOUT to file (overwrite)</td><td class="c3">echo "hi" > file.txt</td></tr>
+          <tr><td class="c1">&gt;&gt;</td><td class="c2">STDOUT to file (append)</td><td class="c3">echo "hi" >> file.txt</td></tr>
+          <tr><td class="c1">&lt;</td><td class="c2">STDIN from file</td><td class="c3">sort < names.txt</td></tr>
+          <tr><td class="c1">2&gt;</td><td class="c2">STDERR to file</td><td class="c3">cmd 2> errors.txt</td></tr>
+          <tr><td class="c1">2&gt;&amp;1</td><td class="c2">STDERR to same place as STDOUT</td><td class="c3">cmd > out.txt 2>&1</td></tr>
+          <tr><td class="c1">2&gt;/dev/null</td><td class="c2">Silently discard errors</td><td class="c3">find / -name x 2>/dev/null</td></tr>
+          <tr><td class="c1">&amp;&gt;</td><td class="c2">Both STDOUT and STDERR to file</td><td class="c3">cmd &> all.txt</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">|</span>Pipes &amp; Special Chars</div>
+        <table class="cmd-table">
+          <tr><td class="c1">|</td><td class="c2">Pipe STDOUT to next command</td><td class="c3">ps aux | grep nginx</td></tr>
+          <tr><td class="c1">|&amp;</td><td class="c2">Pipe STDOUT + STDERR</td><td class="c3">cmd |& grep error</td></tr>
+          <tr><td class="c1">` `</td><td class="c2">Command substitution</td><td class="c3">echo `date`</td></tr>
+          <tr><td class="c1">$()</td><td class="c2">Command substitution (preferred)</td><td class="c3">echo $(date)</td></tr>
+          <tr><td class="c1">" "</td><td class="c2">Literal string, $ still works</td><td class="c3">echo "User: $USER"</td></tr>
+          <tr><td class="c1">' '</td><td class="c2">Fully literal, no substitution</td><td class="c3">echo 'User: $USER'</td></tr>
+          <tr><td class="c1">\</td><td class="c2">Escape next character</td><td class="c3">echo "line1\nline2"</td></tr>
+          <tr><td class="c1">;</td><td class="c2">Run commands sequentially</td><td class="c3">cmd1; cmd2; cmd3</td></tr>
+          <tr><td class="c1">&amp;&amp;</td><td class="c2">Run cmd2 only if cmd1 succeeds</td><td class="c3">mkdir dir && cd dir</td></tr>
+          <tr><td class="c1">||</td><td class="c2">Run cmd2 only if cmd1 fails</td><td class="c3">ping host || echo "down"</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       PACKAGES
+  ══════════════════════════════ -->
+  <div class="section" id="packages">
+    <div class="section-label"><span class="dot dot-blue"></span>Package Management</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📦</span>Debian / Ubuntu — APT &amp; dpkg</div>
+        <table class="cmd-table">
+          <tr><td class="c1">apt update</td><td class="c2">Refresh package index</td><td class="c3">sudo apt update</td></tr>
+          <tr><td class="c1">apt install</td><td class="c2">Install a package</td><td class="c3">sudo apt install nmap</td></tr>
+          <tr><td class="c1">apt remove</td><td class="c2">Remove package (keep config)</td><td class="c3">sudo apt remove nmap</td></tr>
+          <tr><td class="c1">apt purge</td><td class="c2">Remove package + config files</td><td class="c3">sudo apt purge nmap</td></tr>
+          <tr><td class="c1">apt list</td><td class="c2">List packages</td><td class="c3">apt list --installed</td></tr>
+          <tr><td class="c1">dpkg -l</td><td class="c2">List all installed packages</td><td class="c3">dpkg -l | grep python</td></tr>
+          <tr><td class="c1">dpkg -S file</td><td class="c2">Which package owns a file</td><td class="c3">dpkg -S /usr/bin/ssh</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📦</span>RedHat / CentOS — RPM &amp; Yum</div>
+        <table class="cmd-table">
+          <tr><td class="c1">yum install</td><td class="c2">Install a package</td><td class="c3">sudo yum install nmap</td></tr>
+          <tr><td class="c1">yum remove</td><td class="c2">Remove a package</td><td class="c3">sudo yum remove nmap</td></tr>
+          <tr><td class="c1">yum update</td><td class="c2">Update all packages</td><td class="c3">sudo yum update</td></tr>
+          <tr><td class="c1">yum list</td><td class="c2">List packages</td><td class="c3">yum list installed</td></tr>
+          <tr><td class="c1">rpm -qa</td><td class="c2">Query all installed packages</td><td class="c3">rpm -qa | grep ssh</td></tr>
+          <tr><td class="c1">rpm -qi pkg</td><td class="c2">Package info / details</td><td class="c3">rpm -qi openssh</td></tr>
+          <tr><td class="c1">rpm -qf file</td><td class="c2">Which package owns a file</td><td class="c3">rpm -qf /usr/bin/ssh</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       DISK
+  ══════════════════════════════ -->
+  <div class="section" id="disk">
+    <div class="section-label"><span class="dot dot-orange"></span>Disk &amp; File System</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">💾</span>Disk Usage &amp; Layout</div>
+        <table class="cmd-table">
+          <tr><td class="c1">df -h</td><td class="c2">Disk space per filesystem</td><td class="c3">df -h</td></tr>
+          <tr><td class="c1">du -sh</td><td class="c2">Directory size (summarized)</td><td class="c3">du -sh /var/log/</td></tr>
+          <tr><td class="c1">du -h --max-depth</td><td class="c2">Size per subdir</td><td class="c3">du -h --max-depth=1 /</td></tr>
+          <tr><td class="c1">lsblk</td><td class="c2">Block devices tree</td><td class="c3">lsblk</td></tr>
+          <tr><td class="c1">fdisk -l</td><td class="c2">Partition table info</td><td class="c3">sudo fdisk -l</td></tr>
+          <tr><td class="c1">mount</td><td class="c2">List or mount devices</td><td class="c3">mount /dev/sdb1 /mnt/</td></tr>
+          <tr><td class="c1">umount</td><td class="c2">Unmount a device</td><td class="c3">umount /mnt/</td></tr>
+          <tr><td class="c1">showmount -e</td><td class="c2">Query NFS shares on host</td><td class="c3">showmount -e 192.168.1.5</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🗂</span>Crontab</div>
+        <table class="cmd-table">
+          <tr><td class="c1">crontab -l</td><td class="c2">List current user's cron jobs</td><td class="c3">crontab -l</td></tr>
+          <tr><td class="c1">crontab -e</td><td class="c2">Edit current user's crontab</td><td class="c3">crontab -e</td></tr>
+          <tr><td class="c1">crontab -r</td><td class="c2">Remove crontab</td><td class="c3">crontab -r</td></tr>
+          <tr><td class="c1">crontab -u</td><td class="c2">Manage another user's crontab</td><td class="c3">sudo crontab -u alice -l</td></tr>
+        </table>
+        <div style="padding: 8px 10px; font-family: var(--mono); font-size: 11px; color: var(--muted); border-top: 1px solid var(--border);">
+          Format: &nbsp;<span style="color:var(--green)">MIN  HOUR  DOM  MON  DOW  CMD</span><br>
+          <span style="color:var(--blue)">*/5  *     *    *    *    /script.sh</span> &nbsp;← every 5 min<br>
+          <span style="color:var(--blue)">0    2     *    *    1    backup.sh</span> &nbsp;&nbsp;← 2AM Mondays
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       REGEX
+  ══════════════════════════════ -->
+  <div class="section" id="regex">
+    <div class="section-label"><span class="dot dot-red"></span>Regular Expressions (REGEX)</div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ</span>
+      <div>Used with <code>grep</code>, <code>grep -E</code> (extended), <code>sed</code>, and <code>awk</code>. All examples below use <code>grep</code> against a file called <code>data.txt</code>.</div>
+    </div>
+
+    <div class="regex-grid">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🎯</span>Anchors &amp; Wildcards</div>
+        <table class="cmd-table">
+          <tr><td class="c1">^</td><td class="c2">Start of line</td><td class="c3">grep "^root" /etc/passwd</td></tr>
+          <tr><td class="c1">$</td><td class="c2">End of line</td><td class="c3">grep "bash$" /etc/passwd</td></tr>
+          <tr><td class="c1">.</td><td class="c2">Any single character</td><td class="c3">grep "r..t" /etc/passwd</td></tr>
+          <tr><td class="c1">\&lt;</td><td class="c2">Start of word</td><td class="c3">grep "\&lt;root" file</td></tr>
+          <tr><td class="c1">\&gt;</td><td class="c2">End of word</td><td class="c3">grep "root\&gt;" file</td></tr>
+          <tr><td class="c1">\b</td><td class="c2">Word boundary (grep -E)</td><td class="c3">grep -E "\broot\b" file</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔁</span>Repetition Operators</div>
+        <table class="cmd-table">
+          <tr><td class="c1">*</td><td class="c2">0 or more of preceding</td><td class="c3">grep "ro*t" file</td></tr>
+          <tr><td class="c1">+</td><td class="c2">1 or more (grep -E)</td><td class="c3">grep -E "ro+t" file</td></tr>
+          <tr><td class="c1">?</td><td class="c2">0 or 1 (optional) (grep -E)</td><td class="c3">grep -E "colo?r" file</td></tr>
+          <tr><td class="c1">{3}</td><td class="c2">Exactly 3 times</td><td class="c3">grep -E "a{3}" file</td></tr>
+          <tr><td class="c1">{2,4}</td><td class="c2">Between 2 and 4 times</td><td class="c3">grep -E "a{2,4}" file</td></tr>
+          <tr><td class="c1">{2,}</td><td class="c2">2 or more times</td><td class="c3">grep -E "a{2,}" file</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">[ ]</span>Bracket Expressions</div>
+        <table class="cmd-table">
+          <tr><td class="c1">[abc]</td><td class="c2">Match a, b, or c</td><td class="c3">grep "[aeiou]" file</td></tr>
+          <tr><td class="c1">[^abc]</td><td class="c2">Match anything NOT a, b, or c</td><td class="c3">grep "[^0-9]" file</td></tr>
+          <tr><td class="c1">[a-z]</td><td class="c2">Any lowercase letter</td><td class="c3">grep "[a-z]" file</td></tr>
+          <tr><td class="c1">[A-Z]</td><td class="c2">Any uppercase letter</td><td class="c3">grep "[A-Z]" file</td></tr>
+          <tr><td class="c1">[0-9]</td><td class="c2">Any digit</td><td class="c3">grep "[0-9]" file</td></tr>
+          <tr><td class="c1">[a-zA-Z0-9]</td><td class="c2">Any alphanumeric</td><td class="c3">grep "[a-zA-Z0-9]" file</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">[::]</span>Named Character Classes</div>
+        <table class="cmd-table">
+          <tr><td class="c1">[:alpha:]</td><td class="c2">Any letter</td><td class="c3">grep "[[:alpha:]]" file</td></tr>
+          <tr><td class="c1">[:digit:]</td><td class="c2">Any number 0–9</td><td class="c3">grep "[[:digit:]]" file</td></tr>
+          <tr><td class="c1">[:alnum:]</td><td class="c2">Any letter or number</td><td class="c3">grep "[[:alnum:]]" file</td></tr>
+          <tr><td class="c1">[:upper:]</td><td class="c2">Uppercase letters</td><td class="c3">grep "[[:upper:]]" file</td></tr>
+          <tr><td class="c1">[:lower:]</td><td class="c2">Lowercase letters</td><td class="c3">grep "[[:lower:]]" file</td></tr>
+          <tr><td class="c1">[:space:]</td><td class="c2">Whitespace (space, tab, newline)</td><td class="c3">grep "[[:space:]]" file</td></tr>
+          <tr><td class="c1">[:punct:]</td><td class="c2">Punctuation characters</td><td class="c3">grep "[[:punct:]]" file</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="cmd-block" style="margin-top: 1rem;">
+      <div class="cmd-block-header"><span class="icon">💡</span>Practical Regex Examples</div>
+      <table class="cmd-table">
+        <tr><td class="c1">Valid IP (approx)</td><td class="c2">Match IP address pattern</td><td class="c3">grep -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" file</td></tr>
+        <tr><td class="c1">Blank lines</td><td class="c2">Find empty lines</td><td class="c3">grep "^$" file</td></tr>
+        <tr><td class="c1">Non-comment lines</td><td class="c2">Skip lines starting with #</td><td class="c3">grep -v "^#" /etc/ssh/sshd_config</td></tr>
+        <tr><td class="c1">Lines with numbers</td><td class="c2">Any line containing a digit</td><td class="c3">grep "[[:digit:]]" file</td></tr>
+        <tr><td class="c1">Root or alice</td><td class="c2">Match either string</td><td class="c3">grep -E "^(root|alice):" /etc/passwd</td></tr>
+        <tr><td class="c1">Email (basic)</td><td class="c2">Rough email pattern</td><td class="c3">grep -E "[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\.[a-z]{2,}" file</td></tr>
+        <tr><td class="c1">Words 4+ chars</td><td class="c2">Alphabetic words of 4+ length</td><td class="c3">grep -E "\b[a-zA-Z]{4,}\b" file</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       SCRIPTING
+  ══════════════════════════════ -->
+  <div class="section" id="scripting">
+    <div class="section-label"><span class="dot dot-purple"></span>Bash Scripting Basics</div>
+
+    <div class="script-box">
+      <div class="script-title">
+        <span>Creating &amp; Running a Bash Script — Step by Step</span>
+        <span style="color: var(--muted); font-weight: 300;">myscript.sh</span>
+      </div>
+      <div class="script-body">
+
+        <div class="script-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Create the file</div>
+            <div class="step-desc">Use any text editor. <code>nano</code> is the easiest for beginners in a lab.</div>
+            <div class="code-line">nano myscript.sh</div>
+          </div>
+        </div>
+
+        <div class="script-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Add the shebang line — first line of every script</div>
+            <div class="step-desc">Tells the OS which interpreter to use. Must be the very first line.</div>
+            <div class="code-line"><span class="code-shebang">#!/bin/bash</span>
+<span class="code-comment"># This is a comment — describe what your script does</span>
+
+<span class="code-comment"># Store a value in a variable (no spaces around =)</span>
+<span class="code-var">NAME</span>="World"
+
+<span class="code-comment"># Print to the screen</span>
+echo <span class="code-str">"Hello, $NAME!"</span>
+
+<span class="code-comment"># Run a command and store its output</span>
+<span class="code-var">TODAY</span>=$(date)
+echo <span class="code-str">"Today is: $TODAY"</span>
+
+<span class="code-comment"># Simple if statement</span>
+if [ -f /etc/passwd ]; then
+    echo <span class="code-str">"passwd file exists"</span>
+fi</div>
+          </div>
+        </div>
+
+        <div class="script-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Save and give the file execute permissions</div>
+            <div class="step-desc">Without execute permission the script won't run.</div>
+            <div class="code-line">chmod +x myscript.sh
+<span class="code-comment"># Verify permissions — should show -rwxr-xr-x or similar</span>
+ls -l myscript.sh</div>
+          </div>
+        </div>
+
+        <div class="script-step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Run the script</div>
+            <div class="step-desc">Use <code>./</code> to run from current directory, or full path. Or call the interpreter directly.</div>
+            <div class="code-line"><span class="code-comment"># Run with ./ (must be executable)</span>
+./myscript.sh
+
+<span class="code-comment"># Or call the interpreter directly (no chmod needed)</span>
+bash myscript.sh
+
+<span class="code-comment"># Run from full path</span>
+/home/alice/myscript.sh</div>
+          </div>
+        </div>
+
+        <div class="script-step">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Debug and test</div>
+            <div class="step-desc">Use <code>-x</code> flag to trace every command as it executes — great for troubleshooting.</div>
+            <div class="code-line"><span class="code-comment"># Run in debug/trace mode</span>
+bash -x myscript.sh
+
+<span class="code-comment"># Check syntax without running</span>
+bash -n myscript.sh
+
+<span class="code-comment"># Check the exit code of the last command (0 = success)</span>
+echo $?</div>
+          </div>
+        </div>
+
+        <div class="script-step">
+          <div class="step-num">6</div>
+          <div>
+            <div class="step-title">Make it available system-wide (optional)</div>
+            <div class="step-desc">Move or copy to a directory in <code>$PATH</code> so you can call it from anywhere.</div>
+            <div class="code-line"><span class="code-comment"># Copy to a PATH directory</span>
+sudo cp myscript.sh /usr/local/bin/myscript
+
+<span class="code-comment"># Now run from anywhere without ./</span>
+myscript</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="cmd-block">
+      <div class="cmd-block-header"><span class="icon">📋</span>Common Script Constructs — Quick Reference</div>
+      <table class="cmd-table">
+        <tr><td class="c1">Variable</td><td class="c2">Assign and use</td><td class="c3">NAME="bob" &nbsp;|&nbsp; echo $NAME</td></tr>
+        <tr><td class="c1">Read input</td><td class="c2">Prompt user for value</td><td class="c3">read -p "Enter name: " NAME</td></tr>
+        <tr><td class="c1">If / else</td><td class="c2">Conditional logic</td><td class="c3">if [ condition ]; then ... else ... fi</td></tr>
+        <tr><td class="c1">[ -f file ]</td><td class="c2">Test if file exists</td><td class="c3">if [ -f /etc/passwd ]; then ...</td></tr>
+        <tr><td class="c1">[ -d dir ]</td><td class="c2">Test if directory exists</td><td class="c3">if [ -d /tmp/ ]; then ...</td></tr>
+        <tr><td class="c1">[ -z "$VAR" ]</td><td class="c2">Test if variable is empty</td><td class="c3">if [ -z "$NAME" ]; then ...</td></tr>
+        <tr><td class="c1">For loop</td><td class="c2">Iterate over list</td><td class="c3">for i in 1 2 3; do echo $i; done</td></tr>
+        <tr><td class="c1">While loop</td><td class="c2">Loop while condition true</td><td class="c3">while [ condition ]; do ...; done</td></tr>
+        <tr><td class="c1">$1, $2...</td><td class="c2">Positional arguments to script</td><td class="c3">./script.sh arg1 arg2</td></tr>
+        <tr><td class="c1">$#</td><td class="c2">Number of arguments passed</td><td class="c3">echo "Got $# args"</td></tr>
+        <tr><td class="c1">$?</td><td class="c2">Exit code of last command</td><td class="c3">echo $? &nbsp;(0 = success)</td></tr>
+        <tr><td class="c1">exit 0</td><td class="c2">Exit script with code</td><td class="c3">exit 1 &nbsp;(non-zero = error)</td></tr>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Lab tip:</strong> Always test scripts in a safe directory first. Use <code>bash -n script.sh</code> to check for syntax errors before running. Use <code>bash -x script.sh</code> to trace every line when something isn't working.</div>
+    </div>
+
+  </div>
+
+</div><!-- /shell -->
+</body>
+</html>
