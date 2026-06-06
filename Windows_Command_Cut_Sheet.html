@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows Command Cut Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── TOKENS ── */
+:root {
+  --bg:          #0d1117;
+  --bg2:         #161c24;
+  --bg3:         #1c2330;
+  --bg4:         #222b3a;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #e1e8f0;
+  --muted:       #7b8899;
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.10);
+  --blue-mid:    rgba(88,166,255,0.18);
+  --cyan:        #39c5cf;
+  --cyan-dim:    rgba(57,197,207,0.10);
+  --purple:      #bc8cff;
+  --purple-dim:  rgba(188,140,255,0.10);
+  --yellow:      #e3b341;
+  --yellow-dim:  rgba(227,179,65,0.10);
+  --orange:      #f0883e;
+  --orange-dim:  rgba(240,136,62,0.10);
+  --red:         #f85149;
+  --red-dim:     rgba(248,81,73,0.10);
+  --green:       #56d364;
+  --green-dim:   rgba(86,211,100,0.10);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.header-title {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--blue);
+  letter-spacing: -0.01em;
+}
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+.header-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2);
+  color: var(--muted); letter-spacing: .04em;
+}
+.tag-cmd  { border-color: rgba(227,179,65,0.4);  color: var(--yellow); }
+.tag-ps   { border-color: rgba(88,166,255,0.4);  color: var(--blue); }
+
+/* ── NAV ── */
+.nav-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.nav-pill {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border2);
+  color: var(--muted); background: var(--bg2);
+  cursor: pointer; text-decoration: none;
+  transition: all .15s; letter-spacing: .02em;
+}
+.nav-pill:hover { color: var(--text); border-color: var(--blue); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 2rem; }
+.section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--muted); margin-bottom: .75rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.section-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.dot-blue   { background: var(--blue);   box-shadow: 0 0 6px var(--blue); }
+.dot-cyan   { background: var(--cyan);   box-shadow: 0 0 6px var(--cyan); }
+.dot-purple { background: var(--purple); box-shadow: 0 0 5px var(--purple); }
+.dot-yellow { background: var(--yellow); }
+.dot-orange { background: var(--orange); }
+.dot-red    { background: var(--red); }
+.dot-green  { background: var(--green);  box-shadow: 0 0 5px var(--green); }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 750px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+
+/* ── CMD BLOCK ── */
+.cmd-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cmd-block-header {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 12px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.hdr-cmd    { color: var(--yellow); }
+.hdr-ps     { color: var(--blue); }
+.hdr-both   { color: var(--cyan); }
+.hdr-ref    { color: var(--purple); }
+.hdr-reg    { color: var(--orange); }
+
+/* ── COMMAND TABLE ── */
+.cmd-table { width: 100%; border-collapse: collapse; }
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table tr:hover { background: rgba(255,255,255,0.02); }
+.cmd-table td { padding: 5px 10px; vertical-align: top; }
+.c1 {
+  font-family: var(--mono); font-size: 11.5px;
+  white-space: nowrap; width: 1%; padding-right: 12px; font-weight: 500;
+}
+.c1-cmd  { color: var(--yellow); }
+.c1-ps   { color: var(--blue); }
+.c1-both { color: var(--cyan); }
+.c2 { font-size: 12px; color: var(--muted); width: 38%; }
+.c3 { font-family: var(--mono); font-size: 11px; color: var(--green); opacity: .9; }
+
+/* ── COMPARISON TABLE (CMD vs PS) ── */
+.cmp-block {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1rem;
+}
+.cmp-header {
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  padding: 6px 12px; display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+}
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.cmp-table thead th {
+  padding: 6px 10px; text-align: left;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  background: var(--bg4); border-bottom: 1px solid var(--border2);
+  letter-spacing: .03em;
+}
+.th-cmd    { color: var(--yellow); }
+.th-ps     { color: var(--blue); }
+.th-desc   { color: var(--muted); }
+.cmp-table tbody td { padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.cmp-table tbody tr:last-child td { border-bottom: none; }
+.cmp-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.tc-cmd { font-family: var(--mono); font-size: 11px; color: var(--yellow); }
+.tc-ps  { font-family: var(--mono); font-size: 11px; color: var(--blue); }
+.tc-d   { font-size: 11.5px; color: var(--muted); }
+
+/* ── REF TABLE (paths / registry) ── */
+.ref-wrap {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1rem;
+}
+.ref-wrap-title {
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  padding: 7px 14px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em;
+}
+.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ref-table thead th {
+  background: var(--bg4); padding: 6px 12px; text-align: left;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  color: var(--muted); border-bottom: 1px solid var(--border2);
+  letter-spacing: .03em;
+}
+.ref-table tbody td { padding: 6px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.rp  { font-family: var(--mono); font-size: 11px; color: var(--cyan); white-space: nowrap; }
+.rk  { font-family: var(--mono); font-size: 11px; color: var(--orange); }
+.rd  { font-size: 11.5px; color: var(--muted); }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem;
+  border-left: 3px solid; font-size: 12px;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.callout-tip  { background: var(--blue-dim);   border-color: var(--blue); }
+.callout-warn { background: var(--orange-dim); border-color: var(--orange); }
+.callout-trap { background: var(--red-dim);    border-color: var(--red); }
+.callout-key  { background: var(--purple-dim); border-color: var(--purple); }
+
+/* ── CODE ── */
+code {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 3px; padding: 1px 5px; color: var(--cyan);
+}
+.code-block {
+  font-family: var(--mono); font-size: 11.5px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 5px; padding: 10px 14px; margin-top: 6px;
+  color: var(--green); overflow-x: auto; white-space: pre;
+  line-height: 1.7;
+}
+.co  { color: var(--muted); }   /* comment */
+.cv  { color: var(--blue); }    /* variable / flag */
+.cs  { color: #a5d6ff; }        /* string */
+.ck  { color: var(--orange); }  /* keyword */
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block; font-family: var(--mono); font-size: 9.5px;
+  padding: 1px 6px; border-radius: 3px; font-weight: 500;
+}
+.badge-cmd  { background: var(--yellow-dim); color: var(--yellow); }
+.badge-ps   { background: var(--blue-dim);   color: var(--blue); }
+.badge-both { background: var(--cyan-dim);   color: var(--cyan); }
+.badge-reg  { background: var(--orange-dim); color: var(--orange); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+/* ── HIVE PILL ── */
+.hive-pill {
+  display: inline-block; font-family: var(--mono); font-size: 10px;
+  background: var(--orange-dim); color: var(--orange);
+  border: 1px solid rgba(240,136,62,0.25);
+  border-radius: 3px; padding: 1px 6px; margin: 1px 0;
+}
+.hive-linked { background: var(--purple-dim); color: var(--purple); border-color: rgba(188,140,255,0.25); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div>
+      <div class="header-title">windows<span>/</span>cutsheet</div>
+      <div class="header-sub">// lab reference — CMD · PowerShell · flags · examples · registry · AD</div>
+    </div>
+    <div class="header-meta">
+      <span class="tag tag-cmd">CMD</span>
+      <span class="tag tag-ps">PowerShell</span>
+      <span class="tag">Win 11</span>
+    </div>
+  </div>
+
+  <!-- ── NAV ── -->
+  <div class="nav-pills">
+    <a class="nav-pill" href="#gui">GUI Tools</a>
+    <a class="nav-pill" href="#files">File Management</a>
+    <a class="nav-pill" href="#perms">Permissions (ACL)</a>
+    <a class="nav-pill" href="#registry">Registry</a>
+    <a class="nav-pill" href="#reg-hives">Registry Hives</a>
+    <a class="nav-pill" href="#processes">Processes</a>
+    <a class="nav-pill" href="#services">Services</a>
+    <a class="nav-pill" href="#networking">Networking</a>
+    <a class="nav-pill" href="#remoting">Remoting</a>
+    <a class="nav-pill" href="#users">Users &amp; Groups</a>
+    <a class="nav-pill" href="#ad">Active Directory</a>
+    <a class="nav-pill" href="#fileshare">File Shares</a>
+    <a class="nav-pill" href="#logging">Logging &amp; Auditing</a>
+    <a class="nav-pill" href="#schtasks">Scheduled Tasks</a>
+    <a class="nav-pill" href="#io">I/O &amp; Redirection</a>
+    <a class="nav-pill" href="#important-paths">Key File Paths</a>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       GUI TOOLS
+  ══════════════════════════════ -->
+  <div class="section" id="gui">
+    <div class="section-label"><span class="dot dot-blue"></span>GUI Tools — Win + R to open</div>
+    <div class="cmd-block">
+      <div class="cmd-block-header hdr-ref"><span>⊞</span> Run Dialog Shortcuts</div>
+      <table class="cmd-table">
+        <tr><td class="c1 c1-both">regedit</td><td class="c2">Registry Editor — view/modify registry keys</td><td class="c3">Win+R → regedit</td></tr>
+        <tr><td class="c1 c1-both">msconfig</td><td class="c2">System Configuration — startup, boot, services</td><td class="c3">Win+R → msconfig</td></tr>
+        <tr><td class="c1 c1-both">resmon</td><td class="c2">Resource Monitor — CPU, Memory, Disk, Network</td><td class="c3">Win+R → resmon</td></tr>
+        <tr><td class="c1 c1-both">taskmgr</td><td class="c2">Task Manager — processes, services, startup</td><td class="c3">Win+R → taskmgr</td></tr>
+        <tr><td class="c1 c1-both">ncpa.cpl</td><td class="c2">Network Connections — view/update adapters</td><td class="c3">Win+R → ncpa.cpl</td></tr>
+        <tr><td class="c1 c1-both">sysdm.cpl</td><td class="c2">System Properties — computer name, domain</td><td class="c3">Win+R → sysdm.cpl</td></tr>
+        <tr><td class="c1 c1-both">Eventvwr.msc</td><td class="c2">Event Viewer — Windows event logs</td><td class="c3">Win+R → Eventvwr.msc</td></tr>
+        <tr><td class="c1 c1-both">secpol.msc</td><td class="c2">Local Security Policy — configure auditing</td><td class="c3">Win+R → secpol.msc</td></tr>
+        <tr><td class="c1 c1-both">services.msc</td><td class="c2">Services console — GUI service management</td><td class="c3">Win+R → services.msc</td></tr>
+        <tr><td class="c1 c1-both">compmgmt.msc</td><td class="c2">Computer Management — all-in-one admin</td><td class="c3">Win+R → compmgmt.msc</td></tr>
+        <tr><td class="c1 c1-both">lusrmgr.msc</td><td class="c2">Local Users and Groups</td><td class="c3">Win+R → lusrmgr.msc</td></tr>
+        <tr><td class="c1 c1-both">mmc</td><td class="c2">Microsoft Management Console — add snap-ins</td><td class="c3">Win+R → mmc</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       FILE MANAGEMENT
+  ══════════════════════════════ -->
+  <div class="section" id="files">
+    <div class="section-label"><span class="dot dot-yellow"></span>File Management</div>
+
+    <div class="cmp-block">
+      <div class="cmp-header">
+        <span style="color:var(--yellow)">⊡ CMD</span>
+        <span style="color:var(--muted); font-weight:300">vs</span>
+        <span style="color:var(--blue)">⚡ PowerShell</span>
+        <span style="color:var(--muted); font-weight:300; margin-left:auto; font-size:10px;">file operations</span>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th class="th-cmd">CMD Command</th><th class="th-ps">PowerShell Equivalent</th><th class="th-desc">Description + Example</th></tr></thead>
+        <tbody>
+          <tr><td class="tc-cmd">dir</td><td class="tc-ps">Get-ChildItem (gci / ls)</td><td class="tc-d">List directory contents. <code>dir /a</code> shows hidden files. <code>Get-ChildItem -Hidden</code></td></tr>
+          <tr><td class="tc-cmd">dir /s</td><td class="tc-ps">Get-ChildItem -Recurse</td><td class="tc-d">Recursive listing. <code>dir /s *.txt</code> | <code>gci -Recurse *.txt</code></td></tr>
+          <tr><td class="tc-cmd">dir /a:h</td><td class="tc-ps">Get-ChildItem -Force</td><td class="tc-d">Show hidden + system files.</td></tr>
+          <tr><td class="tc-cmd">cd</td><td class="tc-ps">Set-Location (cd / sl)</td><td class="tc-d">Change directory. <code>cd C:\Windows</code> | <code>cd ..</code> (up one)</td></tr>
+          <tr><td class="tc-cmd">mkdir</td><td class="tc-ps">New-Item -ItemType Directory</td><td class="tc-d">Create folder. <code>mkdir C:\tools</code></td></tr>
+          <tr><td class="tc-cmd">copy</td><td class="tc-ps">Copy-Item (cp / copy)</td><td class="tc-d">Copy a file. <code>copy src.txt C:\dst\</code> | <code>Copy-Item -Recurse</code></td></tr>
+          <tr><td class="tc-cmd">move</td><td class="tc-ps">Move-Item (mv / move)</td><td class="tc-d">Move/rename. <code>move old.txt new.txt</code></td></tr>
+          <tr><td class="tc-cmd">del / erase</td><td class="tc-ps">Remove-Item (rm / del)</td><td class="tc-d">Delete. <code>del /f /q file.txt</code> | <code>Remove-Item -Force -Recurse</code></td></tr>
+          <tr><td class="tc-cmd">ren</td><td class="tc-ps">Rename-Item</td><td class="tc-d">Rename. <code>ren old.txt new.txt</code></td></tr>
+          <tr><td class="tc-cmd">type</td><td class="tc-ps">Get-Content (cat / gc)</td><td class="tc-d">Print file. <code>type file.txt</code> | <code>Get-Content -Tail 20 file.txt</code></td></tr>
+          <tr><td class="tc-cmd">echo text &gt; file</td><td class="tc-ps">Set-Content / Add-Content</td><td class="tc-d">Write to file. <code>echo hi > file.txt</code> | <code>Set-Content file.txt "hi"</code></td></tr>
+          <tr><td class="tc-cmd">cls</td><td class="tc-ps">Clear-Host (clear / cls)</td><td class="tc-d">Clear the terminal screen.</td></tr>
+          <tr><td class="tc-cmd">where</td><td class="tc-ps">Get-Command</td><td class="tc-d">Locate executable. <code>where python</code> | <code>Get-Command python</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <div>
+        <strong>Path separators:</strong> Windows uses backslash <code>\</code>. PowerShell accepts forward slash <code>/</code> too. Wrap paths with spaces in quotes: <code>"C:\Program Files\tool.exe"</code><br>
+        <strong>Wildcard:</strong> <code>*</code> matches any characters. <code>dir *.log</code> lists all .log files.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       PERMISSIONS / ACL
+  ══════════════════════════════ -->
+  <div class="section" id="perms">
+    <div class="section-label"><span class="dot dot-orange"></span>Permissions &amp; ACL (NTFS)</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> icacls — View &amp; Modify ACLs</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">icacls file</td><td class="c2">View ACL of file or folder</td><td class="c3">icacls C:\tools\</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /grant</td><td class="c2">Grant permissions to user</td><td class="c3">icacls file.txt /grant Alice:F</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /deny</td><td class="c2">Explicitly deny permissions</td><td class="c3">icacls file.txt /deny Bob:W</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /remove</td><td class="c2">Remove user's ACE entry</td><td class="c3">icacls file.txt /remove Bob</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /reset</td><td class="c2">Reset to inherited perms</td><td class="c3">icacls file.txt /reset</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /t</td><td class="c2">Apply recursively</td><td class="c3">icacls C:\dir\ /grant Alice:F /t</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /save</td><td class="c2">Save ACLs to file</td><td class="c3">icacls C:\dir\ /save acls.txt /t</td></tr>
+          <tr><td class="c1 c1-cmd">icacls /restore</td><td class="c2">Restore saved ACLs</td><td class="c3">icacls C:\ /restore acls.txt</td></tr>
+          <tr><td class="c1 c1-cmd">takeown /f</td><td class="c2">Take ownership of file</td><td class="c3">takeown /f C:\file.txt</td></tr>
+          <tr><td class="c1 c1-cmd">takeown /r</td><td class="c2">Recursive ownership</td><td class="c3">takeown /f C:\dir\ /r /d y</td></tr>
+          <tr><td class="c1 c1-cmd">attrib</td><td class="c2">View file attributes</td><td class="c3">attrib C:\file.txt</td></tr>
+          <tr><td class="c1 c1-cmd">attrib +h</td><td class="c2">Set hidden attribute</td><td class="c3">attrib +h +s file.txt</td></tr>
+          <tr><td class="c1 c1-cmd">attrib -r</td><td class="c2">Remove read-only attribute</td><td class="c3">attrib -r file.txt</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ref"><span>🔐</span> Permission Levels &amp; NTFS Rules</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-both">F</td><td class="c2">Full control</td><td class="c3">icacls file /grant Alice:F</td></tr>
+          <tr><td class="c1 c1-both">M</td><td class="c2">Modify</td><td class="c3">icacls file /grant Alice:M</td></tr>
+          <tr><td class="c1 c1-both">RX</td><td class="c2">Read and execute</td><td class="c3">icacls file /grant Alice:RX</td></tr>
+          <tr><td class="c1 c1-both">R</td><td class="c2">Read only</td><td class="c3">icacls file /grant Alice:R</td></tr>
+          <tr><td class="c1 c1-both">W</td><td class="c2">Write only</td><td class="c3">icacls file /grant Alice:W</td></tr>
+        </table>
+        <div style="padding:8px 10px; border-top:1px solid var(--border); font-size:11.5px;">
+          <div style="color:var(--muted); margin-bottom:4px; font-family:var(--mono); font-size:10px;">NTFS PRECEDENCE RULES</div>
+          <div style="color:var(--red);">Explicit Deny</div>
+          <div style="color:var(--muted); font-size:11px; padding-left:8px;">↓ beats everything</div>
+          <div style="color:var(--yellow);">Explicit Allow</div>
+          <div style="color:var(--muted); font-size:11px; padding-left:8px;">↓ beats inherited</div>
+          <div style="color:var(--muted);">Inherited Deny → Inherited Allow</div>
+          <div style="margin-top:8px; font-size:11px; color:var(--muted);">
+            <strong style="color:var(--text);">Local access:</strong> NTFS perms only<br>
+            <strong style="color:var(--text);">Share access:</strong> Most restrictive of NTFS + Share perms wins<br>
+            <strong style="color:var(--text);">Group perms:</strong> Cumulative with user perms
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div>
+        <strong>Copy vs Move:</strong> Copying within NTFS creates a new file that <strong>inherits target folder perms</strong>. Moving within the same partition keeps original perms. Moving across partitions inherits target. Moving NTFS→FAT <strong>loses all permissions and attributes</strong>.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       REGISTRY COMMANDS
+  ══════════════════════════════ -->
+  <div class="section" id="registry">
+    <div class="section-label"><span class="dot dot-orange"></span>Registry Commands</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> reg — Command Line Registry</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">reg query</td><td class="c2">Read a key's values</td><td class="c3">reg query HKLM\SOFTWARE\Microsoft</td></tr>
+          <tr><td class="c1 c1-cmd">reg query /v</td><td class="c2">Query a specific value</td><td class="c3">reg query HKLM\SAM /v SecurityDesc</td></tr>
+          <tr><td class="c1 c1-cmd">reg query /s</td><td class="c2">Query all subkeys recursively</td><td class="c3">reg query HKCU /s</td></tr>
+          <tr><td class="c1 c1-cmd">reg add</td><td class="c2">Create/set a registry value</td><td class="c3">reg add HKCU\...\Run /v myapp /d C:\tool.exe</td></tr>
+          <tr><td class="c1 c1-cmd">reg delete</td><td class="c2">Delete a key or value</td><td class="c3">reg delete HKCU\...\Run /v myapp /f</td></tr>
+          <tr><td class="c1 c1-cmd">reg export</td><td class="c2">Export key to .reg file</td><td class="c3">reg export HKLM\SAM backup.reg</td></tr>
+          <tr><td class="c1 c1-cmd">reg import</td><td class="c2">Import a .reg file</td><td class="c3">reg import backup.reg</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> PowerShell Registry</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">Get-Item</td><td class="c2">Get a registry key object</td><td class="c3">Get-Item "HKLM:\SOFTWARE\Microsoft"</td></tr>
+          <tr><td class="c1 c1-ps">Get-ItemProperty</td><td class="c2">Get values of a key</td><td class="c3">Get-ItemProperty "HKLM:\SOFTWARE\..."</td></tr>
+          <tr><td class="c1 c1-ps">Set-ItemProperty</td><td class="c2">Set a registry value</td><td class="c3">Set-ItemProperty -Path "HKCU:\..." -Name "val" -Value 1</td></tr>
+          <tr><td class="c1 c1-ps">New-Item</td><td class="c2">Create new registry key</td><td class="c3">New-Item -Path "HKCU:\Software\MyApp"</td></tr>
+          <tr><td class="c1 c1-ps">Remove-Item</td><td class="c2">Delete registry key</td><td class="c3">Remove-Item -Path "HKCU:\Software\MyApp" -Recurse</td></tr>
+          <tr><td class="c1 c1-ps">Get-ChildItem</td><td class="c2">List all subkeys</td><td class="c3">Get-ChildItem "HKLM:\SOFTWARE"</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>In PowerShell, use <code>HKLM:</code> and <code>HKCU:</code> as drive letters (with colon). In CMD, use <code>HKLM\</code> (backslash, no colon). <code>regedit</code> is the GUI tool for interactive editing.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       REGISTRY HIVES TABLE
+  ══════════════════════════════ -->
+  <div class="section" id="reg-hives">
+    <div class="section-label"><span class="dot dot-orange"></span>Registry Hives &amp; Important Keys</div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color:var(--orange);">📂 Registry Hive Reference</div>
+      <table class="ref-table">
+        <thead><tr><th>Full Name</th><th>Acronym</th><th>Type</th><th>Purpose &amp; Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="rk">HKEY_LOCAL_MACHINE</td>
+            <td><span class="hive-pill">HKLM</span></td>
+            <td style="font-size:11px; color:var(--green);">Root</td>
+            <td class="rd">Hardware and software config for the OS. Config info for all users.</td>
+          </tr>
+          <tr>
+            <td class="rk">HKEY_USERS</td>
+            <td><span class="hive-pill">HKU</span></td>
+            <td style="font-size:11px; color:var(--green);">Root</td>
+            <td class="rd">All loaded user profiles on the system.</td>
+          </tr>
+          <tr>
+            <td class="rk">HKEY_CLASSES_ROOT</td>
+            <td><span class="hive-linked">HKCR</span></td>
+            <td style="font-size:11px; color:var(--purple);">Linked</td>
+            <td class="rd">App associations for file types. Shortcut → <code>HKLM\SOFTWARE\Classes</code></td>
+          </tr>
+          <tr>
+            <td class="rk">HKEY_CURRENT_USER</td>
+            <td><span class="hive-linked">HKCU</span></td>
+            <td style="font-size:11px; color:var(--purple);">Linked</td>
+            <td class="rd">Profile of the currently logged-on user. Shortcut → <code>HKU\&lt;SID&gt;</code></td>
+          </tr>
+          <tr>
+            <td class="rk">HKEY_CURRENT_CONFIG</td>
+            <td><span class="hive-linked">HKCC</span></td>
+            <td style="font-size:11px; color:var(--purple);">Linked</td>
+            <td class="rd">Hardware profile at startup. Shortcut → <code>HKLM\SYSTEM\CurrentControlSet\HardwareProfiles\Current</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color:var(--cyan);">🔑 Important Registry Key Paths</div>
+      <table class="ref-table">
+        <thead><tr><th>Registry Path</th><th>Contains / Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="rp">HKLM\SAM</td><td class="rd">Local account credentials (SAM database). Requires SYSTEM privileges to read directly.</td></tr>
+          <tr><td class="rp">HKLM\SECURITY\Cache</td><td class="rd">Domain controller cached credentials.</td></tr>
+          <tr><td class="rp">HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion</td><td class="rd">OS version, build number, install date.</td></tr>
+          <tr><td class="rp">HKLM\SYSTEM\CurrentControlSet\Services</td><td class="rd">All installed services and their configuration.</td></tr>
+          <tr><td class="rp">HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName</td><td class="rd">Machine hostname.</td></tr>
+          <tr><td class="rp">HKCU\Software\Microsoft\Windows\CurrentVersion\Run</td><td class="rd">Programs that run at login for the current user (common persistence location).</td></tr>
+          <tr><td class="rp">HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</td><td class="rd">Programs that run at login for all users (common persistence location).</td></tr>
+          <tr><td class="rp">HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon</td><td class="rd">Logon settings — Userinit, Shell values often abused for persistence.</td></tr>
+          <tr><td class="rp">HKCU\Environment</td><td class="rd">User-level environment variables.</td></tr>
+          <tr><td class="rp">HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment</td><td class="rd">System-wide environment variables including PATH.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-key">
+      <span class="callout-icon">🔑</span>
+      <div><strong>Root hives:</strong> Only HKLM and HKU are true root hives stored on disk. HKCR, HKCU, and HKCC are <strong>linked hives</strong> — pointers to subkeys within the root hives. Structure: Keys (like folders) → Values (like files) → Data (content).</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       PROCESSES
+  ══════════════════════════════ -->
+  <div class="section" id="processes">
+    <div class="section-label"><span class="dot dot-cyan"></span>Process Management</div>
+
+    <div class="cmp-block">
+      <div class="cmp-header">
+        <span style="color:var(--yellow)">⊡ CMD</span>
+        <span style="color:var(--muted); font-weight:300">vs</span>
+        <span style="color:var(--blue)">⚡ PowerShell</span>
+        <span style="color:var(--muted); font-weight:300; margin-left:auto; font-size:10px;">process commands</span>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th class="th-cmd">CMD</th><th class="th-ps">PowerShell</th><th class="th-desc">Description + Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tc-cmd">tasklist</td>
+            <td class="tc-ps">Get-Process (ps / gps)</td>
+            <td class="tc-d">List running processes. <code>tasklist /svc</code> shows hosted services per process.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">tasklist /fi "PID eq 1234"</td>
+            <td class="tc-ps">Get-Process -Id 1234</td>
+            <td class="tc-d">Filter by PID.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">tasklist /fi "IMAGENAME eq notepad.exe"</td>
+            <td class="tc-ps">Get-Process -Name notepad</td>
+            <td class="tc-d">Filter by process name.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">taskkill /PID 1234</td>
+            <td class="tc-ps">Stop-Process -Id 1234</td>
+            <td class="tc-d">Kill by PID.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">taskkill /IM notepad.exe</td>
+            <td class="tc-ps">Stop-Process -Name notepad</td>
+            <td class="tc-d">Kill by image name.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">taskkill /F</td>
+            <td class="tc-ps">Stop-Process -Force</td>
+            <td class="tc-d">Force kill. <code>taskkill /F /PID 1234</code></td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-Process | Get-Member</td>
+            <td class="tc-d">See all available properties and methods on process objects.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-Process | Where-Object {$_.CPU -gt 10}</td>
+            <td class="tc-d">Filter processes by property (CPU, WorkingSet, etc.).</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-Process | Select-Object Name,Id,CPU</td>
+            <td class="tc-d">Isolate specific properties from process objects.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-Process | Measure-Object</td>
+            <td class="tc-d">Count total number of running processes.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div><strong>Key difference:</strong> <code>Get-Process</code> returns objects with a PID property. <code>Get-Service</code> does NOT have a PID — use <code>tasklist /svc</code> in CMD or <code>Get-WmiObject Win32_Service</code> in PS to associate services with PIDs.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       SERVICES
+  ══════════════════════════════ -->
+  <div class="section" id="services">
+    <div class="section-label"><span class="dot dot-purple"></span>Service Management</div>
+
+    <div class="cmp-block">
+      <div class="cmp-header">
+        <span style="color:var(--yellow)">⊡ CMD — sc &amp; net</span>
+        <span style="color:var(--muted); font-weight:300">vs</span>
+        <span style="color:var(--blue)">⚡ PowerShell — Get-Service</span>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th class="th-cmd">CMD (sc / net)</th><th class="th-ps">PowerShell</th><th class="th-desc">Description + Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tc-cmd">sc query</td>
+            <td class="tc-ps">Get-Service</td>
+            <td class="tc-d">List all active services. <code>sc query</code> uses service key name.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc query type= all</td>
+            <td class="tc-ps">Get-Service | Format-List *</td>
+            <td class="tc-d">All services including inactive ones.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc query "wuauserv"</td>
+            <td class="tc-ps">Get-Service -Name wuauserv</td>
+            <td class="tc-d">Query a specific service by name.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc queryex "wuauserv"</td>
+            <td class="tc-ps">Get-Service wuauserv | Select *</td>
+            <td class="tc-d">Extended status — shows PID and additional flags.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc start "wuauserv"</td>
+            <td class="tc-ps">Start-Service -Name wuauserv</td>
+            <td class="tc-d">Start a service by key name. <code>net start "Windows Update"</code> uses display name.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc stop "wuauserv"</td>
+            <td class="tc-ps">Stop-Service -Name wuauserv</td>
+            <td class="tc-d">Stop a service.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc qc "wuauserv"</td>
+            <td class="tc-ps">Get-WmiObject Win32_Service -Filter "Name='wuauserv'"</td>
+            <td class="tc-d">Query service configuration (binary path, start type, etc.).</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc config "svc" start= disabled</td>
+            <td class="tc-ps">Set-Service -Name svc -StartupType Disabled</td>
+            <td class="tc-d">Change service start type.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">sc getkeyname "Windows Update"</td>
+            <td class="tc-ps">—</td>
+            <td class="tc-d">Get key name from display name — useful before using sc commands.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">net start</td>
+            <td class="tc-ps">Get-Service | Where Status -eq Running</td>
+            <td class="tc-d"><code>net start</code> with no args lists display names of all running services.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>sc vs net:</strong> <code>sc start/stop</code> uses the service <em>key name</em>. <code>net start/stop</code> uses the <em>display name</em>. Use <code>sc getkeyname "Display Name"</code> to convert between the two.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       NETWORKING
+  ══════════════════════════════ -->
+  <div class="section" id="networking">
+    <div class="section-label"><span class="dot dot-blue"></span>Networking Commands</div>
+
+    <div class="cmp-block">
+      <div class="cmp-header">
+        <span style="color:var(--yellow)">⊡ CMD</span>
+        <span style="color:var(--muted); font-weight:300">vs</span>
+        <span style="color:var(--blue)">⚡ PowerShell</span>
+        <span style="color:var(--muted); font-weight:300; margin-left:auto; font-size:10px;">networking</span>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th class="th-cmd">CMD</th><th class="th-ps">PowerShell</th><th class="th-desc">Description + Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tc-cmd">ipconfig</td>
+            <td class="tc-ps">Get-NetIPConfiguration</td>
+            <td class="tc-d">Show IP, subnet, gateway per adapter.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">ipconfig /all</td>
+            <td class="tc-ps">Get-NetIPAddress</td>
+            <td class="tc-d">Full details including MAC address and DNS servers.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">ipconfig /displaydns</td>
+            <td class="tc-ps">Get-DnsClientCache</td>
+            <td class="tc-d">Show cached DNS entries.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">ipconfig /flushdns</td>
+            <td class="tc-ps">Clear-DnsClientCache</td>
+            <td class="tc-d">Flush the local DNS resolver cache.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">ping host</td>
+            <td class="tc-ps">Test-Connection host</td>
+            <td class="tc-d">Send 4 ICMP packets. <code>ping -n 10 8.8.8.8</code> | <code>Test-Connection -Count 10</code></td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">tracert host</td>
+            <td class="tc-ps">Test-NetConnection -TraceRoute</td>
+            <td class="tc-d">Trace hops to destination. <code>tracert google.com</code></td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">arp -a</td>
+            <td class="tc-ps">Get-NetNeighbor</td>
+            <td class="tc-d">Show ARP cache (IP-to-MAC mappings).</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">route print</td>
+            <td class="tc-ps">Get-NetRoute</td>
+            <td class="tc-d">Display routing table.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">netstat -a</td>
+            <td class="tc-ps">Get-NetTCPConnection</td>
+            <td class="tc-d">All active listening + established connections.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">netstat -ano</td>
+            <td class="tc-ps">Get-NetTCPConnection | Select *</td>
+            <td class="tc-d">All connections with owning PID, no name resolution.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">netstat -b</td>
+            <td class="tc-ps">—</td>
+            <td class="tc-d">Show executable associated with each connection (requires admin).</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">netstat -r</td>
+            <td class="tc-ps">Get-NetRoute</td>
+            <td class="tc-d">Display routing table from netstat.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">nslookup domain</td>
+            <td class="tc-ps">Resolve-DnsName domain</td>
+            <td class="tc-d">DNS lookup. <code>nslookup google.com</code> | <code>Resolve-DnsName -Type MX google.com</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>netstat key flags recap:</strong><br>
+        <code>-a</code> all connections &nbsp;·&nbsp; <code>-n</code> numeric (no DNS) &nbsp;·&nbsp; <code>-o</code> owning PID &nbsp;·&nbsp; <code>-b</code> executable name &nbsp;·&nbsp; <code>-r</code> routing table &nbsp;·&nbsp; <code>-e</code> ethernet stats<br>
+        <strong>Most useful combo:</strong> <code>netstat -ano</code> then cross-reference PIDs with <code>tasklist</code>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       REMOTING
+  ══════════════════════════════ -->
+  <div class="section" id="remoting">
+    <div class="section-label"><span class="dot dot-cyan"></span>Remoting &amp; WMI</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> PowerShell Remoting</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">Enter-PSSession</td><td class="c2">Interactive 1-to-1 remote shell</td><td class="c3">Enter-PSSession -ComputerName PC01</td></tr>
+          <tr><td class="c1 c1-ps">Enter-PSSession -Cred</td><td class="c2">With alternate credentials</td><td class="c3">Enter-PSSession -CN PC01 -Credential domain\admin</td></tr>
+          <tr><td class="c1 c1-ps">Exit-PSSession</td><td class="c2">Leave remote session</td><td class="c3">Exit-PSSession</td></tr>
+          <tr><td class="c1 c1-ps">Invoke-Command</td><td class="c2">Non-interactive 1-to-many</td><td class="c3">Invoke-Command -CN PC01,PC02 -ScriptBlock {Get-Process}</td></tr>
+          <tr><td class="c1 c1-ps">Invoke-Command -FilePath</td><td class="c2">Run local script on remote</td><td class="c3">Invoke-Command -CN PC01 -FilePath C:\script.ps1</td></tr>
+          <tr><td class="c1 c1-ps">New-PSSession</td><td class="c2">Create persistent session</td><td class="c3">$s = New-PSSession -CN PC01</td></tr>
+          <tr><td class="c1 c1-ps">Remove-PSSession</td><td class="c2">Close persistent session</td><td class="c3">Remove-PSSession $s</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> wmic &amp; systeminfo</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">wmic process list</td><td class="c2">List all processes via WMI</td><td class="c3">wmic process list brief</td></tr>
+          <tr><td class="c1 c1-cmd">wmic process get</td><td class="c2">Get specific process fields</td><td class="c3">wmic process get Name,ProcessId,ParentProcessId</td></tr>
+          <tr><td class="c1 c1-cmd">wmic service list</td><td class="c2">List all services via WMI</td><td class="c3">wmic service list brief</td></tr>
+          <tr><td class="c1 c1-cmd">wmic useraccount</td><td class="c2">List local user accounts</td><td class="c3">wmic useraccount list full</td></tr>
+          <tr><td class="c1 c1-cmd">wmic /node:PC01</td><td class="c2">Run wmic against remote host</td><td class="c3">wmic /node:PC01 process list brief</td></tr>
+          <tr><td class="c1 c1-cmd">systeminfo</td><td class="c2">OS, patches, RAM, domain info</td><td class="c3">systeminfo | findstr /i "domain"</td></tr>
+          <tr><td class="c1 c1-cmd">systeminfo /s</td><td class="c2">Systeminfo for remote host</td><td class="c3">systeminfo /s PC01</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-key">
+      <span class="callout-icon">🔑</span>
+      <div>
+        <strong>Enter-PSSession</strong> = interactive (like SSH — you get a remote prompt). <strong>Invoke-Command</strong> = non-interactive, fire-and-forget, runs across many machines simultaneously.
+        <br>Logon type: Enter-PSSession creates an <em>interactive</em> session. Invoke-Command creates a <em>non-interactive</em> session.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       USERS & GROUPS
+  ══════════════════════════════ -->
+  <div class="section" id="users">
+    <div class="section-label"><span class="dot dot-green"></span>Local Users &amp; Groups</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> net user / localgroup</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">net user</td><td class="c2">List all local user accounts</td><td class="c3">net user</td></tr>
+          <tr><td class="c1 c1-cmd">net user &lt;name&gt;</td><td class="c2">Details about a specific user</td><td class="c3">net user alice</td></tr>
+          <tr><td class="c1 c1-cmd">net user /add</td><td class="c2">Create a new local user</td><td class="c3">net user alice P@ssw0rd /add</td></tr>
+          <tr><td class="c1 c1-cmd">net user /delete</td><td class="c2">Delete a user</td><td class="c3">net user alice /delete</td></tr>
+          <tr><td class="c1 c1-cmd">net user /active</td><td class="c2">Enable or disable account</td><td class="c3">net user alice /active:no</td></tr>
+          <tr><td class="c1 c1-cmd">net user /domain</td><td class="c2">Operate on domain user</td><td class="c3">net user alice /domain</td></tr>
+          <tr><td class="c1 c1-cmd">net localgroup</td><td class="c2">List local groups</td><td class="c3">net localgroup</td></tr>
+          <tr><td class="c1 c1-cmd">net localgroup grp</td><td class="c2">List members of local group</td><td class="c3">net localgroup Administrators</td></tr>
+          <tr><td class="c1 c1-cmd">net localgroup /add</td><td class="c2">Add user to local group</td><td class="c3">net localgroup Administrators alice /add</td></tr>
+          <tr><td class="c1 c1-cmd">whoami</td><td class="c2">Current user and domain</td><td class="c3">whoami</td></tr>
+          <tr><td class="c1 c1-cmd">whoami /groups</td><td class="c2">List groups current user belongs to</td><td class="c3">whoami /groups</td></tr>
+          <tr><td class="c1 c1-cmd">whoami /priv</td><td class="c2">List current user's privileges</td><td class="c3">whoami /priv</td></tr>
+          <tr><td class="c1 c1-cmd">query user</td><td class="c2">Show interactively logged-on users</td><td class="c3">query user</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ref"><span>👤</span> Well-Known SIDs — Local</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-18</td><td class="c2">LocalSystem — used by OS, hidden Admin</td><td class="c3">NT AUTHORITY\SYSTEM</td></tr>
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-19</td><td class="c2">LocalService — local services, no net auth</td><td class="c3">NT AUTHORITY\LocalService</td></tr>
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-20</td><td class="c2">Network Service — needs network auth</td><td class="c3">NT AUTHORITY\NetworkService</td></tr>
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-32-544</td><td class="c2">Administrators — can't be deleted/locked</td><td class="c3">BUILTIN\Administrators</td></tr>
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-32-545</td><td class="c2">Users — built-in group</td><td class="c3">BUILTIN\Users</td></tr>
+          <tr><td class="c1 c1-both" style="font-size:10.5px;">S-1-5-32-546</td><td class="c2">Guests — disabled by default</td><td class="c3">BUILTIN\Guests</td></tr>
+        </table>
+        <div style="padding:8px 10px; border-top:1px solid var(--border);">
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-bottom:6px;">DOMAIN ACCOUNTS (suffix)</div>
+          <table class="cmd-table" style="border:none;">
+            <tr><td class="c1 c1-both" style="font-size:10.5px;">-500</td><td class="c2">Domain Administrator</td><td class="c3">Can't be deleted/disabled</td></tr>
+            <tr><td class="c1 c1-both" style="font-size:10.5px;">-501</td><td class="c2">Guest</td><td class="c3">No password required</td></tr>
+            <tr><td class="c1 c1-both" style="font-size:10.5px;">-502</td><td class="c2">KRBTGT</td><td class="c3">KDC service — DC only</td></tr>
+            <tr><td class="c1 c1-both" style="font-size:10.5px;">-512</td><td class="c2">Domain Admins</td><td class="c3">Admin on ALL domain machines</td></tr>
+            <tr><td class="c1 c1-both" style="font-size:10.5px;">-513</td><td class="c2">Domain Users</td><td class="c3">Auto-added on user creation</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       ACTIVE DIRECTORY
+  ══════════════════════════════ -->
+  <div class="section" id="ad">
+    <div class="section-label"><span class="dot dot-blue"></span>Active Directory Commands</div>
+
+    <div class="cmp-block">
+      <div class="cmp-header">
+        <span style="color:var(--yellow)">⊡ CMD — dsquery / dsget / net</span>
+        <span style="color:var(--muted); font-weight:300">vs</span>
+        <span style="color:var(--blue)">⚡ PowerShell — AD Module</span>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th class="th-cmd">CMD (requires AD DS role)</th><th class="th-ps">PowerShell (requires AD Module)</th><th class="th-desc">Description + Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tc-cmd">dsquery user</td>
+            <td class="tc-ps">Get-ADUser -Filter *</td>
+            <td class="tc-d">List all users in AD.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">dsquery user -name alice*</td>
+            <td class="tc-ps">Get-ADUser -Filter {Name -like "alice*"}</td>
+            <td class="tc-d">Search for users by name pattern.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">dsget user "DN" -memberof</td>
+            <td class="tc-ps">Get-ADUser alice -Properties MemberOf</td>
+            <td class="tc-d">Get group membership for a user.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">dsquery computer</td>
+            <td class="tc-ps">Get-ADComputer -Filter *</td>
+            <td class="tc-d">List all computer objects in AD.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">dsquery group</td>
+            <td class="tc-ps">Get-ADGroup -Filter *</td>
+            <td class="tc-d">List all groups in AD.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">net group /domain</td>
+            <td class="tc-ps">Get-ADGroup -Filter *</td>
+            <td class="tc-d">List domain groups.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">net group "Domain Admins" /domain</td>
+            <td class="tc-ps">Get-ADGroupMember "Domain Admins"</td>
+            <td class="tc-d">List members of Domain Admins.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">net user /domain</td>
+            <td class="tc-ps">Get-ADUser -Filter * -Properties *</td>
+            <td class="tc-d">All domain user details.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-ADDomain</td>
+            <td class="tc-d">Get domain info (name, DCs, PDC emulator, etc.).</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-ADDomainController -Filter *</td>
+            <td class="tc-d">List all domain controllers.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">Get-ADUser alice | Select *</td>
+            <td class="tc-d">All properties of a user object.</td>
+          </tr>
+          <tr>
+            <td class="tc-cmd">—</td>
+            <td class="tc-ps">New-ADUser / Set-ADUser / Remove-ADUser</td>
+            <td class="tc-d">Create, modify, or delete AD user objects.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       FILE SHARES
+  ══════════════════════════════ -->
+  <div class="section" id="fileshare">
+    <div class="section-label"><span class="dot dot-yellow"></span>File Shares</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> net use / net share</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">net share</td><td class="c2">List shares on local machine</td><td class="c3">net share</td></tr>
+          <tr><td class="c1 c1-cmd">net share name=path</td><td class="c2">Create a new share</td><td class="c3">net share tools=C:\tools /grant:everyone,read</td></tr>
+          <tr><td class="c1 c1-cmd">net share name /delete</td><td class="c2">Remove a share</td><td class="c3">net share tools /delete</td></tr>
+          <tr><td class="c1 c1-cmd">net use</td><td class="c2">List mapped drives</td><td class="c3">net use</td></tr>
+          <tr><td class="c1 c1-cmd">net use Z: \\host\share</td><td class="c2">Map a drive letter to a share</td><td class="c3">net use Z: \\PC01\tools</td></tr>
+          <tr><td class="c1 c1-cmd">net use /user</td><td class="c2">Map with alternate credentials</td><td class="c3">net use Z: \\PC01\tools /user:domain\alice P@ss</td></tr>
+          <tr><td class="c1 c1-cmd">net use Z: /delete</td><td class="c2">Disconnect mapped drive</td><td class="c3">net use Z: /delete</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> SmbMapping / SmbShare</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">Get-SmbShare</td><td class="c2">List all SMB shares on local machine</td><td class="c3">Get-SmbShare</td></tr>
+          <tr><td class="c1 c1-ps">New-SmbShare</td><td class="c2">Create a new SMB share</td><td class="c3">New-SmbShare -Name tools -Path C:\tools</td></tr>
+          <tr><td class="c1 c1-ps">Remove-SmbShare</td><td class="c2">Remove a share</td><td class="c3">Remove-SmbShare -Name tools</td></tr>
+          <tr><td class="c1 c1-ps">Get-SmbMapping</td><td class="c2">List all mapped network drives</td><td class="c3">Get-SmbMapping</td></tr>
+          <tr><td class="c1 c1-ps">New-SmbMapping</td><td class="c2">Map a network drive</td><td class="c3">New-SmbMapping -LocalPath Z: -RemotePath \\PC01\tools</td></tr>
+          <tr><td class="c1 c1-ps">Remove-SmbMapping</td><td class="c2">Disconnect a mapped drive</td><td class="c3">Remove-SmbMapping -LocalPath Z:</td></tr>
+          <tr><td class="c1 c1-ps">Get-SmbConnection</td><td class="c2">Current SMB connections</td><td class="c3">Get-SmbConnection</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       LOGGING & AUDITING
+  ══════════════════════════════ -->
+  <div class="section" id="logging">
+    <div class="section-label"><span class="dot dot-red"></span>Logging &amp; Event Viewer</div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color:var(--red);">📋 Windows Event Log Types</div>
+      <table class="ref-table">
+        <thead><tr><th>Log Name</th><th>Contains</th><th>Audit Types</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="rp">Application</td>
+            <td class="rd">Events from applications and programs.</td>
+            <td class="rd">Error · Warning · Information</td>
+          </tr>
+          <tr>
+            <td class="rp">System</td>
+            <td class="rd">Windows component events — driver failures, service errors at startup.</td>
+            <td class="rd">Error · Warning · Information</td>
+          </tr>
+          <tr>
+            <td class="rp">Security</td>
+            <td class="rd">Valid/invalid logon attempts, resource access. <strong>Must be configured via secpol.msc.</strong></td>
+            <td class="rd">Success Audit · Failure Audit</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color:var(--cyan);">📂 Log &amp; Auth File Locations</div>
+      <table class="ref-table">
+        <thead><tr><th>Path</th><th>Contains</th></tr></thead>
+        <tbody>
+          <tr><td class="rp">C:\Windows\System32\winevt\logs\</td><td class="rd">All Windows event log files (.evtx format). Open with Event Viewer.</td></tr>
+          <tr><td class="rp">C:\Windows\System32\config\SAM</td><td class="rd">Local account credential database (Security Accounts Manager).</td></tr>
+          <tr><td class="rp">C:\Windows\NTDS\NTDS.dit</td><td class="rd">Domain Controller credential store — all domain account hashes.</td></tr>
+          <tr><td class="rp">HKLM\SAM</td><td class="rd">Registry location of local SAM credentials.</td></tr>
+          <tr><td class="rp">HKLM\Security\Cache</td><td class="rd">Registry location of cached domain credentials.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> wevtutil — Event Log CLI</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">wevtutil el</td><td class="c2">List all event logs</td><td class="c3">wevtutil el</td></tr>
+          <tr><td class="c1 c1-cmd">wevtutil gl</td><td class="c2">Get info about a log</td><td class="c3">wevtutil gl Security</td></tr>
+          <tr><td class="c1 c1-cmd">wevtutil qe</td><td class="c2">Query events from a log</td><td class="c3">wevtutil qe Security /c:10 /rd:true /f:text</td></tr>
+          <tr><td class="c1 c1-cmd">wevtutil cl</td><td class="c2">Clear a log (admin)</td><td class="c3">wevtutil cl Security</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> Get-WinEvent / Get-EventLog</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">Get-WinEvent</td><td class="c2">Query event logs</td><td class="c3">Get-WinEvent -LogName Security -MaxEvents 50</td></tr>
+          <tr><td class="c1 c1-ps">-FilterHashtable</td><td class="c2">Filter by ID, time, level</td><td class="c3">Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624}</td></tr>
+          <tr><td class="c1 c1-ps">Get-EventLog</td><td class="c2">Older cmdlet (classic logs)</td><td class="c3">Get-EventLog -LogName Application -Newest 20</td></tr>
+          <tr><td class="c1 c1-ps">Clear-EventLog</td><td class="c2">Clear a log</td><td class="c3">Clear-EventLog -LogName Application</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div><strong>Security logging is OFF by default.</strong> Configure audit policies in <code>secpol.msc</code> → Local Policies → Audit Policy. Key Event IDs: <code>4624</code>=successful logon · <code>4625</code>=failed logon · <code>4688</code>=process created · <code>4648</code>=logon with explicit credentials · <code>4720</code>=user account created.</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       SCHEDULED TASKS
+  ══════════════════════════════ -->
+  <div class="section" id="schtasks">
+    <div class="section-label"><span class="dot dot-purple"></span>Scheduled Tasks</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> schtasks</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">schtasks /query</td><td class="c2">List all scheduled tasks</td><td class="c3">schtasks /query /fo LIST /v</td></tr>
+          <tr><td class="c1 c1-cmd">schtasks /create</td><td class="c2">Create a new task</td><td class="c3">schtasks /create /tn "MyTask" /tr C:\script.bat /sc daily /st 09:00</td></tr>
+          <tr><td class="c1 c1-cmd">schtasks /run</td><td class="c2">Run a task immediately</td><td class="c3">schtasks /run /tn "MyTask"</td></tr>
+          <tr><td class="c1 c1-cmd">schtasks /end</td><td class="c2">Stop a running task</td><td class="c3">schtasks /end /tn "MyTask"</td></tr>
+          <tr><td class="c1 c1-cmd">schtasks /change</td><td class="c2">Modify a task's config</td><td class="c3">schtasks /change /tn "MyTask" /disable</td></tr>
+          <tr><td class="c1 c1-cmd">schtasks /delete</td><td class="c2">Delete a task</td><td class="c3">schtasks /delete /tn "MyTask" /f</td></tr>
+          <tr><td class="c1 c1-cmd">/s RemotePC</td><td class="c2">Target a remote machine</td><td class="c3">schtasks /query /s PC01</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> ScheduledTask cmdlets</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">Get-ScheduledTask</td><td class="c2">List all scheduled tasks</td><td class="c3">Get-ScheduledTask | Where State -eq Running</td></tr>
+          <tr><td class="c1 c1-ps">Get-ScheduledTaskInfo</td><td class="c2">Last run, next run info</td><td class="c3">Get-ScheduledTaskInfo -TaskName "MyTask"</td></tr>
+          <tr><td class="c1 c1-ps">Start-ScheduledTask</td><td class="c2">Run a task immediately</td><td class="c3">Start-ScheduledTask -TaskName "MyTask"</td></tr>
+          <tr><td class="c1 c1-ps">Stop-ScheduledTask</td><td class="c2">Stop a running task</td><td class="c3">Stop-ScheduledTask -TaskName "MyTask"</td></tr>
+          <tr><td class="c1 c1-ps">Enable-ScheduledTask</td><td class="c2">Enable a disabled task</td><td class="c3">Enable-ScheduledTask -TaskName "MyTask"</td></tr>
+          <tr><td class="c1 c1-ps">Disable-ScheduledTask</td><td class="c2">Disable a task</td><td class="c3">Disable-ScheduledTask -TaskName "MyTask"</td></tr>
+          <tr><td class="c1 c1-ps">Unregister-ScheduledTask</td><td class="c2">Delete a task</td><td class="c3">Unregister-ScheduledTask -TaskName "MyTask" -Confirm:$false</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       I/O & REDIRECTION
+  ══════════════════════════════ -->
+  <div class="section" id="io">
+    <div class="section-label"><span class="dot dot-yellow"></span>I/O, Redirection &amp; Pipelines</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-cmd"><span class="badge badge-cmd">CMD</span> Redirection &amp; Special Chars</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-cmd">&gt;</td><td class="c2">STDOUT to file (overwrite)</td><td class="c3">systeminfo > info.txt</td></tr>
+          <tr><td class="c1 c1-cmd">&gt;&gt;</td><td class="c2">STDOUT to file (append)</td><td class="c3">echo "more" >> info.txt</td></tr>
+          <tr><td class="c1 c1-cmd">2&gt;</td><td class="c2">STDERR to file</td><td class="c3">cmd 2> errors.txt</td></tr>
+          <tr><td class="c1 c1-cmd">2&gt;&amp;1</td><td class="c2">STDERR to same as STDOUT</td><td class="c3">cmd > out.txt 2>&1</td></tr>
+          <tr><td class="c1 c1-cmd">&lt;</td><td class="c2">STDIN from file</td><td class="c3">sort < names.txt</td></tr>
+          <tr><td class="c1 c1-cmd">|</td><td class="c2">Pipe STDOUT to next command</td><td class="c3">tasklist | find "notepad"</td></tr>
+          <tr><td class="c1 c1-cmd">^</td><td class="c2">Escape metacharacter</td><td class="c3">echo 2 ^> 1</td></tr>
+          <tr><td class="c1 c1-cmd">*</td><td class="c2">Wildcard for filenames</td><td class="c3">dir *.txt</td></tr>
+          <tr><td class="c1 c1-cmd">find</td><td class="c2">Search string in output (no regex)</td><td class="c3">tasklist | find "SYSTEM"</td></tr>
+          <tr><td class="c1 c1-cmd">findstr</td><td class="c2">Search with regex support</td><td class="c3">netstat -ano | findstr ":443"</td></tr>
+          <tr><td class="c1 c1-cmd">set var=val</td><td class="c2">Set environment variable</td><td class="c3">set MYPATH=C:\tools</td></tr>
+          <tr><td class="c1 c1-cmd">echo %var%</td><td class="c2">Print environment variable</td><td class="c3">echo %USERPROFILE%</td></tr>
+          <tr><td class="c1 c1-cmd">set</td><td class="c2">List all env variables</td><td class="c3">set</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-ps"><span class="badge badge-ps">PS</span> Pipeline &amp; Key Cmdlets</div>
+        <table class="cmd-table">
+          <tr><td class="c1 c1-ps">|</td><td class="c2">Pipe objects (not strings) to next cmdlet</td><td class="c3">Get-Process | Where-Object {$_.CPU -gt 5}</td></tr>
+          <tr><td class="c1 c1-ps">Where-Object</td><td class="c2">Filter objects by property value</td><td class="c3">Get-Service | Where-Object {$_.Status -eq "Running"}</td></tr>
+          <tr><td class="c1 c1-ps">Select-Object</td><td class="c2">Pick specific properties</td><td class="c3">Get-Process | Select-Object Name,Id,CPU</td></tr>
+          <tr><td class="c1 c1-ps">Format-List</td><td class="c2">Show all properties vertically</td><td class="c3">Get-Service | Format-List *</td></tr>
+          <tr><td class="c1 c1-ps">Format-Table</td><td class="c2">Show properties in table view</td><td class="c3">Get-Process | Format-Table -AutoSize</td></tr>
+          <tr><td class="c1 c1-ps">Sort-Object</td><td class="c2">Sort output by property</td><td class="c3">Get-Process | Sort-Object CPU -Descending</td></tr>
+          <tr><td class="c1 c1-ps">Measure-Object</td><td class="c2">Count/measure returned objects</td><td class="c3">Get-Process | Measure-Object</td></tr>
+          <tr><td class="c1 c1-ps">Get-Member</td><td class="c2">Discover properties and methods</td><td class="c3">Get-Process | Get-Member</td></tr>
+          <tr><td class="c1 c1-ps">Out-File</td><td class="c2">Save output to file</td><td class="c3">Get-Process | Out-File procs.txt</td></tr>
+          <tr><td class="c1 c1-ps">$env:VAR</td><td class="c2">Access environment variable</td><td class="c3">$env:USERPROFILE</td></tr>
+          <tr><td class="c1 c1-ps">$var = value</td><td class="c2">Set a variable</td><td class="c3">$name = "alice"</td></tr>
+          <tr><td class="c1 c1-ps">Write-Output</td><td class="c2">Print to screen (like echo)</td><td class="c3">Write-Output "Hello $name"</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>CMD output = strings.</strong> Piping in CMD passes plain text. <strong>PS output = objects.</strong> Piping in PowerShell passes rich objects with properties you can filter, sort, and select.<br>
+        <strong>Stream numbers:</strong> STDIN=0 · STDOUT=1 · STDERR=2
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       KEY FILE PATHS
+  ══════════════════════════════ -->
+  <div class="section" id="important-paths">
+    <div class="section-label"><span class="dot dot-cyan"></span>Key Windows File Paths</div>
+
+    <div class="ref-wrap">
+      <div class="ref-wrap-title" style="color:var(--cyan);">📂 Important System Paths</div>
+      <table class="ref-table">
+        <thead><tr><th>Path</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="rp">C:\Windows\System32\cmd.exe</td><td class="rd">Command Prompt binary.</td></tr>
+          <tr><td class="rp">C:\Windows\System32\WindowsPowerShell\</td><td class="rd">PowerShell installation directory.</td></tr>
+          <tr><td class="rp">C:\Windows\System32\config\SAM</td><td class="rd">Local SAM credential database file.</td></tr>
+          <tr><td class="rp">C:\Windows\NTDS\NTDS.dit</td><td class="rd">Active Directory domain credential store (Domain Controllers only).</td></tr>
+          <tr><td class="rp">C:\Windows\System32\drivers\etc\hosts</td><td class="rd">Local DNS resolution — checked before DNS queries.</td></tr>
+          <tr><td class="rp">C:\Windows\System32\winevt\logs\</td><td class="rd">Windows event log files (.evtx). Opened with Event Viewer.</td></tr>
+          <tr><td class="rp">C:\Users\</td><td class="rd">User home directories (Vista through Win 11).</td></tr>
+          <tr><td class="rp">C:\Windows\System32\</td><td class="rd">64-bit system binaries on x64 OS. 32-bit system binaries on x86 OS.</td></tr>
+          <tr><td class="rp">C:\Windows\SysWOW64\</td><td class="rd">32-bit system binaries on a 64-bit OS (the name is counterintuitive).</td></tr>
+          <tr><td class="rp">C:\Program Files\</td><td class="rd">64-bit installed applications (on x64). All apps on x86.</td></tr>
+          <tr><td class="rp">C:\Program Files (x86)\</td><td class="rd">32-bit installed applications on a 64-bit OS only.</td></tr>
+          <tr><td class="rp">C:\Windows\Temp\</td><td class="rd">System-wide temp files.</td></tr>
+          <tr><td class="rp">C:\Windows\Prefetch\</td><td class="rd">Prefetch files — shows recently executed programs (forensic value).</td></tr>
+          <tr><td class="rp">%APPDATA%</td><td class="rd">Per-user app data: <code>C:\Users\&lt;user&gt;\AppData\Roaming\</code></td></tr>
+          <tr><td class="rp">%LOCALAPPDATA%</td><td class="rd">Per-user local data: <code>C:\Users\&lt;user&gt;\AppData\Local\</code></td></tr>
+          <tr><td class="rp">%USERPROFILE%</td><td class="rd">Current user's home: <code>C:\Users\&lt;username&gt;\</code></td></tr>
+          <tr><td class="rp">%SystemRoot%</td><td class="rd">Windows install directory: <code>C:\Windows\</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div><strong>SysWOW64 trap:</strong> On a 64-bit Windows system, <code>System32</code> holds <strong>64-bit</strong> binaries and <code>SysWOW64</code> holds <strong>32-bit</strong> binaries. The naming is backwards from what you'd expect. x86 = 32-bit, always.</div>
+    </div>
+  </div>
+
+
+</div><!-- /shell -->
+</body>
+</html>
