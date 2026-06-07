@@ -213,11 +213,113 @@
   pointer-events: auto;
 }
   
+/* ── PAGE LAYOUT ── */
+.page-layout {
+  display: flex;
+  align-items: flex-start;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  gap: 1.5rem;
+}
+
+/* keep the guide its original width */
+.guide {
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 0 5rem;
+}
+
+/* ── TOC SIDEBAR ── */
+.toc-sidebar {
+  width: 160px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 1.25rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 0.75rem 0;
+  /* hide scrollbar but keep scroll */
+  scrollbar-width: none;
+}
+.toc-sidebar::-webkit-scrollbar { display: none; }
+
+.toc-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 0.5px solid var(--border);
+  font-family: var(--mono);
+}
+
+#toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#toc-list a {
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.15s;
+  color: var(--text-muted);
+  padding: 3px 6px;
+}
+
+#toc-list a:hover {
+  color: var(--text);
+  background: var(--bg-secondary);
+}
+
+/* active = currently in view */
+#toc-list a.toc-active {
+  color: #15532A;
+  background: #DCFCE7;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  #toc-list a.toc-active {
+    color: #86EFAC;
+    background: #0A3322;
+  }
+}
+
+/* main section labels vs sub-headers */
+#toc-list a.toc-main {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+#toc-list a.toc-sub {
+  font-size: 10.5px;
+  padding-left: 14px;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* hide sidebar on small screens */
+@media (max-width: 640px) {
+  .page-layout { padding: 0 0.75rem; }
+  .toc-sidebar { display: none; }
+}
+
   
 </style>
 </head>
 <body>
 
+<div class="page-layout">
 <div class="guide-header">
   <h1>Linux Study Guide</h1>
   <p>// UCWT — Days 1–5 | Ubuntu &amp; CentOS focus</p>
@@ -979,15 +1081,91 @@
   </div>
 
 </div><!-- /day5 -->
+</div><!-- end guide -->
 
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this page</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end page-layout -->
+
+  
 <script>
-function showDay(n) {
-  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('day' + n).classList.add('active');
-  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+<script>
+  // ── DAY SWITCHER ──────────────────────────────
+  function showDay(n) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('day' + n).classList.add('active');
+    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  // ── BUILD TOC ─────────────────────────────────
+  let observer = null;
+
+  function buildTOC() {
+    const activeDay = document.querySelector('.day-section.active');
+    const tocList   = document.getElementById('toc-list');
+    tocList.innerHTML = '';
+
+    // disconnect old observer
+    if (observer) observer.disconnect();
+
+    // collect section badges + h3 subheaders
+    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
+
+    items.forEach((el, i) => {
+      // give each element a unique anchor ID
+      el.id = 'toc-anchor-' + i;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+
+      a.href      = '#toc-anchor-' + i;
+      a.className = el.classList.contains('section-badge') ? 'toc-main' : 'toc-sub';
+      a.textContent = el.textContent.trim();
+
+      // smooth scroll on click
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // ── INTERSECTION OBSERVER ─────────────────
+    const links = tocList.querySelectorAll('a');
+
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('toc-active'));
+          const activeLink = tocList.querySelector(
+            `a[href="#${entry.target.id}"]`
+          );
+          if (activeLink) {
+            activeLink.classList.add('toc-active');
+            // scroll TOC to keep active item visible
+            activeLink.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      }),
+      {
+        rootMargin: '-10% 0px -80% 0px',
+        threshold: 0
+      }
+    });
+
+    items.forEach(el => observer.observe(el));
+  }
+
+  // build TOC on first load
+  buildTOC();
 </script>
   
  <a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑ Back to Top</a> 
