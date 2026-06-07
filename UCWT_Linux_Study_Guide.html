@@ -1090,8 +1090,6 @@
 
 </div><!-- end page-layout -->
 
-  
-<script>
 <script>
   // ── DAY SWITCHER ──────────────────────────────
   function showDay(n) {
@@ -1103,32 +1101,27 @@
     buildTOC();
   }
 
-  // ── BUILD TOC ─────────────────────────────────
+  // ── BUILD TOC (desktop only) ──────────────────
   let observer = null;
 
   function buildTOC() {
     const activeDay = document.querySelector('.day-section.active');
     const tocList   = document.getElementById('toc-list');
-    tocList.innerHTML = '';
 
-    // disconnect old observer
+    tocList.innerHTML = '';
     if (observer) observer.disconnect();
 
-    // collect section badges + h3 subheaders
     const items = activeDay.querySelectorAll('.section-badge, h3.sh');
 
     items.forEach((el, i) => {
-      // give each element a unique anchor ID
       el.id = 'toc-anchor-' + i;
 
       const li = document.createElement('li');
       const a  = document.createElement('a');
-
-      a.href      = '#toc-anchor-' + i;
-      a.className = el.classList.contains('section-badge') ? 'toc-main' : 'toc-sub';
+      a.href        = '#toc-anchor-' + i;
+      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
       a.textContent = el.textContent.trim();
 
-      // smooth scroll on click
       a.addEventListener('click', e => {
         e.preventDefault();
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1145,35 +1138,28 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           links.forEach(l => l.classList.remove('toc-active'));
-          const activeLink = tocList.querySelector(
-            `a[href="#${entry.target.id}"]`
-          );
-          if (activeLink) {
-            activeLink.classList.add('toc-active');
-            // scroll TOC to keep active item visible
-            activeLink.scrollIntoView({ block: 'nearest' });
+          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('toc-active');
+            active.scrollIntoView({ block: 'nearest' });
           }
         }
-      }),
-      {
-        rootMargin: '-10% 0px -80% 0px',
-        threshold: 0
-      }
+      });
+    }, {
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0
     });
 
     items.forEach(el => observer.observe(el));
   }
 
-  // build TOC on first load
-  buildTOC();
-</script>
-  
- <a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑ Back to Top</a> 
-  <script>
+  // ── BACK TO TOP ───────────────────────────────
   const btn = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     btn.classList.toggle('visible', window.scrollY > 300);
   });
+
+  buildTOC();
 </script>
 
 </body>
