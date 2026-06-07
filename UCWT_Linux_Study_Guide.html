@@ -992,7 +992,6 @@
 </div><!-- end page-layout -->
 
 <script>
-<<<<<<< HEAD
   // ── DAY SWITCHER ──────────────────────────────
   function showDay(n) {
     document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
@@ -1000,79 +999,15 @@
     document.getElementById('day' + n).classList.add('active');
     document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    buildTOC();
-  }
-
-  // ── BUILD TOC (desktop only) ──────────────────
-  let observer = null;
-
-  function buildTOC() {
-    const activeDay = document.querySelector('.day-section.active');
-    const tocList   = document.getElementById('toc-list');
-
-    tocList.innerHTML = '';
-    if (observer) observer.disconnect();
-
-    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
-
-    items.forEach((el, i) => {
-      el.id = 'toc-anchor-' + i;
-
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href        = '#toc-anchor-' + i;
-      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
-      a.textContent = el.textContent.trim();
-
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-
-      li.appendChild(a);
-      tocList.appendChild(li);
-    });
-
-    // ── INTERSECTION OBSERVER ─────────────────
-    const links = tocList.querySelectorAll('a');
-
-    observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          links.forEach(l => l.classList.remove('toc-active'));
-          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
-          if (active) {
-            active.classList.add('toc-active');
-            active.scrollIntoView({ block: 'nearest' });
-          }
-        }
-      });
-    }, {
-      rootMargin: '-10% 0px -80% 0px',
-      threshold: 0
-    });
-
-    items.forEach(el => observer.observe(el));
-  }
-
-  // ── BACK TO TOP ───────────────────────────────
-  const btn = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    btn.classList.toggle('visible', window.scrollY > 300);
-  });
-
-  buildTOC();
 </script>
 
-=======
-function showDay(n) {
-  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('day' + n).classList.add('active');
-  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
->>>>>>> parent of 4e7406c (Update UCWT_Linux_Study_Guide.html)
+    <a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑</a>
+    <script>
+      const btn = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 300);
+      });
+    </script>
+  
 </body>
 </html>
