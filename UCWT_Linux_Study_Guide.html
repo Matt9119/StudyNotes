@@ -988,14 +988,16 @@ function showDay(n) {
   document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+</script>
+  
+ <a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑</a> 
+  <script>
   const btn = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     btn.classList.toggle('visible', window.scrollY > 300);
   });
 </script>
 
-<a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑</a>
-  
 </body>
 </html>
 
