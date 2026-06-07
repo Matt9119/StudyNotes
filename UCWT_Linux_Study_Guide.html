@@ -184,24 +184,23 @@
   .ref-table tbody tr:last-child td { border-bottom:none; }
   .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
   .ref-table .rd { font-size:12px; color:var(--text-muted); }
-<<<<<<< HEAD
 
 /* ── Back to top button ── */
 #back-to-top {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  padding: 0 14 px;
+  width: 38px;
   height: 38px;
-  border-radius: 20px;
+  border-radius: 50%;
   background: #16633A;
   color: #D1FAE5;
-  font-size: 13px;
+  font-size: 18px;
   font-family: var(--mono);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
   border: 1px solid rgba(255,255,255,0.15);
   opacity: 0;
   pointer-events: none;
@@ -214,13 +213,11 @@
   pointer-events: auto;
 }
   
-=======
->>>>>>> parent of 4e7406c (Update UCWT_Linux_Study_Guide.html)
+  
 </style>
 </head>
 <body>
 
-<div class="page-layout">
 <div class="guide-header">
   <h1>Linux Study Guide</h1>
   <p>// UCWT — Days 1–5 | Ubuntu &amp; CentOS focus</p>
@@ -982,32 +979,25 @@
   </div>
 
 </div><!-- /day5 -->
-</div><!-- end guide -->
-
-<nav class="toc-sidebar" id="toc-sidebar">
-  <div class="toc-title">On this page</div>
-  <ul id="toc-list"></ul>
-</nav>
-
-</div><!-- end page-layout -->
 
 <script>
-  // ── DAY SWITCHER ──────────────────────────────
-  function showDay(n) {
-    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('day' + n).classList.add('active');
-    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function showDay(n) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day' + n).classList.add('active');
+  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
-    <a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑</a>
-    <script>
-      const btn = document.getElementById('back-to-top');
-      window.addEventListener('scroll', () => {
-        btn.classList.toggle('visible', window.scrollY > 300);
-      });
-    </script>
+<a href="https://matt9119.github.io/StudyNotes/UCWT_Linux_Study_Guide" id="back-to-top" title="Back to top">↑</a>
+  
+<script>
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+</script>
   
 </body>
 </html>
