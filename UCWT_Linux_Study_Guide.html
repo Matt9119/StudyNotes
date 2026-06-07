@@ -184,6 +184,7 @@
   .ref-table tbody tr:last-child td { border-bottom:none; }
   .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
   .ref-table .rd { font-size:12px; color:var(--text-muted); }
+<<<<<<< HEAD
 
 /* ── Back to top button ── */
 #back-to-top {
@@ -213,6 +214,8 @@
   pointer-events: auto;
 }
   
+=======
+>>>>>>> parent of 4e7406c (Update UCWT_Linux_Study_Guide.html)
 </style>
 </head>
 <body>
@@ -989,6 +992,7 @@
 </div><!-- end page-layout -->
 
 <script>
+<<<<<<< HEAD
   // ── DAY SWITCHER ──────────────────────────────
   function showDay(n) {
     document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
@@ -1060,7 +1064,15 @@
   buildTOC();
 </script>
 
+=======
+function showDay(n) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day' + n).classList.add('active');
+  document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+>>>>>>> parent of 4e7406c (Update UCWT_Linux_Study_Guide.html)
 </body>
 </html>
-
-
