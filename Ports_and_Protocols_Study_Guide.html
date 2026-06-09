@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ports &amp; Protocols Study Guide — UCWT</title>
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── TOKENS ── */
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    /* accent: purple/violet for networking theme */
+    --accent:       #6d28d9;
+    --accent-light: #EDE9FE;
+    --accent-text:  #3B0764;
+    --accent-btn:   #5B21B6;
+    --accent-btn-text: #EDE9FE;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.10);
+      --border-strong: rgba(255,255,255,0.20);
+      --accent-light: #2D1B69;
+      --accent-text:  #C4B5FD;
+      --accent-btn:   #5B21B6;
+      --accent-btn-text: #EDE9FE;
+    }
+    .badge-purple { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .badge-teal   { background:#042A22 !important; color:#67E8C4 !important; }
+    .badge-yellow { background:#2A1E00 !important; color:#FCD34D !important; }
+    .badge-orange { background:#2A1000 !important; color:#FCA46A !important; }
+    .badge-blue   { background:#0A1A2E !important; color:#93C5FD !important; }
+    .badge-red    { background:#3A0A0A !important; color:#FCA5A5 !important; }
+    .callout-tip  { background:#0A3322 !important; border-color:#16A34A !important; }
+    .callout-trap { background:#3A1500 !important; border-color:#EA580C !important; }
+    .callout-key  { background:#2D1B69 !important; border-color:#7C3AED !important; }
+    .callout-tip  .callout-label { color:#86EFAC !important; }
+    .callout-trap .callout-label { color:#FCA46A !important; }
+    .callout-key  .callout-label { color:#C4B5FD !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .phase-num  { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .layer-num  { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .ref-table thead th { background:#2c2c2e !important; }
+    .day-btn.active { background: var(--accent-btn) !important; color: var(--accent-btn-text) !important; border-color: var(--accent-btn) !important; }
+    #toc-list a.toc-active { color:#C4B5FD !important; background:#2D1B69 !important; }
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ── PAGE LAYOUT ── */
+  .page-layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    gap: 1.5rem;
+  }
+  .guide {
+    flex: 1;
+    min-width: 0;
+    padding: 1.25rem 0 5rem;
+  }
+
+  /* ── HEADER ── */
+  .guide-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border-strong); }
+  .guide-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+  .guide-header p  { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-family: var(--mono); }
+
+  /* ── NAV ── */
+  .day-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .day-btn {
+    padding:5px 13px; border:0.5px solid var(--border-strong);
+    border-radius:20px; font-size:12px; font-weight:500;
+    cursor:pointer; background:var(--bg); color:var(--text-muted);
+    transition:all 0.15s; font-family:var(--font);
+  }
+  .day-btn.active { background: var(--accent-btn); color: var(--accent-btn-text); border-color: var(--accent-btn); }
+  .day-btn:hover:not(.active) { background:var(--bg-secondary); }
+
+  /* ── DAY SECTIONS ── */
+  .day-section { display:none; }
+  .day-section.active { display:block; }
+
+  /* ── BADGES ── */
+  .section-badge {
+    display:inline-block; font-size:11px; font-weight:500;
+    padding:2px 10px; border-radius:20px; margin-bottom:8px;
+  }
+  .badge-purple { background:#EDE9FE; color:#3B0764; }
+  .badge-teal   { background:#CCFBF1; color:#0F4C3A; }
+  .badge-yellow { background:#FEF9C3; color:#713F0C; }
+  .badge-orange { background:#FFEDD5; color:#7C2D12; }
+  .badge-blue   { background:#DBEAFE; color:#1E3A8A; }
+  .badge-red    { background:#FEE2E2; color:#7F1D1D; }
+
+  .topic-title { font-size:17px; font-weight:500; margin-bottom:4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background:var(--bg); border:0.5px solid var(--border);
+    border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1rem;
+  }
+
+  /* ── CALLOUTS ── */
+  .callout { border-radius:var(--radius-md); padding:.75rem 1rem; margin-bottom:1rem; border-left:3px solid; }
+  .callout-tip  { background:#F0FDF4; border-color:#16A34A; }
+  .callout-trap { background:#FFF7ED; border-color:#EA580C; }
+  .callout-key  { background:#F5F3FF; border-color:#7C3AED; }
+  .callout-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .callout-tip  .callout-label { color:#16A34A; }
+  .callout-trap .callout-label { color:#EA580C; }
+  .callout-key  .callout-label { color:#6D28D9; }
+  .callout p, .callout li { font-size:13px; }
+  .callout ul { padding-left:1rem; margin-top:4px; }
+  .callout li { margin-bottom:2px; }
+
+  /* ── LISTS ── */
+  ul.guide-list { padding-left:1.1rem; margin:.5rem 0; }
+  ul.guide-list li { margin-bottom:5px; font-size:14px; }
+
+  /* ── COMPARISON TABLES ── */
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; margin:.75rem 0; }
+  .cmp-table th { padding:7px 10px; text-align:left; font-weight:500; font-size:12px; border-bottom:0.5px solid var(--border-strong); color:var(--text-muted); }
+  .cmp-table td { padding:7px 10px; border-bottom:0.5px solid var(--border); vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+
+  /* ── CODE PILLS ── */
+  .cmd {
+    display:inline-block; font-family:var(--mono); font-size:12px;
+    background:var(--bg-secondary); border:0.5px solid var(--border);
+    border-radius:4px; padding:1px 6px; color:var(--text);
+  }
+
+  /* ── SECTION HEADERS ── */
+  h3.sh { font-size:14px; font-weight:500; margin:1rem 0 .5rem; border-bottom:.5px solid var(--border); padding-bottom:4px; }
+  h4.sh4 { font-size:13px; font-weight:500; margin:.75rem 0 .25rem; color:var(--text-muted); }
+  .kt { font-weight:500; }
+  .divider { height:.5px; background:var(--border); margin:1.5rem 0; }
+
+  /* ── ROW PATTERNS ── */
+  .perm-row { padding:6px 0; border-bottom:.5px solid var(--border); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-label { font-weight:500; font-size:12px; margin-bottom:2px; }
+
+  /* ── OSI LAYER ROWS ── */
+  .layer-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:.5px solid var(--border); }
+  .layer-row:last-child { border-bottom:none; }
+  .layer-num {
+    min-width:26px; height:26px; border-radius:50%;
+    background: #EDE9FE; color: #3B0764;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:600; flex-shrink:0;
+  }
+  .layer-body { flex:1; }
+  .layer-name { font-size:13px; font-weight:500; }
+  .layer-meta { font-size:11.5px; color:var(--text-muted); margin-top:2px; }
+
+  /* ── QUICK REFERENCE TABLE ── */
+  .ref-section { margin-top:1.75rem; }
+  .ref-section-title {
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.08em;
+    color:var(--text-muted); margin-bottom:.6rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .ref-section-title::after { content:''; flex:1; height:.5px; background:var(--border-strong); }
+  .ref-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:1.25rem; }
+  .ref-table thead th {
+    padding:6px 10px; text-align:left; font-weight:500; font-size:11px;
+    background:var(--bg-secondary); color:var(--text-muted);
+    border-bottom:.5px solid var(--border-strong);
+  }
+  .ref-table thead th:first-child { border-radius:6px 0 0 0; }
+  .ref-table thead th:last-child  { border-radius:0 6px 0 0; }
+  .ref-table tbody td { padding:6px 10px; border-bottom:.5px solid var(--border); vertical-align:top; }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
+  .ref-table .rd { font-size:12px; color:var(--text-muted); }
+
+  /* ── PLACEHOLDER (days 2/3) ── */
+  .placeholder {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .placeholder-icon { font-size: 28px; margin-bottom: .75rem; }
+  .placeholder h3   { font-size: 16px; font-weight: 500; margin-bottom: .4rem; }
+  .placeholder p    { font-size: 13px; color: var(--text-muted); }
+
+  /* ── TOC SIDEBAR ── */
+  .toc-sidebar {
+    width: 155px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 1.25rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding: 1.25rem 0 1rem;
+    scrollbar-width: none;
+  }
+  .toc-sidebar::-webkit-scrollbar { display: none; }
+  .toc-title {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    margin-bottom: 0.6rem; padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border-strong);
+    font-family: var(--mono);
+  }
+  #toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+  #toc-list a {
+    display: block; font-size: 11px; line-height: 1.4;
+    text-decoration: none; border-radius: 4px;
+    color: var(--text-muted); padding: 4px 6px; transition: all 0.15s;
+  }
+  #toc-list a:hover { color: var(--text); background: var(--bg-secondary); }
+  #toc-list a.toc-active { color: #3B0764; background: #EDE9FE; font-weight: 500; }
+  #toc-list a.toc-main   { font-size: 11px; font-weight: 500; }
+  #toc-list a.toc-sub    { font-size: 10.5px; padding-left: 14px; opacity: 0.8; }
+
+  /* ── BACK TO TOP (mobile only) ── */
+  #back-to-top {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    padding: 0 14px; height: 38px; border-radius: 20px;
+    background: var(--accent-btn); color: var(--accent-btn-text);
+    font-size: 13px; font-family: var(--mono);
+    text-decoration: none; display: none;
+    align-items: center; gap: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s; z-index: 999;
+  }
+  #back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 640px) {
+    .page-layout  { padding: 0 0.85rem; gap: 0; }
+    .toc-sidebar  { display: none; }
+    #back-to-top  { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+<div class="guide">
+
+<div class="guide-header">
+  <h1>Ports &amp; Protocols</h1>
+  <p>// UCWT — Days 1–3 | OSI Model · IPv4/IPv6 · Protocols</p>
+</div>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     DAY 1
+══════════════════════════════════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-purple">OSI Model</div>
+  <div class="topic-title">The 7 Layers</div>
+
+  <div class="card">
+    <div class="layer-row">
+      <div class="layer-num">7</div>
+      <div class="layer-body">
+        <div class="layer-name">Application</div>
+        <div class="layer-meta">PDU: Data &nbsp;|&nbsp; Devices: Computers, terminals, printers</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">6</div>
+      <div class="layer-body">
+        <div class="layer-name">Presentation</div>
+        <div class="layer-meta">PDU: Data &nbsp;|&nbsp; Encoding, encryption, compression</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">5</div>
+      <div class="layer-body">
+        <div class="layer-name">Session</div>
+        <div class="layer-meta">PDU: Data &nbsp;|&nbsp; Establishes, manages, and terminates sessions</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">4</div>
+      <div class="layer-body">
+        <div class="layer-name">Transport</div>
+        <div class="layer-meta">PDU: Segments (TCP) / Datagrams (UDP) &nbsp;|&nbsp; End-to-end delivery</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">3</div>
+      <div class="layer-body">
+        <div class="layer-name">Network</div>
+        <div class="layer-meta">PDU: Packets &nbsp;|&nbsp; Devices: Routers, Multi-Layer Switches</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">2</div>
+      <div class="layer-body">
+        <div class="layer-name">Data Link</div>
+        <div class="layer-meta">PDU: Frames &nbsp;|&nbsp; Devices: Switches, Bridges, WAPs</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">1</div>
+      <div class="layer-body">
+        <div class="layer-name">Physical</div>
+        <div class="layer-meta">PDU: Bits &nbsp;|&nbsp; Devices: Wires, hubs, connectors, media converters</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Memory tip</div>
+    <p><strong>Please Do Not Throw Sausage Pizza Away</strong> — Physical, Data Link, Network, Transport, Session, Presentation, Application (bottom to top).</p>
+  </div>
+
+  <h3 class="sh">Data Encapsulation &amp; De-encapsulation</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Encapsulation</div>Sender adds headers (and a trailer at L2) as data travels <em>down</em> the OSI stack.</div>
+    <div class="perm-row"><div class="perm-label">De-encapsulation</div>Receiver strips headers and trailer as data travels <em>up</em> the OSI stack.</div>
+  </div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Layer</th><th>Data format (sender)</th></tr>
+      <tr><td>Application / Presentation / Session</td><td><span class="cmd">[Data]</span></td></tr>
+      <tr><td>Transport (L4)</td><td><span class="cmd">[L4H][Data]</span></td></tr>
+      <tr><td>Network (L3)</td><td><span class="cmd">[L3H][L4H][Data]</span></td></tr>
+      <tr><td>Data Link (L2)</td><td><span class="cmd">[L2H][L3H][L4H][Data][L2T]</span></td></tr>
+      <tr><td>Physical (L1)</td><td><span class="cmd">1001000101010101…</span> (raw bits)</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Layer 2 is the <strong>only</strong> layer that adds both a header <em>and</em> a trailer. The trailer contains the <strong>Frame Check Sequence (FCS)</strong> used for error detection.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">CIA Triad</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Principle</th><th>Meaning</th></tr>
+      <tr><td><span class="kt">Confidentiality</span></td><td>Secrecy of data &amp; access control — only authorized users can read data</td></tr>
+      <tr><td><span class="kt">Integrity</span></td><td>Data is accurate and unmodified — protects against tampering</td></tr>
+      <tr><td><span class="kt">Availability</span></td><td>Data and systems are accessible when needed — protects against DoS</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Data Link Layer — Layer 2</div>
+  <div class="topic-title">Frames, MACs &amp; Protocols</div>
+
+  <h3 class="sh">PDU &amp; key facts</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">PDU</div><span class="kt">Frames</span> — adds both a header and a trailer (FCS) to data.</div>
+    <div class="perm-row"><div class="perm-label">MAC address modification</div>Routers update the <strong>source and destination MAC addresses</strong> when forwarding packets between LAN interfaces — IP addresses stay the same.</div>
+  </div>
+
+  <h3 class="sh">Layer 2 devices</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Switch (L2 only)</div>
+      Connects multiple devices on a LAN. Reduces collision domains using packet switching. Routes by <strong>MAC address</strong> to physical port. Supports VLANs and PNAC (802.1X).
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Multi-Layer Switch (L2 + L3)</div>
+      All switch capabilities plus Layer 3 routing decisions.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Bridges &amp; WAPs</div>
+      Also operate at Layer 2. WAPs connect wireless clients to a wired network.
+    </div>
+  </div>
+
+  <h3 class="sh">MAC address structure</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Format</div>6 bytes written as 12 hex characters — e.g. <span class="cmd">AA:BB:CC:11:22:33</span></div>
+    <div class="perm-row"><div class="perm-label">OUI (first 3 bytes)</div>Organizational Unique Identifier — identifies the manufacturer or vendor.</div>
+    <div class="perm-row"><div class="perm-label">NIC/Serial (last 3 bytes)</div>Identifies the specific device.</div>
+  </div>
+
+  <h3 class="sh">Layer 2 protocols</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Protocol</th><th>Size</th><th>Purpose</th></tr>
+      <tr>
+        <td><span class="kt">802.3 (Ethernet)</span></td>
+        <td>14 bytes</td>
+        <td>Most basic L2 header. Contains source MAC, destination MAC, and 2-byte Ethertype (identifies next layer protocol, e.g. IPv4).</td>
+      </tr>
+      <tr>
+        <td><span class="kt">802.1Q (VLAN)</span></td>
+        <td>+4 bytes</td>
+        <td>Appends a 4-byte VLAN tag to the Ethernet header for logical traffic separation over L2 devices.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Switches operate at <strong>Layer 2 only</strong>. Multi-Layer Switches operate at <strong>Layer 2 AND Layer 3</strong>. Routers operate at Layer 3. Know which device lives at which layer.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">Network Layer — Layer 3</div>
+  <div class="topic-title">Packets, Routing &amp; IP Addressing</div>
+
+  <h3 class="sh">Layer 3 key facts</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">PDU</div><span class="kt">Packets</span> — integrity check (checksum) is built into the L3 header (unlike Frames which use a trailer).</div>
+    <div class="perm-row"><div class="perm-label">Standards body</div>IETF defines Layer 3 standards using the <span class="kt">RFC</span> system. RFC 791 = IPv4. RFC 8200 = IPv6.</div>
+    <div class="perm-row"><div class="perm-label">Frame stripping</div>When traffic leaves a LAN, L3 devices strip the frame to read the packet header and make routing decisions.</div>
+  </div>
+
+  <h3 class="sh">Layer 3 devices</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Router</div>
+      Connects multiple networks and Autonomous Systems (the internet). Builds routing tables dynamically using <span class="kt">RIP</span> or <span class="kt">OSPF</span>. Routes by IP address.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Multi-Layer Switch</div>
+      Can make both L2 (MAC) and L3 (IP) routing decisions.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">IPv4</div>
+
+  <h3 class="sh">IPv4 overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Address size</div>32-bit / 4 bytes — written as 4 decimal octets 0–255 separated by periods. Ex: <span class="cmd">192.168.0.1</span></div>
+    <div class="perm-row"><div class="perm-label">Address space</div>2<sup>32</sup> unique addresses (~4.3 billion).</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>20 bytes (standard, without options).</div>
+    <div class="perm-row"><div class="perm-label">Delivery model</div>Connectionless, <strong>best-effort</strong> — no guaranteed delivery, ordering, or duplicate prevention without TCP.</div>
+    <div class="perm-row"><div class="perm-label">Private addressing</div>Supports internal routing via <span class="kt">NAT</span> and private IP ranges.</div>
+    <div class="perm-row"><div class="perm-label">MAC mapping</div>Uses <span class="kt">ARP</span> (Address Resolution Protocol) to map IP → MAC.</div>
+  </div>
+
+  <h3 class="sh">IPv4 header structure</h3>
+  <div class="card" style="font-family: var(--mono); font-size: 12px;">
+    <table class="cmp-table" style="font-family: var(--mono); font-size: 11.5px;">
+      <tr><th style="width:33%">Bits 0–15</th><th style="width:33%">Bits 16–31</th><th></th></tr>
+      <tr><td>IP Version + IHL + TOS</td><td colspan="2">Total IP Length</td></tr>
+      <tr><td>Identification</td><td>Flags</td><td>Fragment Offset</td></tr>
+      <tr><td>TTL</td><td>Next Protocol</td><td>IP Header Checksum</td></tr>
+      <tr><td colspan="3">Source IP Address</td></tr>
+      <tr><td colspan="3">Destination IP Address</td></tr>
+      <tr><td colspan="3">Options + Padding</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">IPv4 vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Spoofing <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality / Availability)</span></div>
+      Attacker forges packets from a trusted source address to bypass auth, launch DoS attacks, or redirect traffic.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Sniffing <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality)</span></div>
+      Attacker intercepts and reads unencrypted packets to steal sensitive data.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">IPv6</div>
+
+  <h3 class="sh">IPv6 overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Address size</div>128-bit / 16 bytes — written as 8 groups of 4 hex characters separated by colons. Ex: <span class="cmd">1111:2202:0333:0004:ffff:0000:0000:bbbb</span></div>
+    <div class="perm-row"><div class="perm-label">Address space</div>2<sup>128</sup> unique addresses — effectively unlimited.</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>40 bytes (fixed, simpler than IPv4).</div>
+    <div class="perm-row"><div class="perm-label">MAC mapping</div>Uses <span class="kt">NDP</span> (Neighbor Discovery Protocol) instead of ARP.</div>
+    <div class="perm-row"><div class="perm-label">Security</div>IPSec is <strong>mandatory when requested</strong> (optional in IPv4).</div>
+    <div class="perm-row"><div class="perm-label">No NAT</div>True end-to-end connectivity — every device gets a globally unique address.</div>
+  </div>
+
+  <h3 class="sh">IPv6 address abbreviation rules</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Rule 1</div>Drop leading zeros within each group. <span class="cmd">0333</span> → <span class="cmd">333</span></div>
+    <div class="perm-row"><div class="perm-label">Rule 2</div>Replace the <strong>largest</strong> consecutive group of all-zero blocks with <span class="cmd">::</span> — only once.</div>
+    <div class="perm-row"><div class="perm-label">Rule 3</div>Replace any other single all-zero group with <span class="cmd">0</span>.</div>
+    <div class="perm-row"><div class="perm-label">Example</div><span class="cmd">1111:2202:0333:0004:ffff:0000:0000:bbbb</span> → <span class="cmd">1111:2202:333:4:ffff::bbbb</span></div>
+  </div>
+
+  <h3 class="sh">IPv6 vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">NDP misconfig <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality / Integrity)</span></div>
+      Rogue DHCPv6 servers and misconfigured NDP can expose MAC addresses and reassign IPv6 addresses on a private network.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Higher misconfig risk <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Integrity / Availability)</span></div>
+      IPv6 has greater complexity, increasing the chance of device and security misconfiguration.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">IPv4 vs IPv6</div>
+  <div class="topic-title">Side-by-side comparison</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>IPv4</th><th>IPv6</th></tr>
+      <tr><td>Address size</td><td>32-bit / 4 bytes</td><td>128-bit / 16 bytes</td></tr>
+      <tr><td>Address format</td><td>Decimal — <span class="cmd">192.168.0.1</span></td><td>Hexadecimal — <span class="cmd">1111::ffff:0:1</span></td></tr>
+      <tr><td>Header size</td><td>20 bytes</td><td>40 bytes</td></tr>
+      <tr><td>Checksum in header</td><td>Yes</td><td>No</td></tr>
+      <tr><td>Fragmentation</td><td>In standard header (Flags + Fragment Offset)</td><td>Via appended extension header</td></tr>
+      <tr><td>Address config</td><td>Manual or DHCP</td><td>Static, ICMPv6, or DHCPv6</td></tr>
+      <tr><td>IPSec security</td><td>Optional</td><td>Required (when requested)</td></tr>
+      <tr><td>MAC mapping</td><td>ARP</td><td>NDP</td></tr>
+      <tr><td>NAT required</td><td>Yes (address exhaustion)</td><td>No (true end-to-end)</td></tr>
+      <tr><td>Multicasting</td><td>Optional</td><td>Built-in</td></tr>
+      <tr><td>QoS (Quality of Service)</td><td>Optional</td><td>Built-in</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>IPv6 headers do <strong>not</strong> contain a checksum — that was intentionally removed to reduce processing overhead. Error checking is handled by upper-layer protocols.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Fragmentation &amp; Vulnerabilities</div>
+
+  <h3 class="sh">Fragmentation</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it is</div>Breaking data into chunks when payload exceeds the <span class="kt">MTU (Maximum Transmission Unit)</span>. Receiver reassembles the chunks.</div>
+    <div class="perm-row"><div class="perm-label">IPv4</div>Handled within the standard header using the <strong>Flags</strong> and <strong>Fragment Offset</strong> fields. Standard MTU = 1500 bytes → Fragment Offset in multiples of 8-byte blocks.</div>
+    <div class="perm-row"><div class="perm-label">IPv6</div>Handled via an additional 8-byte <strong>fragmentation extension header</strong> — not in the base header.</div>
+  </div>
+
+  <h3 class="sh">Fragmentation vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Firewall evasion <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality / Integrity)</span></div>
+      Firewalls may miss fragmented malware — it passes inspection in pieces and reassembles as malicious payload at the endpoint.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">MITM fragment tampering <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Integrity)</span></div>
+      A man-in-the-middle attacker can alter individual fragments, corrupting a data transfer or injecting malicious content.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Fragment flood DoS <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Availability)</span></div>
+      Attacker spams fake fragments that can never be reassembled, exhausting memory buffers and causing a Denial of Service.
+    </div>
+  </div>
+
+  <!-- ── DAY 1 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 1 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Term / Concept</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">PDU</td><td class="rd">Protocol Data Unit — the name for data at each OSI layer (Bits / Frames / Packets / Segments)</td></tr>
+        <tr><td class="rc">Encapsulation</td><td class="rd">Adding headers (and L2 trailer) as data travels down the OSI stack (sender side)</td></tr>
+        <tr><td class="rc">De-encapsulation</td><td class="rd">Stripping headers and trailer as data travels up the OSI stack (receiver side)</td></tr>
+        <tr><td class="rc">FCS</td><td class="rd">Frame Check Sequence — trailer added at Layer 2 for error detection</td></tr>
+        <tr><td class="rc">MAC address</td><td class="rd">6-byte L2 address (OUI 3 bytes + NIC/Serial 3 bytes) written as 12 hex characters</td></tr>
+        <tr><td class="rc">OUI</td><td class="rd">Organizational Unique Identifier — first 3 bytes of MAC, identifies the manufacturer</td></tr>
+        <tr><td class="rc">802.3</td><td class="rd">Ethernet — 14-byte L2 header with src/dst MAC + 2-byte Ethertype</td></tr>
+        <tr><td class="rc">802.1Q</td><td class="rd">VLAN protocol — appends 4-byte tag to Ethernet header for traffic separation</td></tr>
+        <tr><td class="rc">Frame stripping</td><td class="rd">L3 devices remove the L2 frame to read the packet header for routing decisions</td></tr>
+        <tr><td class="rc">RFC</td><td class="rd">Request for Comment — IETF standard documents. RFC 791 = IPv4, RFC 8200 = IPv6</td></tr>
+        <tr><td class="rc">RIP / OSPF</td><td class="rd">Routing protocols used to dynamically build routing tables within an Autonomous System</td></tr>
+        <tr><td class="rc">NAT</td><td class="rd">Network Address Translation — allows private IPs to share a public IP (IPv4 only)</td></tr>
+        <tr><td class="rc">ARP</td><td class="rd">Address Resolution Protocol — maps IPv4 address to MAC address</td></tr>
+        <tr><td class="rc">NDP</td><td class="rd">Neighbor Discovery Protocol — maps IPv6 address to MAC address (replaces ARP)</td></tr>
+        <tr><td class="rc">MTU</td><td class="rd">Maximum Transmission Unit — max packet size before fragmentation occurs (standard 1500 bytes)</td></tr>
+        <tr><td class="rc">TTL</td><td class="rd">Time To Live — decremented at each hop; prevents packets from circulating forever</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>Layer</th><th>PDU</th><th>Key device(s)</th><th>Address type</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">7 — Application</td><td class="rd">Data</td><td class="rd">Computers, terminals</td><td class="rd">—</td></tr>
+        <tr><td class="rc">4 — Transport</td><td class="rd">Segments / Datagrams</td><td class="rd">—</td><td class="rd">Port numbers</td></tr>
+        <tr><td class="rc">3 — Network</td><td class="rd">Packets</td><td class="rd">Routers, MLS</td><td class="rd">IP addresses</td></tr>
+        <tr><td class="rc">2 — Data Link</td><td class="rd">Frames</td><td class="rd">Switches, bridges</td><td class="rd">MAC addresses</td></tr>
+        <tr><td class="rc">1 — Physical</td><td class="rd">Bits</td><td class="rd">Hubs, wires</td><td class="rd">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day1 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 2 — PLACEHOLDER
+══════════════════════════════════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="placeholder">
+    <div class="placeholder-icon">📡</div>
+    <h3>Day 2 — Coming Soon</h3>
+    <p>Content will be added once notes are provided.<br>Topics may include: Transport Layer, TCP vs UDP, port numbers, and common protocols.</p>
+  </div>
+
+</div><!-- /day2 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 3 — PLACEHOLDER
+══════════════════════════════════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="placeholder">
+    <div class="placeholder-icon">🔌</div>
+    <h3>Day 3 — Coming Soon</h3>
+    <p>Content will be added once notes are provided.<br>Topics may include: Application layer protocols, well-known ports, and security considerations.</p>
+  </div>
+
+</div><!-- /day3 -->
+
+</div><!-- end .guide -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this page</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  // ── DAY SWITCHER ──────────────────────────────
+  function showDay(n) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('day' + n).classList.add('active');
+    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  // ── BUILD TOC ─────────────────────────────────
+  let observer = null;
+
+  function buildTOC() {
+    const activeDay = document.querySelector('.day-section.active');
+    const tocList   = document.getElementById('toc-list');
+
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
+
+    // if placeholder day, show nothing
+    if (items.length === 0) return;
+
+    items.forEach((el, i) => {
+      el.id = 'toc-anchor-' + i;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href        = '#toc-anchor-' + i;
+      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
+      a.textContent = el.textContent.trim();
+
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // ── INTERSECTION OBSERVER ─────────────────
+    const links = tocList.querySelectorAll('a');
+
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('toc-active'));
+          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('toc-active');
+            active.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      });
+    }, {
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0
+    });
+
+    items.forEach(el => observer.observe(el));
+  }
+
+  // ── BACK TO TOP ───────────────────────────────
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  buildTOC();
+</script>
+
+</body>
+</html>
