@@ -564,7 +564,7 @@
   <div class="topic-title">Process fundamentals</div>
 
   <div class="card">
-    <div class="perm-row"><div class="perm-label">PID</div>Every running process has a unique Process ID. <span class="cmd">init</span> is always PID 1.</div>
+    <div class="perm-row"><div class="perm-label">PID</div>Every running process has a unique Process ID. <span class="cmd">init</span> is always PID 1. <span class="cmd">kthreadd</span> is the parent process for all other background kernel threads and is always PID 2.</div>
     <div class="perm-row"><div class="perm-label">PPID</div>Parent Process ID — who spawned this process.</div>
     <div class="perm-row"><div class="perm-label">/proc/</div>Pseudo-filesystem containing info on all currently running processes.</div>
   </div>
