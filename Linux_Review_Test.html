@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Review Test — UCWT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0e1117;
+  --bg2:         #161b22;
+  --bg3:         #1c2128;
+  --bg4:         #21262d;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #e1e8f0;
+  --muted:       #7b8899;
+  --green:       #3fb950;
+  --green-dim:   rgba(63,185,80,0.12);
+  --red:         #f85149;
+  --red-dim:     rgba(248,81,73,0.12);
+  --yellow:      #e3b341;
+  --yellow-dim:  rgba(227,179,65,0.10);
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.10);
+  --purple:      #bc8cff;
+  --orange:      #f0883e;
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0 0 4rem;
+}
+
+.shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.75rem 1.25rem;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+}
+.header-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+.header-title {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--green);
+}
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.score-board {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: .75rem 1rem;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.score-item { display: flex; flex-direction: column; gap: 2px; }
+.score-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.score-val   { color: var(--text); font-weight: 600; font-size: 15px; }
+.score-divider { width: 1px; height: 32px; background: var(--border2); }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 1.25rem;
+  margin-top: 2rem;
+}
+.section-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.tag-mc      { background: var(--blue-dim);   color: var(--blue); }
+.tag-tf      { background: var(--yellow-dim); color: var(--yellow); }
+.tag-sa      { background: var(--purple-dim, rgba(188,140,255,.10)); color: var(--purple); }
+.tag-match   { background: var(--green-dim);  color: var(--green); }
+.section-count { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color .2s;
+}
+.q-card.correct { border-color: var(--green) !important; }
+.q-card.wrong   { border-color: var(--red)   !important; }
+
+.q-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .4rem;
+}
+.q-text {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: .85rem;
+  line-height: 1.55;
+}
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--green);
+}
+
+/* ── MC OPTIONS ── */
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  transition: all .15s;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.option:hover { border-color: var(--border2); background: var(--bg4); }
+.option.selected { border-color: var(--blue); background: var(--blue-dim); }
+.option.correct  { border-color: var(--green) !important; background: var(--green-dim) !important; }
+.option.wrong    { border-color: var(--red)   !important; background: var(--red-dim)   !important; }
+.opt-letter {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 18px;
+  margin-top: 1px;
+}
+.option.selected .opt-letter { color: var(--blue); }
+.option.correct  .opt-letter { color: var(--green); }
+.option.wrong    .opt-letter { color: var(--red); }
+
+/* ── TRUE / FALSE ── */
+.tf-options { display: flex; gap: 8px; margin-top: 4px; }
+.tf-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.tf-btn:hover   { border-color: var(--border2); background: var(--bg4); }
+.tf-btn.selected{ border-color: var(--blue); background: var(--blue-dim); color: var(--blue); }
+.tf-btn.correct { border-color: var(--green) !important; background: var(--green-dim) !important; color: var(--green) !important; }
+.tf-btn.wrong   { border-color: var(--red)   !important; background: var(--red-dim)   !important; color: var(--red) !important; }
+
+/* ── SHORT ANSWER ── */
+.sa-textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  padding: 10px 12px;
+  resize: vertical;
+  transition: border-color .15s;
+  line-height: 1.5;
+}
+.sa-textarea:focus { outline: none; border-color: var(--border2); }
+
+.reveal-btn {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.reveal-btn:hover { color: var(--text); border-color: var(--green); }
+
+.answer-reveal {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--green-dim);
+  border: 1px solid rgba(63,185,80,0.25);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.answer-reveal.open { display: block; }
+.answer-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 5px;
+}
+
+/* ── MATCHING ── */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+@media (max-width: 520px) { .match-grid { grid-template-columns: 1fr; } }
+
+.match-left, .match-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.match-item {
+  padding: 8px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.match-item.col-a { border-left: 3px solid var(--blue); }
+.match-item.col-b { border-left: 3px solid var(--purple); }
+
+.match-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.match-label.col-a { color: var(--blue); }
+.match-label.col-b { color: var(--purple); }
+
+.match-select {
+  width: 100%;
+  margin-top: 4px;
+  padding: 5px 8px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 12px;
+  cursor: pointer;
+}
+.match-select:focus { outline: none; border-color: var(--border2); }
+
+.match-answer-row {
+  display: none;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--green-dim);
+  border: 1px solid rgba(63,185,80,0.25);
+  border-radius: 6px;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.match-answer-row.open { display: block; }
+.match-answer-key { font-family: var(--mono); font-size: 11px; color: var(--green); }
+
+/* ── FEEDBACK ── */
+.feedback {
+  display: none;
+  margin-top: 8px;
+  font-size: 12px;
+  font-family: var(--mono);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.feedback.show-correct { display: block; background: var(--green-dim); color: var(--green); }
+.feedback.show-wrong   { display: block; background: var(--red-dim);   color: var(--red); }
+
+/* ── CHECK / RESET BUTTONS ── */
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+.btn-check {
+  padding: 10px 24px;
+  background: #16633A;
+  color: #D1FAE5;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-check:hover { background: #1a7a46; }
+.btn-reset {
+  padding: 10px 24px;
+  background: var(--bg2);
+  color: var(--muted);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-reset:hover { color: var(--text); border-color: var(--red); }
+
+/* ── RESULT BANNER ── */
+.result-banner {
+  display: none;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid;
+  font-size: 14px;
+}
+.result-banner.show { display: block; }
+.result-banner.pass { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.result-banner.fail { background: var(--red-dim);   border-color: var(--red);   color: var(--red); }
+.result-big { font-family: var(--mono); font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+.result-sub { font-size: 13px; opacity: .85; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">linux<span>/</span>review-test</div>
+        <div class="header-sub">// UCWT · Days 1–5 · 15 Questions</div>
+      </div>
+    </div>
+    <div class="score-board">
+      <div class="score-item">
+        <span class="score-label">Auto-scored</span>
+        <span class="score-val" id="score-display">—</span>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <span class="score-label">MC + T/F</span>
+        <span class="score-val">9 pts</span>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <span class="score-label">Short Answer</span>
+        <span class="score-val">3 pts</span>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <span class="score-label">Matching</span>
+        <span class="score-val">3 pts</span>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <span class="score-label">Total</span>
+        <span class="score-val">15 pts</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 1 — MULTIPLE CHOICE
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-mc">Multiple Choice</span>
+    <span class="section-count">Questions 1 – 5 &nbsp;·&nbsp; 1 pt each</span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-num">Question 1</div>
+    <div class="q-text">Which command should <em>always</em> be used to edit the <code>/etc/sudoers</code> file?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q1','A')" id="q1-A"><span class="opt-letter">A</span>nano /etc/sudoers</div>
+      <div class="option" onclick="selectOption('q1','B')" id="q1-B"><span class="opt-letter">B</span>vim /etc/sudoers</div>
+      <div class="option" onclick="selectOption('q1','C')" id="q1-C"><span class="opt-letter">C</span>visudo</div>
+      <div class="option" onclick="selectOption('q1','D')" id="q1-D"><span class="opt-letter">D</span>sudo edit /etc/sudoers</div>
+    </div>
+    <div class="feedback" id="q1-feedback"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-num">Question 2</div>
+    <div class="q-text">Which Linux directory is a <em>pseudo-filesystem</em> that only exists while the system is running and contains live process information?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q2','A')" id="q2-A"><span class="opt-letter">A</span><code>/var/</code></div>
+      <div class="option" onclick="selectOption('q2','B')" id="q2-B"><span class="opt-letter">B</span><code>/tmp/</code></div>
+      <div class="option" onclick="selectOption('q2','C')" id="q2-C"><span class="opt-letter">C</span><code>/proc/</code></div>
+      <div class="option" onclick="selectOption('q2','D')" id="q2-D"><span class="opt-letter">D</span><code>/opt/</code></div>
+    </div>
+    <div class="feedback" id="q2-feedback"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-num">Question 3</div>
+    <div class="q-text">A file has permissions set with <code>chmod 4755 file</code>. What does the leading <strong>4</strong> represent?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q3','A')" id="q3-A"><span class="opt-letter">A</span>Sticky bit — prevents unprivileged users from deleting files</div>
+      <div class="option" onclick="selectOption('q3','B')" id="q3-B"><span class="opt-letter">B</span>SGID — executable runs as the group owner</div>
+      <div class="option" onclick="selectOption('q3','C')" id="q3-C"><span class="opt-letter">C</span>SUID — executable runs as the file owner</div>
+      <div class="option" onclick="selectOption('q3','D')" id="q3-D"><span class="opt-letter">D</span>Full read permissions for all users</div>
+    </div>
+    <div class="feedback" id="q3-feedback"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-num">Question 4</div>
+    <div class="q-text">Which command has replaced <code>netstat</code> on modern Linux systems for displaying socket and connection information?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q4','A')" id="q4-A"><span class="opt-letter">A</span><code>ip a</code></div>
+      <div class="option" onclick="selectOption('q4','B')" id="q4-B"><span class="opt-letter">B</span><code>ifconfig</code></div>
+      <div class="option" onclick="selectOption('q4','C')" id="q4-C"><span class="opt-letter">C</span><code>ss</code></div>
+      <div class="option" onclick="selectOption('q4','D')" id="q4-D"><span class="opt-letter">D</span><code>route</code></div>
+    </div>
+    <div class="feedback" id="q4-feedback"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-num">Question 5</div>
+    <div class="q-text">On a <strong>RedHat-based</strong> Linux system, where are authentication events such as logins and sudo usage logged?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q5','A')" id="q5-A"><span class="opt-letter">A</span><code>/var/log/auth.log</code></div>
+      <div class="option" onclick="selectOption('q5','B')" id="q5-B"><span class="opt-letter">B</span><code>/var/log/syslog</code></div>
+      <div class="option" onclick="selectOption('q5','C')" id="q5-C"><span class="opt-letter">C</span><code>/var/log/messages</code></div>
+      <div class="option" onclick="selectOption('q5','D')" id="q5-D"><span class="opt-letter">D</span><code>/var/log/secure</code></div>
+    </div>
+    <div class="feedback" id="q5-feedback"></div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 2 — TRUE / FALSE
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-tf">True / False</span>
+    <span class="section-count">Questions 6 – 9 &nbsp;·&nbsp; 1 pt each</span>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-num">Question 6</div>
+    <div class="q-text">The <code>/proc/</code> filesystem persists between reboots and stores permanent system configuration data.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q6','T')" id="q6-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q6','F')" id="q6-F">False</button>
+    </div>
+    <div class="feedback" id="q6-feedback"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-num">Question 7</div>
+    <div class="q-text">A <strong>zombie process</strong> is a child process that continues to run after its parent process has terminated.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q7','T')" id="q7-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q7','F')" id="q7-F">False</button>
+    </div>
+    <div class="feedback" id="q7-feedback"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-num">Question 8</div>
+    <div class="q-text">Running <code>export VAR</code> makes an environment variable available to child shell processes.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q8','T')" id="q8-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q8','F')" id="q8-F">False</button>
+    </div>
+    <div class="feedback" id="q8-feedback"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-num">Question 9</div>
+    <div class="q-text">The Bourne Again Shell (<code>bash</code>) does not maintain a command history file.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q9','T')" id="q9-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q9','F')" id="q9-F">False</button>
+    </div>
+    <div class="feedback" id="q9-feedback"></div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 3 — SHORT ANSWER
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-sa">Short Answer</span>
+    <span class="section-count">Questions 10 – 12 &nbsp;·&nbsp; 1 pt each · self-assessed</span>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-num">Question 10</div>
+    <div class="q-text">Describe the correct order of the Linux boot process, naming all 4 stages and what happens at each one.</div>
+    <textarea class="sa-textarea" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal('rev10')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev10">
+      <div class="answer-label">Answer</div>
+      <strong>1. Firmware (BIOS/UEFI)</strong> — Runs POST, discovers hardware, loads the bootloader into memory.<br>
+      <strong>2. Boot Loader (GRUB)</strong> — Loads the kernel into working memory. May allow user to choose which kernel.<br>
+      <strong>3. Kernel</strong> — Starts <code>/sbin/init</code> and loads processes needed for the OS to run.<br>
+      <strong>4. User Space</strong> — Init system (SysV/Upstart/Systemd) starts services; user can now interact with the host.
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="q11">
+    <div class="q-num">Question 11</div>
+    <div class="q-text">What is the difference between the <code>kill</code> command and the <code>killall</code> command? Give an example of each.</div>
+    <textarea class="sa-textarea" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal('rev11')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev11">
+      <div class="answer-label">Answer</div>
+      <strong>kill</strong> terminates a process using its <strong>PID (Process ID)</strong> — e.g. <code>kill -9 1234</code><br>
+      <strong>killall</strong> (and <code>pkill</code>) terminate processes using the <strong>process name</strong> — e.g. <code>killall firefox</code><br>
+      The <code>-9</code> flag sends a SIGKILL signal, which force-terminates the process immediately with no cleanup.
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="q12">
+    <div class="q-num">Question 12</div>
+    <div class="q-text">Explain what <code>umask 022</code> means. What permissions will a newly created <em>directory</em> have when this umask is active, and what will a new <em>file</em> have?</div>
+    <textarea class="sa-textarea" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal('rev12')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev12">
+      <div class="answer-label">Answer</div>
+      The <strong>umask</strong> value is subtracted from the system default permissions when creating new files/dirs.<br><br>
+      <strong>Directory:</strong> Default is 777 → 777 − 022 = <code>755</code> (rwx r-x r-x) — owner has full control, group and others can read and execute.<br>
+      <strong>File:</strong> Default is 666 → 666 − 022 = <code>644</code> (rw- r-- r--) — owner can read/write, group and others can only read. Files don't get execute by default.
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 4 — MATCHING
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-match">Matching</span>
+    <span class="section-count">Questions 13 – 15 &nbsp;·&nbsp; 1 pt each · self-assessed</span>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="q13">
+    <div class="q-num">Question 13</div>
+    <div class="q-text">Match each <code>/etc/</code> file on the left to its correct purpose on the right.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — File</div>
+        <div class="match-item col-a"><code>/etc/shadow</code></div>
+        <div class="match-item col-a"><code>/etc/passwd</code></div>
+        <div class="match-item col-a"><code>/etc/sudoers</code></div>
+        <div class="match-item col-a"><code>/etc/group</code></div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — Purpose</div>
+        <div class="match-item col-b">1. Configures which users can run <code>sudo</code> and what commands</div>
+        <div class="match-item col-b">2. Hashed passwords and account aging policy (root-readable only)</div>
+        <div class="match-item col-b">3. User account info: UID, GID, home directory, login shell</div>
+        <div class="match-item col-b">4. Group membership information for each account</div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev13')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev13">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-answer-key">/etc/shadow</span> → <strong>2</strong> — Hashed passwords and account aging policy<br>
+      <span class="match-answer-key">/etc/passwd</span> → <strong>3</strong> — User account info (UID, GID, home, shell)<br>
+      <span class="match-answer-key">/etc/sudoers</span> → <strong>1</strong> — Configures sudo usage<br>
+      <span class="match-answer-key">/etc/group</span> → <strong>4</strong> — Group membership information
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="q14">
+    <div class="q-num">Question 14</div>
+    <div class="q-text">Match each binary login log file to the correct command used to read it.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — File</div>
+        <div class="match-item col-a"><code>/var/run/utmp</code></div>
+        <div class="match-item col-a"><code>/var/log/wtmp</code></div>
+        <div class="match-item col-a"><code>/var/log/btmp</code></div>
+        <div class="match-item col-a"><code>/var/log/lastlog</code></div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — Command</div>
+        <div class="match-item col-b">1. <code>lastb</code> — displays failed login attempts</div>
+        <div class="match-item col-b">2. <code>lastlog</code> — most recent login per user</div>
+        <div class="match-item col-b">3. <code>w</code> or <code>who</code> — currently logged-on users</div>
+        <div class="match-item col-b">4. <code>last</code> — successful login history</div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev14')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev14">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-answer-key">/var/run/utmp</span> → <strong>3</strong> — <code>w</code> or <code>who</code><br>
+      <span class="match-answer-key">/var/log/wtmp</span> → <strong>4</strong> — <code>last</code><br>
+      <span class="match-answer-key">/var/log/btmp</span> → <strong>1</strong> — <code>lastb</code><br>
+      <span class="match-answer-key">/var/log/lastlog</span> → <strong>2</strong> — <code>lastlog</code>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="q15">
+    <div class="q-num">Question 15</div>
+    <div class="q-text">Match each special Linux permission to its correct description.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — Permission</div>
+        <div class="match-item col-a"><strong>SUID</strong> (value: 4)</div>
+        <div class="match-item col-a"><strong>SGID</strong> (value: 2)</div>
+        <div class="match-item col-a"><strong>Sticky Bit</strong> (value: 1)</div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — Description</div>
+        <div class="match-item col-b">1. Prevents unprivileged users from deleting files they do not own in a shared directory</div>
+        <div class="match-item col-b">2. Executable runs with the permissions of the <em>file owner</em></div>
+        <div class="match-item col-b">3. Executable runs with the permissions of the <em>group owner</em></div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev15')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev15">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-answer-key">SUID</span> → <strong>2</strong> — Runs as the file owner (e.g. <code>/bin/passwd</code> runs as root)<br>
+      <span class="match-answer-key">SGID</span> → <strong>3</strong> — Runs as the group owner<br>
+      <span class="match-answer-key">Sticky Bit</span> → <strong>1</strong> — Only owner can delete their own files (common on <code>/tmp/</code>)
+    </div>
+  </div>
+
+
+  <!-- ── SUBMIT ROW ── -->
+  <div class="action-row">
+    <button class="btn-check" onclick="checkAnswers()">Check MC &amp; T/F Answers</button>
+    <button class="btn-reset" onclick="resetTest()">Reset Test</button>
+  </div>
+
+  <div class="result-banner" id="result-banner">
+    <div class="result-big" id="result-score"></div>
+    <div class="result-sub" id="result-msg"></div>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+  // ── ANSWER KEY ──────────────────────────────
+  const MC_ANSWERS = { q1:'C', q2:'C', q3:'C', q4:'C', q5:'D' };
+  const TF_ANSWERS = { q6:'F', q7:'F', q8:'T', q9:'F' };
+
+  const selections = {};
+
+  // ── SELECT MC OPTION ──────────────────────────
+  function selectOption(qid, letter) {
+    // clear previous selection for this question
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`${qid}-${l}`);
+      if (el) el.classList.remove('selected');
+    });
+    const el = document.getElementById(`${qid}-${letter}`);
+    if (el) el.classList.add('selected');
+    selections[qid] = letter;
+  }
+
+  // ── SELECT T/F ────────────────────────────────
+  function selectTF(qid, val) {
+    ['T','F'].forEach(v => {
+      const el = document.getElementById(`${qid}-${v}`);
+      if (el) el.classList.remove('selected');
+    });
+    const el = document.getElementById(`${qid}-${val}`);
+    if (el) el.classList.add('selected');
+    selections[qid] = val;
+  }
+
+  // ── REVEAL TOGGLE (short answer + matching) ───
+  function toggleReveal(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    el.classList.toggle('open');
+    btn.textContent = el.classList.contains('open') ? 'Hide Answer' : 'Reveal Answer';
+  }
+
+  // ── CHECK ANSWERS ─────────────────────────────
+  function checkAnswers() {
+    let score = 0;
+    const total = Object.keys(MC_ANSWERS).length + Object.keys(TF_ANSWERS).length;
+
+    // ── MC ──
+    Object.entries(MC_ANSWERS).forEach(([qid, correct]) => {
+      const selected = selections[qid];
+      const card     = document.getElementById(qid);
+      const feedback = document.getElementById(`${qid}-feedback`);
+
+      ['A','B','C','D'].forEach(l => {
+        const opt = document.getElementById(`${qid}-${l}`);
+        if (!opt) return;
+        opt.classList.remove('selected','correct','wrong');
+        if (l === correct) opt.classList.add('correct');
+        else if (l === selected && selected !== correct) opt.classList.add('wrong');
+      });
+
+      card.classList.remove('correct','wrong');
+      if (!selected) {
+        feedback.textContent = '⚠ No answer selected.';
+        feedback.className = 'feedback show-wrong';
+      } else if (selected === correct) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback show-correct';
+      } else {
+        card.classList.add('wrong');
+        feedback.textContent = `✗ Incorrect. The correct answer is ${correct}.`;
+        feedback.className = 'feedback show-wrong';
+      }
+    });
+
+    // ── T/F ──
+    Object.entries(TF_ANSWERS).forEach(([qid, correct]) => {
+      const selected = selections[qid];
+      const card     = document.getElementById(qid);
+      const feedback = document.getElementById(`${qid}-feedback`);
+
+      ['T','F'].forEach(v => {
+        const btn = document.getElementById(`${qid}-${v}`);
+        if (!btn) return;
+        btn.classList.remove('selected','correct','wrong');
+        if (v === correct) btn.classList.add('correct');
+        else if (v === selected && selected !== correct) btn.classList.add('wrong');
+      });
+
+      card.classList.remove('correct','wrong');
+      const label = correct === 'T' ? 'True' : 'False';
+      if (!selected) {
+        feedback.textContent = '⚠ No answer selected.';
+        feedback.className = 'feedback show-wrong';
+      } else if (selected === correct) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback show-correct';
+      } else {
+        card.classList.add('wrong');
+        feedback.textContent = `✗ Incorrect. The correct answer is ${label}.`;
+        feedback.className = 'feedback show-wrong';
+      }
+    });
+
+    // ── SCORE DISPLAY ──
+    document.getElementById('score-display').textContent = `${score} / ${total}`;
+
+    const banner  = document.getElementById('result-banner');
+    const scoreTxt = document.getElementById('result-score');
+    const msg     = document.getElementById('result-msg');
+    const pct     = Math.round((score / total) * 100);
+
+    scoreTxt.textContent = `${score} / ${total} (${pct}%)`;
+    banner.classList.add('show');
+
+    if (pct >= 80) {
+      banner.className = 'result-banner show pass';
+      msg.textContent = 'Great work! Review any missed questions and check your short answers and matching against the answer keys.';
+    } else if (pct >= 60) {
+      banner.className = 'result-banner show pass';
+      msg.textContent = 'Good effort — review the questions you missed and use the study guide to reinforce those topics.';
+    } else {
+      banner.className = 'result-banner show fail';
+      msg.textContent = 'Keep studying! Reveal the short answer and matching keys, then revisit the study guide sections that gave you trouble.';
+    }
+
+    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── RESET ─────────────────────────────────────
+  function resetTest() {
+    // clear selections
+    Object.keys(selections).forEach(k => delete selections[k]);
+
+    // MC
+    Object.keys(MC_ANSWERS).forEach(qid => {
+      ['A','B','C','D'].forEach(l => {
+        const opt = document.getElementById(`${qid}-${l}`);
+        if (opt) opt.classList.remove('selected','correct','wrong');
+      });
+      const card = document.getElementById(qid);
+      if (card) card.classList.remove('correct','wrong');
+      const fb = document.getElementById(`${qid}-feedback`);
+      if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    });
+
+    // T/F
+    Object.keys(TF_ANSWERS).forEach(qid => {
+      ['T','F'].forEach(v => {
+        const btn = document.getElementById(`${qid}-${v}`);
+        if (btn) btn.classList.remove('selected','correct','wrong');
+      });
+      const card = document.getElementById(qid);
+      if (card) card.classList.remove('correct','wrong');
+      const fb = document.getElementById(`${qid}-feedback`);
+      if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    });
+
+    // short answer textareas
+    document.querySelectorAll('.sa-textarea').forEach(t => t.value = '');
+
+    // close all reveals
+    document.querySelectorAll('.answer-reveal, .match-answer-row').forEach(el => {
+      el.classList.remove('open');
+      if (el.previousElementSibling?.classList.contains('reveal-btn')) {
+        el.previousElementSibling.textContent = 'Reveal Answer';
+      }
+    });
+
+    // reset score
+    document.getElementById('score-display').textContent = '—';
+    const banner = document.getElementById('result-banner');
+    banner.classList.remove('show','pass','fail');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
