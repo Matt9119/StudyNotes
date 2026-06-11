@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ports &amp; Protocols Review Quiz — UCWT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0d1117;
+  --bg2:         #161c24;
+  --bg3:         #1c2330;
+  --bg4:         #222b3a;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #e1e8f0;
+  --muted:       #7b8899;
+  --purple:      #a78bfa;
+  --purple-dim:  rgba(167,139,250,0.12);
+  --purple-mid:  rgba(167,139,250,0.20);
+  --green:       #4ade80;
+  --green-dim:   rgba(74,222,128,0.10);
+  --red:         #f87171;
+  --red-dim:     rgba(248,113,113,0.10);
+  --yellow:      #fbbf24;
+  --yellow-dim:  rgba(251,191,36,0.10);
+  --blue:        #60a5fa;
+  --blue-dim:    rgba(96,165,250,0.10);
+  --orange:      #fb923c;
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0 0 4rem;
+}
+
+.shell { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem; }
+
+/* ── HEADER ── */
+.header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.header-top { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
+.header-title { font-family: var(--mono); font-size: 1.15rem; font-weight: 600; color: var(--purple); }
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.score-board {
+  display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+  padding: .75rem 1rem; background: var(--bg2);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-family: var(--mono); font-size: 12px;
+}
+.score-item { display: flex; flex-direction: column; gap: 2px; }
+.score-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.score-val   { color: var(--text); font-weight: 600; font-size: 15px; }
+.score-divider { width: 1px; height: 32px; background: var(--border2); }
+
+/* ── SECTION HEADERS ── */
+.section-header { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.25rem; margin-top: 2rem; }
+.section-tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; padding: 3px 10px; border-radius: 4px;
+}
+.tag-mc    { background: var(--blue-dim);   color: var(--blue); }
+.tag-tf    { background: var(--yellow-dim); color: var(--yellow); }
+.tag-sa    { background: var(--purple-dim); color: var(--purple); }
+.tag-match { background: var(--green-dim);  color: var(--green); }
+.section-count { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1rem;
+  transition: border-color .2s;
+}
+.q-card.correct { border-color: var(--green) !important; }
+.q-card.wrong   { border-color: var(--red) !important; }
+
+.q-num { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+.q-text { font-size: 14px; font-weight: 500; margin-bottom: .85rem; line-height: 1.55; }
+.q-day-tag {
+  display: inline-block; font-family: var(--mono); font-size: 9.5px;
+  padding: 1px 7px; border-radius: 3px; margin-bottom: 8px;
+  font-weight: 500; letter-spacing: .03em;
+}
+.d1 { background: var(--purple-dim); color: var(--purple); }
+.d2 { background: var(--blue-dim);   color: var(--blue); }
+.d3 { background: var(--orange-dim, rgba(251,146,60,.10)); color: var(--orange); }
+
+code {
+  font-family: var(--mono); font-size: 12px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 3px; padding: 1px 5px; color: var(--purple);
+}
+
+/* ── MC OPTIONS ── */
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg3); cursor: pointer; transition: all .15s;
+  font-size: 13.5px; line-height: 1.45;
+}
+.option:hover  { border-color: var(--border2); background: var(--bg4); }
+.option.selected{ border-color: var(--blue); background: var(--blue-dim); }
+.option.correct { border-color: var(--green) !important; background: var(--green-dim) !important; }
+.option.wrong   { border-color: var(--red) !important; background: var(--red-dim) !important; }
+.opt-letter { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--muted); min-width: 18px; margin-top: 1px; }
+.option.selected .opt-letter { color: var(--blue); }
+.option.correct  .opt-letter { color: var(--green); }
+.option.wrong    .opt-letter { color: var(--red); }
+
+/* ── TRUE / FALSE ── */
+.tf-options { display: flex; gap: 8px; margin-top: 4px; }
+.tf-btn {
+  flex: 1; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--text); font-family: var(--sans);
+  font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all .15s; text-align: center;
+}
+.tf-btn:hover    { border-color: var(--border2); background: var(--bg4); }
+.tf-btn.selected { border-color: var(--blue); background: var(--blue-dim); color: var(--blue); }
+.tf-btn.correct  { border-color: var(--green) !important; background: var(--green-dim) !important; color: var(--green) !important; }
+.tf-btn.wrong    { border-color: var(--red) !important; background: var(--red-dim) !important; color: var(--red) !important; }
+
+/* ── SHORT ANSWER / FILL IN THE BLANK ── */
+.sa-input {
+  width: 100%; min-height: 70px; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text); font-family: var(--sans); font-size: 13.5px;
+  padding: 10px 12px; resize: vertical; transition: border-color .15s; line-height: 1.5;
+}
+.sa-input:focus { outline: none; border-color: var(--border2); }
+.fitb-input {
+  display: inline-block; background: var(--bg3); border: none;
+  border-bottom: 2px solid var(--border2); color: var(--purple);
+  font-family: var(--mono); font-size: 13px; padding: 2px 8px;
+  min-width: 160px; transition: border-color .15s;
+}
+.fitb-input:focus { outline: none; border-bottom-color: var(--purple); }
+
+.reveal-btn {
+  margin-top: 8px; padding: 6px 14px; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 5px; color: var(--muted);
+  font-family: var(--mono); font-size: 11px; cursor: pointer; transition: all .15s;
+}
+.reveal-btn:hover { color: var(--text); border-color: var(--purple); }
+
+.answer-reveal {
+  display: none; margin-top: 10px; padding: 10px 12px;
+  background: var(--purple-dim); border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 6px; font-size: 13px; color: var(--text); line-height: 1.6;
+}
+.answer-reveal.open { display: block; }
+.answer-label { font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--purple); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+
+/* ── MATCHING ── */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+@media (max-width: 520px) { .match-grid { grid-template-columns: 1fr; } }
+.match-left, .match-right { display: flex; flex-direction: column; gap: 6px; }
+.match-item { padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; line-height: 1.4; }
+.match-item.col-a { border-left: 3px solid var(--blue); }
+.match-item.col-b { border-left: 3px solid var(--purple); }
+.match-label { font-family: var(--mono); font-size: 10px; font-weight: 600; margin-bottom: 4px; }
+.match-label.col-a { color: var(--blue); }
+.match-label.col-b { color: var(--purple); }
+.match-answer-row {
+  display: none; margin-top: 8px; padding: 10px 12px;
+  background: var(--purple-dim); border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 6px; font-size: 12.5px; line-height: 1.8;
+}
+.match-answer-row.open { display: block; }
+.match-key { font-family: var(--mono); font-size: 11px; color: var(--purple); }
+
+/* ── FEEDBACK ── */
+.feedback { display: none; margin-top: 8px; font-size: 12px; font-family: var(--mono); padding: 5px 10px; border-radius: 5px; }
+.feedback.show-correct { display: block; background: var(--green-dim); color: var(--green); }
+.feedback.show-wrong   { display: block; background: var(--red-dim);   color: var(--red); }
+
+/* ── ACTION ROW ── */
+.action-row { display: flex; gap: 10px; margin-top: 2rem; flex-wrap: wrap; }
+.btn-check {
+  padding: 10px 24px; background: #4c1d95; color: #ede9fe;
+  border: none; border-radius: 6px; font-family: var(--sans);
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s;
+}
+.btn-check:hover { background: #5b21b6; }
+.btn-reset {
+  padding: 10px 24px; background: var(--bg2); color: var(--muted);
+  border: 1px solid var(--border2); border-radius: 6px; font-family: var(--sans);
+  font-size: 14px; cursor: pointer; transition: all .15s;
+}
+.btn-reset:hover { color: var(--text); border-color: var(--red); }
+
+/* ── RESULT BANNER ── */
+.result-banner { display: none; margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 8px; border: 1px solid; font-size: 14px; }
+.result-banner.show { display: block; }
+.result-banner.pass { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.result-banner.avg  { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+.result-banner.fail { background: var(--red-dim);    border-color: var(--red);    color: var(--red); }
+.result-big { font-family: var(--mono); font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+.result-sub { font-size: 13px; opacity: .85; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">ports-and-protocols<span>/</span>quiz</div>
+        <div class="header-sub">// UCWT · Days 1–3 · 15 Questions</div>
+      </div>
+    </div>
+    <div class="score-board">
+      <div class="score-item"><span class="score-label">Auto-Scored</span><span class="score-val" id="score-display">—</span></div>
+      <div class="score-divider"></div>
+      <div class="score-item"><span class="score-label">MC + T/F</span><span class="score-val">9 pts</span></div>
+      <div class="score-divider"></div>
+      <div class="score-item"><span class="score-label">Short Answer</span><span class="score-val">3 pts</span></div>
+      <div class="score-divider"></div>
+      <div class="score-item"><span class="score-label">Matching</span><span class="score-val">3 pts</span></div>
+      <div class="score-divider"></div>
+      <div class="score-item"><span class="score-label">Total</span><span class="score-val">15 pts</span></div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════
+       MULTIPLE CHOICE — Q1–5
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-mc">Multiple Choice</span>
+    <span class="section-count">Questions 1–5 &nbsp;·&nbsp; 1 pt each</span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-day-tag d1">Day 1</div>
+    <div class="q-num">Question 1</div>
+    <div class="q-text">Which OSI layer is the <em>only</em> one that adds both a header <strong>and</strong> a trailer to data during encapsulation?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q1','A')" id="q1-A"><span class="opt-letter">A</span>Layer 3 — Network</div>
+      <div class="option" onclick="selectOption('q1','B')" id="q1-B"><span class="opt-letter">B</span>Layer 4 — Transport</div>
+      <div class="option" onclick="selectOption('q1','C')" id="q1-C"><span class="opt-letter">C</span>Layer 2 — Data Link</div>
+      <div class="option" onclick="selectOption('q1','D')" id="q1-D"><span class="opt-letter">D</span>Layer 7 — Application</div>
+    </div>
+    <div class="feedback" id="q1-feedback"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-day-tag d1">Day 1</div>
+    <div class="q-num">Question 2</div>
+    <div class="q-text">An IPv6 address is abbreviated from <code>1111:2202:0333:0004:ffff:0000:0000:bbbb</code>. Which of the following is the correct abbreviation?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q2','A')" id="q2-A"><span class="opt-letter">A</span><code>1111:2202:333:4:ffff:0:0:bbbb</code></div>
+      <div class="option" onclick="selectOption('q2','B')" id="q2-B"><span class="opt-letter">B</span><code>1111:2202:333:4:ffff::bbbb</code></div>
+      <div class="option" onclick="selectOption('q2','C')" id="q2-C"><span class="opt-letter">C</span><code>1111::2202:333:4:ffff::bbbb</code></div>
+      <div class="option" onclick="selectOption('q2','D')" id="q2-D"><span class="opt-letter">D</span><code>1111:2202::333:4:ffff:bbbb</code></div>
+    </div>
+    <div class="feedback" id="q2-feedback"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 3</div>
+    <div class="q-text">Which of the following best describes a <strong>SYN-Flood</strong> attack?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q3','A')" id="q3-A"><span class="opt-letter">A</span>An attacker modifies DNS records to redirect traffic to a malicious IP</div>
+      <div class="option" onclick="selectOption('q3','B')" id="q3-B"><span class="opt-letter">B</span>An attacker spoofs legitimate IPs to spam SYN requests and overload a server</div>
+      <div class="option" onclick="selectOption('q3','C')" id="q3-C"><span class="opt-letter">C</span>An attacker intercepts ARP replies to associate their MAC with a legitimate IP</div>
+      <div class="option" onclick="selectOption('q3','D')" id="q3-D"><span class="opt-letter">D</span>An attacker exhausts a DHCP pool so no new devices can get an IP address</div>
+    </div>
+    <div class="feedback" id="q3-feedback"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 4</div>
+    <div class="q-text">ARP is considered insecure for which primary reason?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q4','A')" id="q4-A"><span class="opt-letter">A</span>ARP packets are always transmitted in plaintext</div>
+      <div class="option" onclick="selectOption('q4','B')" id="q4-B"><span class="opt-letter">B</span>ARP has no way to verify a MAC address is truly associated with an IP, and systems always update their ARP tables when they receive a reply — even if unsolicited</div>
+      <div class="option" onclick="selectOption('q4','C')" id="q4-C"><span class="opt-letter">C</span>ARP uses UDP which provides no error checking</div>
+      <div class="option" onclick="selectOption('q4','D')" id="q4-D"><span class="opt-letter">D</span>ARP only works within the same subnet and cannot cross routers</div>
+    </div>
+    <div class="feedback" id="q4-feedback"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-day-tag d3">Day 3</div>
+    <div class="q-num">Question 5</div>
+    <div class="q-text">What is the primary difference between <strong>SCADA</strong> and a <strong>Distributed Control System (DCS)</strong>?</div>
+    <div class="options">
+      <div class="option" onclick="selectOption('q5','A')" id="q5-A"><span class="opt-letter">A</span>SCADA uses PLCs while DCS only uses RTUs</div>
+      <div class="option" onclick="selectOption('q5','B')" id="q5-B"><span class="opt-letter">B</span>SCADA monitors geographically dispersed assets while DCS controls systems within the same location</div>
+      <div class="option" onclick="selectOption('q5','C')" id="q5-C"><span class="opt-letter">C</span>DCS operates at Layer 3 while SCADA operates at Layer 2</div>
+      <div class="option" onclick="selectOption('q5','D')" id="q5-D"><span class="opt-letter">D</span>SCADA is used only in water utilities while DCS is used in manufacturing</div>
+    </div>
+    <div class="feedback" id="q5-feedback"></div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       TRUE / FALSE — Q6–9
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-tf">True / False</span>
+    <span class="section-count">Questions 6–9 &nbsp;·&nbsp; 1 pt each</span>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-day-tag d1">Day 1</div>
+    <div class="q-num">Question 6</div>
+    <div class="q-text">IPv6 headers contain a checksum field, just like IPv4 headers.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q6','T')" id="q6-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q6','F')" id="q6-F">False</button>
+    </div>
+    <div class="feedback" id="q6-feedback"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 7</div>
+    <div class="q-text">UDP is connection-oriented and guarantees packet delivery and ordering.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q7','T')" id="q7-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q7','F')" id="q7-F">False</button>
+    </div>
+    <div class="feedback" id="q7-feedback"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 8</div>
+    <div class="q-text">A Zone Transfer occurs when a primary DNS server transfers its cache/database to a secondary or backup DNS server.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q8','T')" id="q8-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q8','F')" id="q8-F">False</button>
+    </div>
+    <div class="feedback" id="q8-feedback"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-day-tag d3">Day 3</div>
+    <div class="q-num">Question 9</div>
+    <div class="q-text">Both Modbus and DNP3 include built-in authentication and encryption to protect OT communications.</div>
+    <div class="tf-options">
+      <button class="tf-btn" onclick="selectTF('q9','T')" id="q9-T">True</button>
+      <button class="tf-btn" onclick="selectTF('q9','F')" id="q9-F">False</button>
+    </div>
+    <div class="feedback" id="q9-feedback"></div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       SHORT ANSWER / FILL IN THE BLANK — Q10–12
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-sa">Short Answer</span>
+    <span class="section-count">Questions 10–12 &nbsp;·&nbsp; 1 pt each · self-assessed</span>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-day-tag d1">Day 1</div>
+    <div class="q-num">Question 10</div>
+    <div class="q-text">Name the three pillars of the <strong>CIA Triad</strong> and provide a one-sentence explanation of each.</div>
+    <textarea class="sa-input" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal('rev10')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev10">
+      <div class="answer-label">Answer</div>
+      <strong>Confidentiality</strong> — Secrecy of data and access control; only authorized users can access sensitive information.<br>
+      <strong>Integrity</strong> — Accuracy and trustworthiness of data; protects against unauthorized modification or tampering.<br>
+      <strong>Availability</strong> — Data and systems are accessible when needed; protects against Denial of Service attacks and outages.
+    </div>
+  </div>
+
+  <!-- Q11 — Fill in the blank -->
+  <div class="q-card" id="q11">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 11 — Fill in the blank</div>
+    <div class="q-text" style="line-height:2;">
+      TCP establishes connections using a <input class="fitb-input" id="fitb-a" placeholder="___________"> handshake. Its PDU is called a <input class="fitb-input" id="fitb-b" placeholder="___________">, while UDP's PDU is called a <input class="fitb-input" id="fitb-c" placeholder="___________">. The TCP header is <input class="fitb-input" id="fitb-d" placeholder="___" style="min-width:60px;"> bytes, while the UDP header is only <input class="fitb-input" id="fitb-e" placeholder="___" style="min-width:60px;"> bytes.
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev11')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev11">
+      <div class="answer-label">Answer</div>
+      TCP establishes connections using a <strong>3-way (three-way)</strong> handshake. Its PDU is called a <strong>Segment</strong>, while UDP's PDU is called a <strong>Datagram</strong>. The TCP header is <strong>20</strong> bytes, while the UDP header is only <strong>8</strong> bytes.
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="q12">
+    <div class="q-day-tag d3">Day 3</div>
+    <div class="q-num">Question 12</div>
+    <div class="q-text">Explain the difference between a <strong>PLC</strong>, an <strong>RTU</strong>, and an <strong>IED</strong> in a SCADA environment. How does each one decide when to act?</div>
+    <textarea class="sa-input" placeholder="Write your answer here..."></textarea>
+    <button class="reveal-btn" onclick="toggleReveal('rev12')">Reveal Answer</button>
+    <div class="answer-reveal" id="rev12">
+      <div class="answer-label">Answer</div>
+      <strong>PLC (Programmable Logic Controller)</strong> — Programmed with logic and may act <em>with or without</em> direct instructions from the control server. Flexible and autonomous.<br>
+      <strong>RTU (Remote Terminal Unit)</strong> — Acts primarily <em>with instructions</em> from a control server. Waits for commands before taking action.<br>
+      <strong>IED (Intelligent Electronic Device)</strong> — Acts primarily <em>without</em> direct instructions; makes autonomous decisions based on local sensor data or pre-programmed conditions.
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       MATCHING — Q13–15
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <span class="section-tag tag-match">Matching</span>
+    <span class="section-count">Questions 13–15 &nbsp;·&nbsp; 1 pt each · self-assessed</span>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="q13">
+    <div class="q-day-tag d1">Day 1</div>
+    <div class="q-num">Question 13</div>
+    <div class="q-text">Match each OSI layer to its correct Protocol Data Unit (PDU) and primary device.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — OSI Layer</div>
+        <div class="match-item col-a">Layer 1 — Physical</div>
+        <div class="match-item col-a">Layer 2 — Data Link</div>
+        <div class="match-item col-a">Layer 3 — Network</div>
+        <div class="match-item col-a">Layer 4 — Transport</div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — PDU / Device</div>
+        <div class="match-item col-b">1. Packets &nbsp;|&nbsp; Routers</div>
+        <div class="match-item col-b">2. Bits &nbsp;|&nbsp; Hubs, wires, connectors</div>
+        <div class="match-item col-b">3. Segments / Datagrams &nbsp;|&nbsp; Servers, clients</div>
+        <div class="match-item col-b">4. Frames &nbsp;|&nbsp; Switches, bridges</div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev13')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev13">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-key">Layer 1 — Physical</span> → <strong>2</strong> — Bits | Hubs, wires, connectors<br>
+      <span class="match-key">Layer 2 — Data Link</span> → <strong>4</strong> — Frames | Switches, bridges<br>
+      <span class="match-key">Layer 3 — Network</span> → <strong>1</strong> — Packets | Routers<br>
+      <span class="match-key">Layer 4 — Transport</span> → <strong>3</strong> — Segments/Datagrams | Servers, clients
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="q14">
+    <div class="q-day-tag d2">Day 2</div>
+    <div class="q-num">Question 14</div>
+    <div class="q-text">Match each attack to the protocol it targets and its CIA Triad impact.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — Attack</div>
+        <div class="match-item col-a">DNS Hijacking</div>
+        <div class="match-item col-a">ARP Spoofing</div>
+        <div class="match-item col-a">DHCP Starvation</div>
+        <div class="match-item col-a">TCP Veto</div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — Impact</div>
+        <div class="match-item col-b">1. Attacker associates their MAC with a legit IP to intercept/modify data — <em>Conf/Integrity</em></div>
+        <div class="match-item col-b">2. Exhaust IP pool so no new devices can connect — <em>Availability</em></div>
+        <div class="match-item col-b">3. Modify DNS records to redirect traffic to a malicious IP — <em>Integrity</em></div>
+        <div class="match-item col-b">4. Spoof expected packet to inject a malicious payload mid-stream — <em>Confidentiality</em></div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev14')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev14">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-key">DNS Hijacking</span> → <strong>3</strong> — Modify DNS records → malicious redirect (Integrity)<br>
+      <span class="match-key">ARP Spoofing</span> → <strong>1</strong> — Associate attacker MAC with legit IP (Conf / Integrity)<br>
+      <span class="match-key">DHCP Starvation</span> → <strong>2</strong> — Exhaust IP pool (Availability)<br>
+      <span class="match-key">TCP Veto</span> → <strong>4</strong> — Inject malicious payload mid-stream (Confidentiality)
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="q15">
+    <div class="q-day-tag d3">Day 3</div>
+    <div class="q-num">Question 15</div>
+    <div class="q-text">Match each BPF filter expression to what it captures.</div>
+    <div class="match-grid">
+      <div class="match-left">
+        <div class="match-label col-a">Column A — BPF Filter</div>
+        <div class="match-item col-a"><code>tcp[13] &amp; 2 == 2</code></div>
+        <div class="match-item col-a"><code>tcp[13] == 18</code></div>
+        <div class="match-item col-a"><code>tcp[13] &amp; 4 == 4</code></div>
+        <div class="match-item col-a"><code>broadcast</code></div>
+      </div>
+      <div class="match-right">
+        <div class="match-label col-b">Column B — What it captures</div>
+        <div class="match-item col-b">1. TCP packets with the RST flag set</div>
+        <div class="match-item col-b">2. All broadcast traffic on the network</div>
+        <div class="match-item col-b">3. TCP SYN-ACK packets</div>
+        <div class="match-item col-b">4. TCP packets with the SYN flag set</div>
+      </div>
+    </div>
+    <button class="reveal-btn" onclick="toggleReveal('rev15')">Reveal Answer</button>
+    <div class="match-answer-row" id="rev15">
+      <div class="answer-label">Answer Key</div>
+      <span class="match-key">tcp[13] &amp; 2 == 2</span> → <strong>4</strong> — SYN flag set<br>
+      <span class="match-key">tcp[13] == 18</span> → <strong>3</strong> — SYN-ACK packets<br>
+      <span class="match-key">tcp[13] &amp; 4 == 4</span> → <strong>1</strong> — RST flag set<br>
+      <span class="match-key">broadcast</span> → <strong>2</strong> — All broadcast traffic
+    </div>
+  </div>
+
+
+  <!-- ── ACTION ROW ── -->
+  <div class="action-row">
+    <button class="btn-check" onclick="checkAnswers()">Check MC &amp; T/F Answers</button>
+    <button class="btn-reset" onclick="resetQuiz()">Reset Quiz</button>
+  </div>
+
+  <div class="result-banner" id="result-banner">
+    <div class="result-big" id="result-score"></div>
+    <div class="result-sub" id="result-msg"></div>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+  const MC_ANSWERS = { q1:'C', q2:'B', q3:'B', q4:'B', q5:'B' };
+  const TF_ANSWERS = { q6:'F', q7:'F', q8:'T', q9:'F' };
+  const selections = {};
+
+  function selectOption(qid, letter) {
+    ['A','B','C','D'].forEach(l => {
+      const el = document.getElementById(`${qid}-${l}`);
+      if (el) el.classList.remove('selected');
+    });
+    document.getElementById(`${qid}-${letter}`)?.classList.add('selected');
+    selections[qid] = letter;
+  }
+
+  function selectTF(qid, val) {
+    ['T','F'].forEach(v => document.getElementById(`${qid}-${v}`)?.classList.remove('selected'));
+    document.getElementById(`${qid}-${val}`)?.classList.add('selected');
+    selections[qid] = val;
+  }
+
+  function toggleReveal(id) {
+    const el  = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    el.classList.toggle('open');
+    btn.textContent = el.classList.contains('open') ? 'Hide Answer' : 'Reveal Answer';
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const total = Object.keys(MC_ANSWERS).length + Object.keys(TF_ANSWERS).length;
+
+    Object.entries(MC_ANSWERS).forEach(([qid, correct]) => {
+      const selected = selections[qid];
+      const card = document.getElementById(qid);
+      const feedback = document.getElementById(`${qid}-feedback`);
+      ['A','B','C','D'].forEach(l => {
+        const opt = document.getElementById(`${qid}-${l}`);
+        if (!opt) return;
+        opt.classList.remove('selected','correct','wrong');
+        if (l === correct) opt.classList.add('correct');
+        else if (l === selected && selected !== correct) opt.classList.add('wrong');
+      });
+      card.classList.remove('correct','wrong');
+      if (!selected) {
+        feedback.textContent = '⚠ No answer selected.';
+        feedback.className = 'feedback show-wrong';
+      } else if (selected === correct) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback show-correct';
+      } else {
+        card.classList.add('wrong');
+        feedback.textContent = `✗ Incorrect — correct answer is ${correct}.`;
+        feedback.className = 'feedback show-wrong';
+      }
+    });
+
+    Object.entries(TF_ANSWERS).forEach(([qid, correct]) => {
+      const selected = selections[qid];
+      const card = document.getElementById(qid);
+      const feedback = document.getElementById(`${qid}-feedback`);
+      ['T','F'].forEach(v => {
+        const btn = document.getElementById(`${qid}-${v}`);
+        if (!btn) return;
+        btn.classList.remove('selected','correct','wrong');
+        if (v === correct) btn.classList.add('correct');
+        else if (v === selected && selected !== correct) btn.classList.add('wrong');
+      });
+      card.classList.remove('correct','wrong');
+      const label = correct === 'T' ? 'True' : 'False';
+      if (!selected) {
+        feedback.textContent = '⚠ No answer selected.';
+        feedback.className = 'feedback show-wrong';
+      } else if (selected === correct) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback show-correct';
+      } else {
+        card.classList.add('wrong');
+        feedback.textContent = `✗ Incorrect — correct answer is ${label}.`;
+        feedback.className = 'feedback show-wrong';
+      }
+    });
+
+    document.getElementById('score-display').textContent = `${score} / ${total}`;
+    const pct = Math.round((score / total) * 100);
+    const banner   = document.getElementById('result-banner');
+    const scoreTxt = document.getElementById('result-score');
+    const msg      = document.getElementById('result-msg');
+
+    scoreTxt.textContent = `${score} / ${total} (${pct}%)`;
+    banner.classList.add('show');
+
+    if (pct >= 80) {
+      banner.className = 'result-banner show pass';
+      msg.textContent = 'Strong work! Review any misses and self-assess your short answers and matching using the reveal keys.';
+    } else if (pct >= 60) {
+      banner.className = 'result-banner show avg';
+      msg.textContent = 'Good effort — revisit the flagged questions in your study guide and try again.';
+    } else {
+      banner.className = 'result-banner show fail';
+      msg.textContent = 'Keep at it — use the answer reveals and go back to the Ports & Protocols study guide to reinforce these topics.';
+    }
+
+    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function resetQuiz() {
+    Object.keys(selections).forEach(k => delete selections[k]);
+
+    Object.keys(MC_ANSWERS).forEach(qid => {
+      ['A','B','C','D'].forEach(l => document.getElementById(`${qid}-${l}`)?.classList.remove('selected','correct','wrong'));
+      document.getElementById(qid)?.classList.remove('correct','wrong');
+      const fb = document.getElementById(`${qid}-feedback`);
+      if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    });
+
+    Object.keys(TF_ANSWERS).forEach(qid => {
+      ['T','F'].forEach(v => document.getElementById(`${qid}-${v}`)?.classList.remove('selected','correct','wrong'));
+      document.getElementById(qid)?.classList.remove('correct','wrong');
+      const fb = document.getElementById(`${qid}-feedback`);
+      if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    });
+
+    document.querySelectorAll('.sa-input').forEach(t => t.value = '');
+    document.querySelectorAll('.fitb-input').forEach(i => i.value = '');
+    document.querySelectorAll('.answer-reveal, .match-answer-row').forEach(el => {
+      el.classList.remove('open');
+      if (el.previousElementSibling?.classList.contains('reveal-btn')) {
+        el.previousElementSibling.textContent = 'Reveal Answer';
+      }
+    });
+
+    document.getElementById('score-display').textContent = '—';
+    const banner = document.getElementById('result-banner');
+    banner.className = 'result-banner';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
