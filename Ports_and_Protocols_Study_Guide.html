@@ -624,28 +624,543 @@
 
 
 <!-- ══════════════════════════════════════════
-     DAY 2 — PLACEHOLDER
+     DAY 2
 ══════════════════════════════════════════ -->
 <div class="day-section" id="day2">
 
-  <div class="placeholder">
-    <div class="placeholder-icon">📡</div>
-    <h3>Day 2 — Coming Soon</h3>
-    <p>Content will be added once notes are provided.<br>Topics may include: Transport Layer, TCP vs UDP, port numbers, and common protocols.</p>
+  <div class="section-badge badge-purple">Transport Layer — Layer 4</div>
+  <div class="topic-title">Segments, Datagrams &amp; Ports</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">PDU</div><span class="kt">Segments</span> (TCP) or <span class="kt">Datagrams</span> (UDP) depending on the protocol used.</div>
+    <div class="perm-row"><div class="perm-label">Checksum</div>Layer 4 contains its own checksum for error checking — like Layer 3.</div>
+    <div class="perm-row"><div class="perm-label">Devices</div><span class="kt">Servers</span> host services on fixed, well-known ports. <span class="kt">Client systems</span> (computers, mobile devices) connect to servers or make peer-to-peer connections.</div>
+    <div class="perm-row"><div class="perm-label">Address type</div><span class="kt">Port numbers</span> — identify specific services on a host.</div>
+  </div>
+
+  <h3 class="sh">Port ranges</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Range</th><th>Name</th><th>Purpose</th></tr>
+      <tr><td><span class="cmd">0 – 1024</span></td><td><span class="kt">Known / Well-Known Ports</span></td><td>Reserved for well-known services (HTTP, DNS, SSH, etc.)</td></tr>
+      <tr><td><span class="cmd">1025 – 65535</span></td><td><span class="kt">Ephemeral Ports</span></td><td>Dynamically assigned for short-lived client connections</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Servers listen on <strong>known ports</strong>. When a client connects, the OS assigns it an <strong>ephemeral port</strong> for that session. The pair (src IP:src port ↔ dst IP:dst port) uniquely identifies the connection.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">TCP — Transmission Control Protocol</div>
+
+  <h3 class="sh">TCP overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Connection type</div><span class="kt">Connection-oriented</span> — establishes a session before sending data.</div>
+    <div class="perm-row"><div class="perm-label">3-Way Handshake</div>SYN → SYN-ACK → ACK. Must complete before data transfer begins.</div>
+    <div class="perm-row"><div class="perm-label">Reliability</div>Guarantees delivery, correct ordering, and protection from duplicates.</div>
+    <div class="perm-row"><div class="perm-label">Data handling</div>Streams are broken into <strong>segments</strong> and reassembled by the receiver.</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>20 bytes.</div>
+    <div class="perm-row"><div class="perm-label">Security note</div>A stream can be manipulated to evade detection by some firewalls and IDS.</div>
+  </div>
+
+  <h3 class="sh">TCP header fields</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Field</th><th>Purpose</th></tr>
+      <tr><td>Source &amp; Destination Port</td><td>Identifies sending and receiving services</td></tr>
+      <tr><td>Sequence Number</td><td>Tracks order of segments for reassembly</td></tr>
+      <tr><td>Data Offset</td><td>Indicates where the data begins in the segment</td></tr>
+      <tr><td>Checksum</td><td>Error detection for the header and data</td></tr>
+      <tr><td>Data</td><td>Variable-length payload</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">TCP vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">SYN-Flood <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Availability)</span></div>
+      Attacker spoofs legitimate IP addresses to spam SYN requests, overwhelming a server and denying service to legitimate users.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Connection Hijacking <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality)</span></div>
+      Attacker eavesdrops on a session, sends TCP-RST to both client and server, then reconstructs the connections — inserting themselves into the stream.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">TCP Veto <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality)</span></div>
+      While eavesdropping, attacker spoofs the expected packet size and replaces the packet with a malicious payload, which the receiver accepts.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">UDP — User Datagram Protocol</div>
+
+  <h3 class="sh">UDP overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Connection type</div><span class="kt">Connectionless</span> — no handshake, no session establishment.</div>
+    <div class="perm-row"><div class="perm-label">Reliability</div>Unreliable — does <strong>not</strong> guarantee delivery, ordering, or duplicate protection.</div>
+    <div class="perm-row"><div class="perm-label">Best used for</div>Real-time applications — gaming, streaming, VoIP — where speed matters more than accuracy.</div>
+    <div class="perm-row"><div class="perm-label">Security</div>Like TCP, relies on upper-layer protocols (e.g. HTTPS) for security and error checking.</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>8 bytes — much smaller than TCP.</div>
+  </div>
+
+  <h3 class="sh">UDP header fields</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Field</th><th>Purpose</th></tr>
+      <tr><td>Source &amp; Destination Port</td><td>Identifies sending and receiving services</td></tr>
+      <tr><td>Message Length</td><td>Total length of the UDP header + data</td></tr>
+      <tr><td>Checksum</td><td>Optional — basic error detection only</td></tr>
+      <tr><td>Data</td><td>Variable-length payload</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">UDP vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Forged datagram DoS <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Availability)</span></div>
+      Attackers can forge UDP datagrams with spoofed source addresses to flood a target and cause a Denial of Service.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">TCP vs UDP</div>
+  <div class="topic-title">Side-by-side comparison</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>TCP</th><th>UDP</th></tr>
+      <tr><td>Connection-oriented</td><td>Connectionless</td></tr>
+      <tr><td>Slower</td><td>Faster</td></tr>
+      <tr><td>Guaranteed delivery</td><td>No delivery guarantee</td></tr>
+      <tr><td>Critical applications (banking, file transfer)</td><td>Real-time applications (VoIP, gaming, streaming)</td></tr>
+      <tr><td>Packet reorder mechanism</td><td>No reorder mechanism</td></tr>
+      <tr><td>Flow control</td><td>No flow control</td></tr>
+      <tr><td>Advanced error checking</td><td>Basic error checking (checksum only)</td></tr>
+      <tr><td>Three-way handshake</td><td>No handshake</td></tr>
+      <tr><td>20-byte header</td><td>8-byte header</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>UDP is not inherently less secure than TCP — it's just simpler. Both rely on upper-layer protocols like HTTPS for encryption and security. The key difference is <strong>reliability vs speed</strong>, not security.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">DNS — Domain Name System</div>
+
+  <h3 class="sh">DNS overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Purpose</div>Resolves a <span class="kt">Fully Qualified Domain Name (FQDN)</span> to an IP address — or an IP back to a domain name.</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>12 bytes.</div>
+  </div>
+
+  <h3 class="sh">DNS message types</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Type</th><th>Description</th></tr>
+      <tr><td><span class="kt">DNS Query</span></td><td>Client requests resolution of a domain name or IP address</td></tr>
+      <tr><td><span class="kt">DNS Response</span></td><td>Server replies with the resolved address</td></tr>
+      <tr><td><span class="kt">Zone Transfer</span></td><td>Primary DNS server transfers its full database to a secondary/backup DNS server</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">DNS header fields</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Field</th><th>Purpose</th></tr>
+      <tr><td>Transaction ID</td><td>Matches queries to their responses</td></tr>
+      <tr><td>Flags</td><td>Indicates query vs response, error codes, etc.</td></tr>
+      <tr><td>Queries / Responses</td><td>Variable-length question and answer sections</td></tr>
+      <tr><td>Answer Record</td><td>Contains the resolved resource record</td></tr>
+      <tr><td>Authority Record</td><td>Points to authoritative nameserver</td></tr>
+      <tr><td>Additional Record</td><td>Supplemental information</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">DNS vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">DNS Exfiltration <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality)</span></div>
+      Attacker encodes stolen data inside DNS queries to an external server, bypassing firewalls that allow DNS traffic.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">DNS Tunneling <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality)</span></div>
+      Attacker inserts a string within normal DNS communications to establish a covert remote connection or C2 channel.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">DNS Flood <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Availability)</span></div>
+      Attacker spams a client with valid-looking DNS responses to cause a Denial of Service.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">DNS Hijacking <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Integrity)</span></div>
+      Attacker modifies DNS server records to redirect legitimate domain lookups to a malicious IP address.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">DHCP — Dynamic Host Configuration Protocol</div>
+
+  <h3 class="sh">DHCP overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Purpose</div>Dynamically assigns (leases) temporary IP addresses to devices from a pool of valid IPs for the network.</div>
+    <div class="perm-row"><div class="perm-label">Authentication</div><strong>Lacks authentication</strong> — cannot verify the identity of the DHCP server or client.</div>
+  </div>
+
+  <h3 class="sh">DHCP vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Rogue DHCP Server <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality / Integrity)</span></div>
+      An attacker sets up an unauthorized DHCP server that assigns clients a malicious gateway or DNS server, redirecting all traffic through the attacker.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Starvation Attack <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Availability)</span></div>
+      Attacker exhausts the DHCP address pool by requesting all available IPs, preventing legitimate devices from obtaining an address.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">ARP — Address Resolution Protocol</div>
+
+  <h3 class="sh">ARP overview</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Purpose</div>Dynamically maps a logical <span class="kt">IPv4 address</span> to a physical <span class="kt">MAC address</span> within a LAN using ARP requests and replies.</div>
+    <div class="perm-row"><div class="perm-label">Header size</div>28 bytes. Optional trailer of 36 bytes.</div>
+    <div class="perm-row"><div class="perm-label">Security weakness</div>No way to verify a MAC address is truly associated with an IP. Systems <strong>always</strong> update their ARP table when they receive an ARP reply — even unsolicited ones.</div>
+  </div>
+
+  <h3 class="sh">ARP header fields</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Field</th><th>Purpose</th></tr>
+      <tr><td>Hardware Type</td><td>Type of network (e.g. Ethernet)</td></tr>
+      <tr><td>Protocol Type</td><td>Layer 3 protocol (e.g. IPv4)</td></tr>
+      <tr><td>Source MAC</td><td>MAC address of the requesting device</td></tr>
+      <tr><td>Source IP</td><td>IP address of the requesting device</td></tr>
+      <tr><td>Target MAC</td><td>MAC address being sought (blank in requests)</td></tr>
+      <tr><td>Target IP</td><td>IP address being resolved</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">ARP vulnerabilities</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">ARP Cache Poisoning <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Integrity / Availability)</span></div>
+      Flooding a device with excessive unsolicited ARP replies corrupts its ARP cache and can cause a Denial of Service.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">ARP Spoofing <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(Confidentiality / Integrity)</span></div>
+      Attacker associates their MAC address with a legitimate IP address. Traffic intended for the legitimate host is instead sent to the attacker, enabling interception or modification (MITM).
+    </div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>ARP has <strong>no authentication</strong>. A device will accept and cache any ARP reply it receives — even if it never sent a request. This is the root cause of both ARP Cache Poisoning and ARP Spoofing attacks.</p>
+  </div>
+
+  <!-- ── DAY 2 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 2 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Protocol</th><th>Layer</th><th>Header Size</th><th>Key trait</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">TCP</td><td class="rd">4 — Transport</td><td class="rd">20 bytes</td><td class="rd">Connection-oriented, guaranteed delivery, 3-way handshake</td></tr>
+        <tr><td class="rc">UDP</td><td class="rd">4 — Transport</td><td class="rd">8 bytes</td><td class="rd">Connectionless, best-effort, real-time apps</td></tr>
+        <tr><td class="rc">DNS</td><td class="rd">7 — Application</td><td class="rd">12 bytes</td><td class="rd">Resolves FQDNs to IPs; supports queries, responses, zone transfers</td></tr>
+        <tr><td class="rc">DHCP</td><td class="rd">7 — Application</td><td class="rd">—</td><td class="rd">Dynamically leases IPs; no authentication</td></tr>
+        <tr><td class="rc">ARP</td><td class="rd">2/3 boundary</td><td class="rd">28 bytes</td><td class="rd">Maps IPv4 → MAC; accepts unsolicited replies</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>Attack</th><th>Protocol</th><th>CIA Impact</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">SYN-Flood</td><td class="rd">TCP</td><td class="rd">Availability</td><td class="rd">Spoof IPs to overwhelm server with SYN requests</td></tr>
+        <tr><td class="rc">Connection Hijacking</td><td class="rd">TCP</td><td class="rd">Confidentiality</td><td class="rd">Send TCP-RST and reconstruct connections through attacker</td></tr>
+        <tr><td class="rc">TCP Veto</td><td class="rd">TCP</td><td class="rd">Confidentiality</td><td class="rd">Spoof expected packet size to inject malicious payload</td></tr>
+        <tr><td class="rc">UDP DoS</td><td class="rd">UDP</td><td class="rd">Availability</td><td class="rd">Forge datagrams to flood a target</td></tr>
+        <tr><td class="rc">DNS Exfiltration</td><td class="rd">DNS</td><td class="rd">Confidentiality</td><td class="rd">Encode stolen data inside DNS queries</td></tr>
+        <tr><td class="rc">DNS Tunneling</td><td class="rd">DNS</td><td class="rd">Confidentiality</td><td class="rd">Establish covert C2 channel within DNS traffic</td></tr>
+        <tr><td class="rc">DNS Flood</td><td class="rd">DNS</td><td class="rd">Availability</td><td class="rd">Spam valid DNS responses to deny service</td></tr>
+        <tr><td class="rc">DNS Hijacking</td><td class="rd">DNS</td><td class="rd">Integrity</td><td class="rd">Modify DNS records to redirect to malicious IP</td></tr>
+        <tr><td class="rc">Rogue DHCP</td><td class="rd">DHCP</td><td class="rd">Conf. / Integrity</td><td class="rd">Unauthorized DHCP server assigns malicious gateway/DNS</td></tr>
+        <tr><td class="rc">DHCP Starvation</td><td class="rd">DHCP</td><td class="rd">Availability</td><td class="rd">Exhaust IP pool so legitimate devices can't get an address</td></tr>
+        <tr><td class="rc">ARP Cache Poisoning</td><td class="rd">ARP</td><td class="rd">Integrity / Avail.</td><td class="rd">Flood ARP cache with unsolicited replies → DoS</td></tr>
+        <tr><td class="rc">ARP Spoofing</td><td class="rd">ARP</td><td class="rd">Conf. / Integrity</td><td class="rd">Associate attacker MAC with legitimate IP → MITM</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div><!-- /day2 -->
 
 
 <!-- ══════════════════════════════════════════
-     DAY 3 — PLACEHOLDER
+     DAY 3
 ══════════════════════════════════════════ -->
 <div class="day-section" id="day3">
 
-  <div class="placeholder">
-    <div class="placeholder-icon">🔌</div>
-    <h3>Day 3 — Coming Soon</h3>
-    <p>Content will be added once notes are provided.<br>Topics may include: Application layer protocols, well-known ports, and security considerations.</p>
+  <div class="section-badge badge-orange">Operational Technology (OT)</div>
+  <div class="topic-title">OT &amp; Critical Infrastructure</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What is OT?</div>A broad range of programmable systems and devices that interact with or manage the physical environment — manufacturing, mechanical, hydraulic, aeronautic systems.</div>
+    <div class="perm-row"><div class="perm-label">PPD-21</div>Presidential Policy Directive 21 defined <strong>16 critical infrastructure (CI) sectors</strong> and established national policy to secure and maintain resilient CI.</div>
+    <div class="perm-row"><div class="perm-label">OT-reliant sectors (13)</div>Chemical, Commercial Facilities, Critical Manufacturing, Dams, Defense Industrial Base, Emergency Services, Energy, Food &amp; Agriculture, Government Facilities, Healthcare, Nuclear, Transportation, Water.</div>
+    <div class="perm-row"><div class="perm-label">Non-OT sectors (3)</div>Communications, Financial, Information Technology.</div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>OT prioritizes <strong>availability and safety</strong> over confidentiality — the opposite priority order from traditional IT security.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">Industrial Control Systems (ICS)</div>
+  <div class="topic-title">Hardware &amp; the Automation Pyramid</div>
+
+  <h3 class="sh">ICS hardware components</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Component</th><th>Role</th></tr>
+      <tr><td><span class="kt">HMIs / Engineering Workstations</span></td><td>Used by human operators to monitor and control processes</td></tr>
+      <tr><td><span class="kt">Actuators</span></td><td>Make changes to the physical world (valves, motors, etc.)</td></tr>
+      <tr><td><span class="kt">Sensors</span></td><td>Monitor changes in the physical world (temp, pressure, flow)</td></tr>
+      <tr><td><span class="kt">Controllers</span></td><td>Control sensors and actuators, make autonomous decisions, report system status</td></tr>
+      <tr><td><span class="kt">Communications Equipment</span></td><td>Network all sensors, actuators, controllers, and HMIs together</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Automation pyramid</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Level</th><th>Name</th><th>Function</th></tr>
+      <tr><td><span class="cmd">0</span></td><td>Field</td><td>Flow/temp controls, control valves, and sensors</td></tr>
+      <tr><td><span class="cmd">1</span></td><td>Direct Control</td><td>I/O Modules and PLCs</td></tr>
+      <tr><td><span class="cmd">2</span></td><td>SCADA</td><td>Interface to monitor/control manufacturing plants; can control PLCs</td></tr>
+      <tr><td><span class="cmd">3</span></td><td>MES (Manufacturing Execution System)</td><td>Equipment tracking, scheduling, KPI monitors, product genealogy</td></tr>
+      <tr><td><span class="cmd">4</span></td><td>ERP (Enterprise Resource Planning)</td><td>Production planning, material management, basic business functions</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">SCADA</div>
+  <div class="topic-title">Supervisory Control &amp; Data Acquisition</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it is</div>An ICS architecture providing <strong>centralized monitoring and control</strong> of geographically dispersed assets. Primary goal: centralized data acquisition.</div>
+    <div class="perm-row"><div class="perm-label">Heartbeat networks</div>SCADA networks (L1/L2) send periodic pulses from the command center (SCADA server) to field controllers to verify operational status.</div>
+  </div>
+
+  <h3 class="sh">SCADA — 3 main components</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Central Command Center</div>All servers running SCADA software.</div>
+    <div class="perm-row"><div class="perm-label">Local Control Systems</div>Remotely located — directly control and automate field/remote-site equipment.</div>
+    <div class="perm-row"><div class="perm-label">Communication Systems</div>Connect the central command center servers to all remote locations.</div>
+  </div>
+
+  <h3 class="sh">Specialized SCADA field hardware</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Device</th><th>Full name</th><th>How it acts</th></tr>
+      <tr><td><span class="kt">PLC</span></td><td>Programmable Logic Controller</td><td>Programmed — may act <strong>with or without</strong> instructions</td></tr>
+      <tr><td><span class="kt">RTU</span></td><td>Remote Terminal Unit</td><td>Acts primarily <strong>with</strong> instructions from control server</td></tr>
+      <tr><td><span class="kt">IED</span></td><td>Intelligent Electronic Device</td><td>Acts primarily <strong>without</strong> instructions (autonomous)</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Distributed Control System (DCS)</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Purpose</div>Controls production systems within the <strong>same geographical location</strong> (vs SCADA which spans geographic distances).</div>
+    <div class="perm-row"><div class="perm-label">How it works</div>Uses a centralized supervisory control loop to mediate a group of localized controllers, each handling part of an entire production process.</div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p><strong>SCADA</strong> = geographically <em>dispersed</em> assets (remote sites, pipelines, power grids). <strong>DCS</strong> = assets within the <em>same location</em> (a single factory floor).</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">OT Protocols</div>
+
+  <h3 class="sh">Modbus vs DNP3</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Feature</th><th>Modbus</th><th>DNP3</th></tr>
+      <tr><td>Developed</td><td>1979</td><td>For electric utility environments</td></tr>
+      <tr><td>OSI Layer</td><td>Application</td><td>Internet (Network)</td></tr>
+      <tr><td>Model</td><td>Client-server, request-response</td><td>Bidirectional communications</td></tr>
+      <tr><td>Industries</td><td>General industrial standard</td><td>Electric, oil &amp; gas, water/wastewater</td></tr>
+      <tr><td>Error checking</td><td>None (no checksum)</td><td>CRCs — TCP-like error checking</td></tr>
+      <tr><td>Authentication</td><td>None</td><td>None</td></tr>
+      <tr><td>Encryption</td><td>None</td><td>None</td></tr>
+      <tr><td>Other features</td><td>Open-source, designed for efficiency</td><td>Timestamping, data fragmentation, priority sorting</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>Both Modbus and DNP3 were designed for <strong>efficiency and availability — not security</strong>. Neither has authentication or encryption built in.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">OT Security</div>
+
+  <h3 class="sh">Threat landscape</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Primary threat</div><span class="kt">Nation-state APTs</span> — disrupting a major utility can severely impact a nation's population or economy.</div>
+    <div class="perm-row"><div class="perm-label">Secondary threat</div>Cybercriminal organizations targeting CI for financial gain or disruption.</div>
+    <div class="perm-row"><div class="perm-label">Attack impacts</div>Financial losses, stolen data, disruption to civilizational functions, and direct threats to human safety.</div>
+    <div class="perm-row"><div class="perm-label">Expanding surface</div>The Industrial Internet of Things (IIoT) is continuously expanding OT attack surfaces.</div>
+  </div>
+
+  <h3 class="sh">Security challenges</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Challenge</th><th>Why it's hard</th></tr>
+      <tr><td><span class="kt">Availability Requirements</span></td><td>Outages must be planned weeks in advance — patching windows are rare</td></tr>
+      <tr><td><span class="kt">Change Management</span></td><td>Vulnerabilities are often left unpatched for extended periods</td></tr>
+      <tr><td><span class="kt">Resource Constraints</span></td><td>Many legacy systems cannot perform encryption/decryption</td></tr>
+      <tr><td><span class="kt">Component Lifecycle</span></td><td>Long lifecycles mean insecure legacy systems remain in production</td></tr>
+      <tr><td><span class="kt">Managed Support</span></td><td>OT support typically comes from a single vendor</td></tr>
+      <tr><td><span class="kt">Component Location</span></td><td>Remote, isolated sites require physical and environmental security</td></tr>
+      <tr><td><span class="kt">Protocol Security</span></td><td>Many OT protocols include no security features whatsoever</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Security measures</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li><span class="kt">Asset Inventory</span> — identify and mitigate vulnerable devices</li>
+      <li><span class="kt">Vulnerability/Patch Management</span> — update vulnerable software on schedule</li>
+      <li><span class="kt">IDS/IPS</span> — monitor and control data transfer between IT and OT networks</li>
+      <li><span class="kt">Endpoint Detection &amp; Response</span> — invest in OT systems with security processing capability</li>
+      <li><span class="kt">Physical Access Control</span> — restrict OT system access to privileged users only</li>
+      <li><span class="kt">Physical Security</span> — secure and protect the physical systems and their environments</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Berkeley Packet Filters (BPF)</div>
+  <div class="topic-title">Filtering Network Traffic</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What is BPF?</div>Designed for the Linux kernel — enables granular packet processing using <span class="kt">libpcap</span> (Linux) and <span class="kt">WinPcap</span> (Windows) libraries. Can filter both live and captured traffic.</div>
+    <div class="perm-row"><div class="perm-label">eBPF</div>Extended BPF — used by Windows and included in some Linux kernels. Many security tools support both BPF and eBPF.</div>
+    <div class="perm-row"><div class="perm-label">Why use BPFs?</div>Acts as a raw interface with the Data Link layer — filter by traffic type, IP, port, or individual flags (SYN, ACK, etc.). Combined with threat intelligence, dramatically reduces analysis time.</div>
+  </div>
+
+  <h3 class="sh">BPF logical operators</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Operator</th><th>Aliases</th><th>Behavior</th></tr>
+      <tr><td><span class="kt">NOT</span></td><td><span class="cmd">not</span> / <span class="cmd">!</span></td><td>Negation — if filter matches, <em>exclude</em> it</td></tr>
+      <tr><td><span class="kt">AND</span></td><td><span class="cmd">and</span> / <span class="cmd">&amp;&amp;</span></td><td>Concatenation — <em>both</em> filters must match</td></tr>
+      <tr><td><span class="kt">OR</span></td><td><span class="cmd">or</span> / <span class="cmd">||</span></td><td>Alternation — <em>at least one</em> filter must match</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Common BPF filters</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Filter</th><th>What it captures</th></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 2 == 2</span></td><td>TCP packets with SYN flag set</td></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 16 == 16</span></td><td>TCP packets with ACK flag set</td></tr>
+      <tr><td><span class="cmd">tcp[13] == 18</span></td><td>TCP SYN-ACK packets</td></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 4 == 4</span></td><td>TCP packets with RST flag set</td></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 1 == 1</span></td><td>TCP packets with FIN flag set</td></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 8 == 8</span></td><td>TCP packets with PSH flag set</td></tr>
+      <tr><td><span class="cmd">tcp[13] &amp; 32 == 32</span></td><td>TCP packets with URG flag set</td></tr>
+      <tr><td><span class="cmd">ether host 00:00:00:00:00:00</span></td><td>Traffic to or from a specific MAC address</td></tr>
+      <tr><td><span class="cmd">!ether host 00:00:00:00:00:00</span></td><td>Traffic NOT to/from a specific MAC address</td></tr>
+      <tr><td><span class="cmd">broadcast</span></td><td>Broadcast traffic only</td></tr>
+      <tr><td><span class="cmd">icmp</span></td><td>ICMP traffic only</td></tr>
+      <tr><td><span class="cmd">ip</span></td><td>IPv4 traffic only</td></tr>
+      <tr><td><span class="cmd">ip6</span></td><td>IPv6 traffic only</td></tr>
+      <tr><td><span class="cmd">udp</span></td><td>UDP traffic only</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Wireshark <strong>display filters</strong> use a different syntax from BPFs and <strong>cannot</strong> be used to produce new pcap files. BPF filters are used during capture; Wireshark display filters are for viewing only.</p>
+  </div>
+
+  <h3 class="sh">Common Wireshark display filters</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Display Filter</th><th>What it shows</th></tr>
+      <tr><td><span class="cmd">ip.addr == 8.8.8.8</span></td><td>All messages containing IP address 8.8.8.8</td></tr>
+      <tr><td><span class="cmd">tcp.srcport == 8080</span></td><td>All TCP messages with source port 8080</td></tr>
+      <tr><td><span class="cmd">tcp.flags.syn == 1</span></td><td>All TCP messages with the SYN flag set</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">Hex / Decimal / Binary</div>
+
+  <h3 class="sh">Conversion reference</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Decimal → Hex</div>Repeatedly divide by 16, recording remainders. Ex: 425 ÷ 16 = 26 r<strong>9</strong> → 26 ÷ 16 = 1 r<strong>A</strong> → 1 ÷ 16 = 0 r<strong>1</strong> → result: <span class="cmd">0x1A9</span></div>
+  </div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Hex</th><th>Decimal</th><th>Binary (4-bit)</th><th>Hex</th><th>Decimal</th><th>Binary (4-bit)</th></tr>
+      <tr><td><span class="cmd">0</span></td><td>0</td><td>0000</td><td><span class="cmd">8</span></td><td>8</td><td>1000</td></tr>
+      <tr><td><span class="cmd">1</span></td><td>1</td><td>0001</td><td><span class="cmd">9</span></td><td>9</td><td>1001</td></tr>
+      <tr><td><span class="cmd">2</span></td><td>2</td><td>0010</td><td><span class="cmd">A</span></td><td>10</td><td>1010</td></tr>
+      <tr><td><span class="cmd">3</span></td><td>3</td><td>0011</td><td><span class="cmd">B</span></td><td>11</td><td>1011</td></tr>
+      <tr><td><span class="cmd">4</span></td><td>4</td><td>0100</td><td><span class="cmd">C</span></td><td>12</td><td>1100</td></tr>
+      <tr><td><span class="cmd">5</span></td><td>5</td><td>0101</td><td><span class="cmd">D</span></td><td>13</td><td>1101</td></tr>
+      <tr><td><span class="cmd">6</span></td><td>6</td><td>0110</td><td><span class="cmd">E</span></td><td>14</td><td>1110</td></tr>
+      <tr><td><span class="cmd">7</span></td><td>7</td><td>0111</td><td><span class="cmd">F</span></td><td>15</td><td>1111</td></tr>
+    </table>
+  </div>
+
+  <!-- ── DAY 3 QUICK REFERENCE ── -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 3 — Quick Reference</div>
+
+    <table class="ref-table">
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">OT</td><td class="rd">Operational Technology — programmable systems interacting with the physical environment</td></tr>
+        <tr><td class="rc">ICS</td><td class="rd">Industrial Control Systems — automates manufacturing, handling, production, and distribution</td></tr>
+        <tr><td class="rc">SCADA</td><td class="rd">Centralized monitoring and control of geographically dispersed assets; goal = data acquisition</td></tr>
+        <tr><td class="rc">DCS</td><td class="rd">Distributed Control System — controls production within the same geographical location</td></tr>
+        <tr><td class="rc">HMI</td><td class="rd">Human-Machine Interface — operator console to monitor and control processes</td></tr>
+        <tr><td class="rc">PLC</td><td class="rd">Programmable Logic Controller — acts with or without instructions</td></tr>
+        <tr><td class="rc">RTU</td><td class="rd">Remote Terminal Unit — acts primarily with instructions from control server</td></tr>
+        <tr><td class="rc">IED</td><td class="rd">Intelligent Electronic Device — acts primarily without instructions (autonomous)</td></tr>
+        <tr><td class="rc">PPD-21</td><td class="rd">Presidential Policy Directive defining 16 CI sectors; 13 are OT-reliant</td></tr>
+        <tr><td class="rc">Modbus</td><td class="rd">Open-source app-layer OT protocol from 1979; client-server; no auth/encryption/checksum</td></tr>
+        <tr><td class="rc">DNP3</td><td class="rd">Internet-layer OT protocol; bidirectional; CRC error checking; no auth or encryption</td></tr>
+        <tr><td class="rc">BPF</td><td class="rd">Berkeley Packet Filter — granular packet filtering at the Data Link layer using libpcap</td></tr>
+        <tr><td class="rc">eBPF</td><td class="rd">Extended BPF — used by Windows and some Linux kernels</td></tr>
+        <tr><td class="rc">Heartbeat Network</td><td class="rd">SCADA L1/L2 network — server sends periodic pulses to field controllers to verify status</td></tr>
+        <tr><td class="rc">IIoT</td><td class="rd">Industrial Internet of Things — expanding OT attack surface due to network connectivity</td></tr>
+      </tbody>
+    </table>
+
+    <table class="ref-table">
+      <thead><tr><th>BPF Filter</th><th>Captures</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">tcp[13] &amp; 2 == 2</td><td class="rd">SYN packets</td></tr>
+        <tr><td class="rc">tcp[13] &amp; 16 == 16</td><td class="rd">ACK packets</td></tr>
+        <tr><td class="rc">tcp[13] == 18</td><td class="rd">SYN-ACK packets</td></tr>
+        <tr><td class="rc">tcp[13] &amp; 4 == 4</td><td class="rd">RST packets</td></tr>
+        <tr><td class="rc">tcp[13] &amp; 1 == 1</td><td class="rd">FIN packets</td></tr>
+        <tr><td class="rc">icmp</td><td class="rd">All ICMP traffic</td></tr>
+        <tr><td class="rc">broadcast</td><td class="rd">Broadcast traffic only</td></tr>
+        <tr><td class="rc">ip / ip6 / udp</td><td class="rd">Filter by protocol type</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div><!-- /day3 -->
