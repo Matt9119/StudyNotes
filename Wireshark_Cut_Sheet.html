@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireshark Cut Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0d1117;
+  --bg2:         #13191f;
+  --bg3:         #192028;
+  --bg4:         #1e2832;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #dde4ed;
+  --muted:       #6e7f96;
+  /* teal / Wireshark accent */
+  --teal:        #2dd4bf;
+  --teal-dim:    rgba(45,212,191,0.10);
+  --teal-mid:    rgba(45,212,191,0.18);
+  --blue:        #60a5fa;
+  --blue-dim:    rgba(96,165,250,0.10);
+  --purple:      #a78bfa;
+  --purple-dim:  rgba(167,139,250,0.10);
+  --yellow:      #fbbf24;
+  --yellow-dim:  rgba(251,191,36,0.10);
+  --orange:      #fb923c;
+  --orange-dim:  rgba(251,146,60,0.10);
+  --red:         #f87171;
+  --red-dim:     rgba(248,113,113,0.10);
+  --green:       #4ade80;
+  --green-dim:   rgba(74,222,128,0.10);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.shell { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.75rem;
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+}
+.header-title { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--teal); letter-spacing: -0.01em; }
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+.header-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); letter-spacing: .04em; }
+.tag-ws { border-color: rgba(45,212,191,0.35); color: var(--teal); }
+
+/* ── NAV PILLS ── */
+.nav-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.nav-pill {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500; padding: 4px 10px;
+  border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); background: var(--bg2);
+  cursor: pointer; text-decoration: none; transition: all .15s; letter-spacing: .02em;
+}
+.nav-pill:hover { color: var(--text); border-color: var(--teal); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 2rem; }
+.section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); margin-bottom: .75rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.section-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.dot-teal   { background: var(--teal);   box-shadow: 0 0 6px var(--teal); }
+.dot-blue   { background: var(--blue);   box-shadow: 0 0 5px var(--blue); }
+.dot-purple { background: var(--purple); }
+.dot-yellow { background: var(--yellow); }
+.dot-orange { background: var(--orange); }
+.dot-red    { background: var(--red); }
+.dot-green  { background: var(--green);  box-shadow: 0 0 5px var(--green); }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 750px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+
+/* ── CMD BLOCK ── */
+.cmd-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cmd-block-header {
+  background: var(--bg3); border-bottom: 1px solid var(--border); padding: 6px 12px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.hdr-teal   { color: var(--teal); }
+.hdr-blue   { color: var(--blue); }
+.hdr-purple { color: var(--purple); }
+.hdr-yellow { color: var(--yellow); }
+.hdr-orange { color: var(--orange); }
+.hdr-green  { color: var(--green); }
+.hdr-red    { color: var(--red); }
+
+/* ── CMD TABLE ── */
+.cmd-table { width: 100%; border-collapse: collapse; }
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table tr:hover { background: rgba(255,255,255,0.02); }
+.cmd-table td { padding: 5px 10px; vertical-align: top; }
+.c1 { font-family: var(--mono); font-size: 11.5px; white-space: nowrap; width: 1%; padding-right: 12px; font-weight: 500; }
+.ct  { color: var(--teal); }
+.cb  { color: var(--blue); }
+.cp  { color: var(--purple); }
+.cy  { color: var(--yellow); }
+.co  { color: var(--orange); }
+.c2  { font-size: 12px; color: var(--muted); width: 35%; }
+.c3  { font-family: var(--mono); font-size: 11px; color: var(--green); opacity: .9; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; border-left: 3px solid; font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.callout-tip  { background: var(--teal-dim);   border-color: var(--teal); }
+.callout-warn { background: var(--orange-dim); border-color: var(--orange); }
+.callout-trap { background: var(--red-dim);    border-color: var(--red); }
+.callout-key  { background: var(--purple-dim); border-color: var(--purple); }
+.callout-math { background: var(--blue-dim);   border-color: var(--blue); }
+
+/* ── INLINE CODE ── */
+code {
+  font-family: var(--mono); font-size: 11.5px; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 3px; padding: 1px 5px; color: var(--teal);
+}
+
+/* ── MATH BOX ── */
+.math-box {
+  background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px;
+  padding: 10px 14px; font-family: var(--mono); font-size: 12px; margin-bottom: 8px;
+  line-height: 1.8;
+}
+.math-formula { color: var(--yellow); font-size: 13px; font-weight: 500; }
+.math-example { color: var(--teal); font-size: 11.5px; }
+.math-note    { color: var(--muted); font-size: 11px; }
+.math-result  { color: var(--green); font-weight: 600; }
+
+/* ── PANE DIAGRAM ── */
+.pane-diagram { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; }
+.pane {
+  border-radius: 5px; padding: 7px 12px; font-size: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.pane-1 { background: rgba(45,212,191,0.10); border: 1px solid rgba(45,212,191,0.25); }
+.pane-2 { background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.25); }
+.pane-3 { background: rgba(167,139,250,0.10); border: 1px solid rgba(167,139,250,0.25); }
+.pane-name { font-family: var(--mono); font-size: 11px; font-weight: 600; }
+.pane-1 .pane-name { color: var(--teal); }
+.pane-2 .pane-name { color: var(--blue); }
+.pane-3 .pane-name { color: var(--purple); }
+.pane-desc { font-size: 11.5px; color: var(--muted); }
+
+/* ── HEADER ANATOMY ── */
+.header-field-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 6px 0;
+}
+.hf {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 4px;
+  padding: 5px 9px; font-size: 11.5px;
+}
+.hf-name  { font-family: var(--mono); font-size: 11px; color: var(--teal); font-weight: 500; }
+.hf-desc  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* ── FLAG TABLE ── */
+.flag-row { display: flex; gap: 6px; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.flag-row:last-child { border-bottom: none; }
+.flag-pill { font-family: var(--mono); font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 3px; min-width: 44px; text-align: center; }
+.fp-syn  { background: rgba(74,222,128,0.12);  color: var(--green); }
+.fp-ack  { background: rgba(96,165,250,0.12);  color: var(--blue); }
+.fp-synack{ background: rgba(45,212,191,0.12); color: var(--teal); }
+.fp-rst  { background: rgba(248,113,113,0.12); color: var(--red); }
+.fp-fin  { background: rgba(251,191,36,0.12);  color: var(--yellow); }
+.fp-psh  { background: rgba(167,139,250,0.12); color: var(--purple); }
+.fp-urg  { background: rgba(251,146,60,0.12);  color: var(--orange); }
+.flag-hex { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+.flag-desc { font-size: 11.5px; color: var(--text); }
+
+/* ── PORT TABLE ── */
+.port-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.port-row:last-child { border-bottom: none; }
+.port-num { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--teal); min-width: 50px; }
+.port-proto { font-family: var(--mono); font-size: 10.5px; padding: 1px 6px; border-radius: 3px; min-width: 40px; text-align: center; }
+.proto-tcp { background: rgba(96,165,250,0.12);  color: var(--blue); }
+.proto-udp { background: rgba(251,191,36,0.12);  color: var(--yellow); }
+.proto-both{ background: rgba(45,212,191,0.12);  color: var(--teal); }
+.port-name { flex: 1; font-size: 12px; color: var(--text); }
+.port-note { font-size: 11px; color: var(--muted); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-title">wireshark<span>/</span>cutsheet</div>
+      <div class="header-sub">// filters · header math · protocol reference · inspection tips</div>
+    </div>
+    <div class="header-meta">
+      <span class="tag tag-ws">Wireshark</span>
+      <span class="tag">pcap</span>
+      <span class="tag">BPF</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-pills">
+    <a class="nav-pill" href="#display-filters">Display Filters</a>
+    <a class="nav-pill" href="#capture-filters">Capture Filters (BPF)</a>
+    <a class="nav-pill" href="#header-math">Header Math</a>
+    <a class="nav-pill" href="#ipv4-header">IPv4 Header</a>
+    <a class="nav-pill" href="#ipv6-header">IPv6 Header</a>
+    <a class="nav-pill" href="#tcp-header">TCP Header</a>
+    <a class="nav-pill" href="#flags">TCP Flags</a>
+    <a class="nav-pill" href="#ip-flags">IP Flags &amp; Fragmentation</a>
+    <a class="nav-pill" href="#hex-table">Hex / Dec / Binary</a>
+    <a class="nav-pill" href="#ports">Common Ports</a>
+    <a class="nav-pill" href="#protocols">Protocol Numbers</a>
+    <a class="nav-pill" href="#tips">Inspection Tips</a>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       INTERFACE
+  ═══════════════════════════ -->
+  <!-- ═══════════════════════════
+       DISPLAY FILTERS
+  ═══════════════════════════ -->
+  <div class="section" id="display-filters">
+    <div class="section-label"><span class="dot dot-blue"></span>Display Filters — applied after capture</div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div><strong>Display filters ≠ Capture filters (BPF).</strong> Display filters narrow what you <em>see</em> in an existing pcap. They use a different syntax from BPF and <strong>cannot produce a new pcap file</strong>. Use <code>File → Export Specified Packets</code> to save a filtered subset.</div>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span>🌐</span> IP address filters</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cb">ip.addr == x.x.x.x</td><td class="c2">Any packet with this IP (src or dst)</td><td class="c3">ip.addr == 192.168.1.1</td></tr>
+          <tr><td class="c1 cb">ip.src == x.x.x.x</td><td class="c2">Source IP only</td><td class="c3">ip.src == 10.0.0.5</td></tr>
+          <tr><td class="c1 cb">ip.dst == x.x.x.x</td><td class="c2">Destination IP only</td><td class="c3">ip.dst == 8.8.8.8</td></tr>
+          <tr><td class="c1 cb">ip.addr == x.x.x.x/24</td><td class="c2">Entire subnet</td><td class="c3">ip.addr == 10.0.0.0/24</td></tr>
+          <tr><td class="c1 cb">ip.ttl &lt; 10</td><td class="c2">Packets with low TTL</td><td class="c3">ip.ttl &lt; 5</td></tr>
+          <tr><td class="c1 cb">ip.proto == 6</td><td class="c2">Filter by protocol number</td><td class="c3">ip.proto == 17 (UDP)</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span>🔌</span> Protocol &amp; port filters</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cb">tcp</td><td class="c2">All TCP traffic</td><td class="c3">tcp</td></tr>
+          <tr><td class="c1 cb">udp</td><td class="c2">All UDP traffic</td><td class="c3">udp</td></tr>
+          <tr><td class="c1 cb">icmp</td><td class="c2">All ICMP (ping) traffic</td><td class="c3">icmp</td></tr>
+          <tr><td class="c1 cb">arp</td><td class="c2">All ARP traffic</td><td class="c3">arp</td></tr>
+          <tr><td class="c1 cb">dns</td><td class="c2">All DNS traffic</td><td class="c3">dns</td></tr>
+          <tr><td class="c1 cb">http</td><td class="c2">HTTP traffic (port 80)</td><td class="c3">http</td></tr>
+          <tr><td class="c1 cb">tcp.port == N</td><td class="c2">TCP src or dst port</td><td class="c3">tcp.port == 443</td></tr>
+          <tr><td class="c1 cb">tcp.srcport == N</td><td class="c2">TCP source port only</td><td class="c3">tcp.srcport == 8080</td></tr>
+          <tr><td class="c1 cb">tcp.dstport == N</td><td class="c2">TCP destination port only</td><td class="c3">tcp.dstport == 22</td></tr>
+          <tr><td class="c1 cb">udp.port == N</td><td class="c2">UDP src or dst port</td><td class="c3">udp.port == 53</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span>🚩</span> TCP flag filters</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cb">tcp.flags.syn == 1</td><td class="c2">SYN flag set</td><td class="c3">Show all connection attempts</td></tr>
+          <tr><td class="c1 cb">tcp.flags.ack == 1</td><td class="c2">ACK flag set</td><td class="c3">—</td></tr>
+          <tr><td class="c1 cb">tcp.flags.reset == 1</td><td class="c2">RST flag set</td><td class="c3">Rejected/closed connections</td></tr>
+          <tr><td class="c1 cb">tcp.flags.fin == 1</td><td class="c2">FIN flag set</td><td class="c3">Connection teardowns</td></tr>
+          <tr><td class="c1 cb">tcp.flags == 0x002</td><td class="c2">ONLY SYN set (no ACK)</td><td class="c3">New connections only</td></tr>
+          <tr><td class="c1 cb">tcp.flags == 0x012</td><td class="c2">SYN + ACK (handshake reply)</td><td class="c3">Server responses</td></tr>
+          <tr><td class="c1 cb">tcp.flags == 0x018</td><td class="c2">PSH + ACK (data transfer)</td><td class="c3">Packets with payload data</td></tr>
+          <tr><td class="c1 cb">tcp.analysis.retransmission</td><td class="c2">Retransmitted packets</td><td class="c3">Network issues</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span>🔗</span> Combining &amp; special filters</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cb">&amp;&amp; / and</td><td class="c2">Both conditions must match</td><td class="c3">ip.src==10.0.0.1 &amp;&amp; tcp.port==80</td></tr>
+          <tr><td class="c1 cb">|| / or</td><td class="c2">Either condition matches</td><td class="c3">dns || icmp</td></tr>
+          <tr><td class="c1 cb">! / not</td><td class="c2">Exclude matching packets</td><td class="c3">!arp &amp;&amp; !icmp</td></tr>
+          <tr><td class="c1 cb">contains</td><td class="c2">Field contains a string</td><td class="c3">http contains "password"</td></tr>
+          <tr><td class="c1 cb">matches</td><td class="c2">Field matches a regex</td><td class="c3">dns.qry.name matches "\.ru$"</td></tr>
+          <tr><td class="c1 cb">dns.qry.name</td><td class="c2">Filter DNS by queried name</td><td class="c3">dns.qry.name == "google.com"</td></tr>
+          <tr><td class="c1 cb">frame.len &gt; N</td><td class="c2">Packets larger than N bytes</td><td class="c3">frame.len &gt; 1400</td></tr>
+          <tr><td class="c1 cb">ip.flags.mf == 1</td><td class="c2">More Fragments flag set</td><td class="c3">Fragmented packets</td></tr>
+          <tr><td class="c1 cb">ip.frag_offset &gt; 0</td><td class="c2">Not the first fragment</td><td class="c3">Reassembly packets</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       CAPTURE FILTERS (BPF)
+  ═══════════════════════════ -->
+  <div class="section" id="capture-filters">
+    <div class="section-label"><span class="dot dot-yellow"></span>Capture Filters — BPF syntax, set before capture</div>
+
+    <div class="grid-2">
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-yellow"><span>📡</span> Common BPF capture filters</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cy">host x.x.x.x</td><td class="c2">Traffic to or from an IP</td><td class="c3">host 192.168.1.5</td></tr>
+          <tr><td class="c1 cy">src host x.x.x.x</td><td class="c2">Traffic from a specific source</td><td class="c3">src host 10.0.0.1</td></tr>
+          <tr><td class="c1 cy">dst host x.x.x.x</td><td class="c2">Traffic to a specific dest</td><td class="c3">dst host 8.8.8.8</td></tr>
+          <tr><td class="c1 cy">net x.x.x.x/24</td><td class="c2">Traffic within a subnet</td><td class="c3">net 192.168.0.0/16</td></tr>
+          <tr><td class="c1 cy">port N</td><td class="c2">Traffic on a specific port</td><td class="c3">port 443</td></tr>
+          <tr><td class="c1 cy">src port N</td><td class="c2">Traffic from source port</td><td class="c3">src port 80</td></tr>
+          <tr><td class="c1 cy">tcp / udp / icmp</td><td class="c2">Filter by protocol</td><td class="c3">tcp and port 22</td></tr>
+          <tr><td class="c1 cy">not port N</td><td class="c2">Exclude a port</td><td class="c3">not port 80</td></tr>
+          <tr><td class="c1 cy">ether host MAC</td><td class="c2">Traffic to/from a MAC address</td><td class="c3">ether host aa:bb:cc:dd:ee:ff</td></tr>
+          <tr><td class="c1 cy">tcp[13] == 18</td><td class="c2">TCP SYN-ACK packets</td><td class="c3">—</td></tr>
+          <tr><td class="c1 cy">tcp[13] &amp; 2 == 2</td><td class="c2">TCP SYN flag set</td><td class="c3">—</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-yellow"><span>⚙</span> BPF logical operators</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cy">and / &amp;&amp;</td><td class="c2">Both must match</td><td class="c3">host 10.0.0.1 and port 80</td></tr>
+          <tr><td class="c1 cy">or / ||</td><td class="c2">Either matches</td><td class="c3">port 80 or port 443</td></tr>
+          <tr><td class="c1 cy">not / !</td><td class="c2">Exclude matches</td><td class="c3">not arp and not icmp</td></tr>
+        </table>
+
+        <div style="padding: 8px 10px; border-top: 1px solid var(--border);">
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em;">TCP Flag byte reference (byte 13)</div>
+          <table class="cmd-table" style="border:none;">
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 32 == 32</td><td style="font-size:11.5px; color:var(--muted);">URG</td></tr>
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 16 == 16</td><td style="font-size:11.5px; color:var(--muted);">ACK</td></tr>
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 8 == 8</td><td style="font-size:11.5px; color:var(--muted);">PSH</td></tr>
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 4 == 4</td><td style="font-size:11.5px; color:var(--muted);">RST</td></tr>
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 2 == 2</td><td style="font-size:11.5px; color:var(--muted);">SYN</td></tr>
+            <tr><td class="c1 cy" style="font-size:10.5px;">tcp[13] &amp; 1 == 1</td><td style="font-size:11.5px; color:var(--muted);">FIN</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       HEADER MATH
+  ═══════════════════════════ -->
+  <div class="section" id="header-math">
+    <div class="section-label"><span class="dot dot-green"></span>Header Size Reference &amp; Packet Math</div>
+
+    <!-- Quick size table -->
+    <div class="cmd-block" style="margin-bottom:1rem;">
+      <div class="cmd-block-header hdr-green"><span>📐</span> Default header sizes — memorize these</div>
+      <table class="cmd-table">
+        <tr><td class="c1" style="color:var(--teal);">Ethernet II</td><td class="c2">Layer 2 frame header</td><td class="c3">14 bytes &nbsp;(+ 4 byte FCS trailer)</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">IPv4</td><td class="c2">Layer 3 — minimum, no options</td><td class="c3" style="color:#4ade80; font-weight:600;">20 bytes</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">IPv6</td><td class="c2">Layer 3 — fixed size</td><td class="c3" style="color:#4ade80; font-weight:600;">40 bytes</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">TCP</td><td class="c2">Layer 4 — minimum, no options</td><td class="c3" style="color:#4ade80; font-weight:600;">20 bytes</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">UDP</td><td class="c2">Layer 4 — fixed size</td><td class="c3" style="color:#4ade80; font-weight:600;">8 bytes</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">ICMP</td><td class="c2">Echo request/reply header</td><td class="c3">8 bytes</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">DNS</td><td class="c2">Query/response header</td><td class="c3">12 bytes (+ variable records)</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">ARP</td><td class="c2">Request/reply for IPv4</td><td class="c3">28 bytes (+ optional 36 byte trailer)</td></tr>
+        <tr><td class="c1" style="color:var(--teal);">802.1Q VLAN tag</td><td class="c2">Appended to Ethernet header</td><td class="c3">+4 bytes</td></tr>
+      </table>
+    </div>
+
+    <div class="grid-2">
+
+      <!-- IPv4 Payload calculation -->
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span>🧮</span> IPv4 payload calculation</div>
+        <div style="padding:10px 14px;">
+          <div class="math-box">
+            <div class="math-formula">IPv4 Payload = Total Length − (IHL × 4)</div>
+            <div style="height:6px;"></div>
+            <div class="math-note">IHL (Internet Header Length) is a 4-bit field showing the</div>
+            <div class="math-note">header size in <strong>32-bit words</strong> — multiply by 4 to get bytes.</div>
+            <div class="math-note">Standard IHL value = <strong>5</strong> → 5 × 4 = <strong>20 bytes</strong></div>
+            <div style="height:8px; border-top: 1px solid var(--border); margin: 6px 0;"></div>
+            <div class="math-note">Example: Total Length = 1500, IHL = 5</div>
+            <div class="math-example">1500 − (5 × 4) = 1500 − 20 = <span class="math-result">1480 bytes of payload</span></div>
+          </div>
+          <div class="math-box">
+            <div class="math-formula">Max payload at standard MTU:</div>
+            <div class="math-example">MTU 1500 − 20 (IP) = <span class="math-result">1480 bytes</span></div>
+            <div class="math-example">With TCP: 1500 − 20 (IP) − 20 (TCP) = <span class="math-result">1460 bytes</span> (MSS)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fragment offset calculation -->
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span>✂</span> Fragment offset calculation</div>
+        <div style="padding:10px 14px;">
+          <div class="math-box">
+            <div class="math-formula">Byte Position = Fragment Offset × 8</div>
+            <div style="height:6px;"></div>
+            <div class="math-note">Fragment Offset is stored in 8-byte blocks.</div>
+            <div class="math-note">Multiply the field value by 8 to get the byte</div>
+            <div class="math-note">position in the original datagram.</div>
+            <div style="height:8px; border-top: 1px solid var(--border); margin: 6px 0;"></div>
+            <div class="math-note">Example: Offset field = 185</div>
+            <div class="math-example">185 × 8 = <span class="math-result">1480 byte offset</span></div>
+            <div class="math-note" style="margin-top:4px;">Max Fragment Offset at 1500 MTU:</div>
+            <div class="math-example">(1500 − 20) / 8 = <span class="math-result">185 blocks</span></div>
+          </div>
+          <div class="math-box">
+            <div class="math-formula">IPv4 Flags field (3 bits):</div>
+            <div class="math-example">Bit 0 — Reserved (always 0)</div>
+            <div class="math-example">Bit 1 — <span style="color:var(--yellow);">DF</span> (Don't Fragment)</div>
+            <div class="math-example">Bit 2 — <span style="color:var(--orange);">MF</span> (More Fragments — 1 = more coming)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TCP payload -->
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span>🧮</span> TCP payload calculation</div>
+        <div style="padding:10px 14px;">
+          <div class="math-box">
+            <div class="math-formula">TCP Payload = IP Total Length − IP Header − TCP Header</div>
+            <div style="height:6px;"></div>
+            <div class="math-note">TCP Data Offset field (4 bits) = TCP header size in 32-bit words.</div>
+            <div class="math-note">Multiply by 4 to get bytes (same logic as IPv4 IHL).</div>
+            <div class="math-note">Standard Data Offset = <strong>5</strong> → 5 × 4 = <strong>20 bytes</strong></div>
+            <div style="height:8px; border-top: 1px solid var(--border); margin: 6px 0;"></div>
+            <div class="math-note">Example: IP Total Length = 1500, IHL = 5, TCP Data Offset = 5</div>
+            <div class="math-example">1500 − 20 − 20 = <span class="math-result">1460 bytes TCP payload</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IPv6 payload note -->
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span>⚠</span> IPv4 vs IPv6 length field difference</div>
+        <div style="padding:10px 14px;">
+          <div class="math-box">
+            <div class="math-formula">IPv4: Total Length = Header + Payload</div>
+            <div class="math-example">Payload = Total Length − (IHL × 4)</div>
+            <div style="height:8px; border-top:1px solid var(--border); margin:6px 0;"></div>
+            <div class="math-formula">IPv6: Payload Length = Payload ONLY</div>
+            <div class="math-example">IPv6 header is NOT included in the Payload Length field</div>
+            <div class="math-example">Total size = Payload Length + <span class="math-result">40</span> (fixed header)</div>
+            <div style="height:8px; border-top:1px solid var(--border); margin:6px 0;"></div>
+            <div class="math-note" style="color:var(--red);">⚠ Don't mix these up — the field names are</div>
+            <div class="math-note" style="color:var(--red);">different and mean different things.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       IPv4 HEADER
+  ═══════════════════════════ -->
+  <div class="section" id="ipv4-header">
+    <div class="section-label"><span class="dot dot-teal"></span>IPv4 Header — 20 bytes (standard)</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>📦</span> Field reference</div>
+        <div style="padding:10px 12px;">
+          <div class="header-field-grid">
+            <div class="hf"><div class="hf-name">Version (4b)</div><div class="hf-desc">Always 4 for IPv4</div></div>
+            <div class="hf"><div class="hf-name">IHL (4b)</div><div class="hf-desc">Header length in 32-bit words. Standard = 5 (→ 20 bytes)</div></div>
+            <div class="hf"><div class="hf-name">TOS/DSCP (8b)</div><div class="hf-desc">Type of service / QoS markings</div></div>
+            <div class="hf"><div class="hf-name">Total Length (16b)</div><div class="hf-desc">Entire datagram size including header and payload</div></div>
+            <div class="hf"><div class="hf-name">Identification (16b)</div><div class="hf-desc">Groups fragments of the same datagram</div></div>
+            <div class="hf"><div class="hf-name">Flags (3b)</div><div class="hf-desc">Reserved | DF (don't fragment) | MF (more fragments)</div></div>
+            <div class="hf"><div class="hf-name">Fragment Offset (13b)</div><div class="hf-desc">Position of fragment in 8-byte blocks</div></div>
+            <div class="hf"><div class="hf-name">TTL (8b)</div><div class="hf-desc">Decremented at each hop — prevents loops. 0 = drop.</div></div>
+            <div class="hf"><div class="hf-name">Protocol (8b)</div><div class="hf-desc">Next layer: 1=ICMP, 6=TCP, 17=UDP</div></div>
+            <div class="hf"><div class="hf-name">Header Checksum (16b)</div><div class="hf-desc">Error check for header only (NOT payload)</div></div>
+            <div class="hf"><div class="hf-name">Source IP (32b)</div><div class="hf-desc">Sender's IP address</div></div>
+            <div class="hf"><div class="hf-name">Destination IP (32b)</div><div class="hf-desc">Recipient's IP address</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>🔍</span> Where to find IPv4 fields in Wireshark</div>
+        <table class="cmd-table">
+          <tr><td class="c1 ct">Expand</td><td class="c2">—</td><td class="c3">Internet Protocol Version 4</td></tr>
+          <tr><td class="c1 ct">Version</td><td class="c2">Always 4</td><td class="c3">ip.version</td></tr>
+          <tr><td class="c1 ct">IHL</td><td class="c2">Header len in 32b words</td><td class="c3">ip.hdr_len</td></tr>
+          <tr><td class="c1 ct">Total Length</td><td class="c2">Header + payload size</td><td class="c3">ip.len</td></tr>
+          <tr><td class="c1 ct">Identification</td><td class="c2">Fragment group ID</td><td class="c3">ip.id</td></tr>
+          <tr><td class="c1 ct">Flags</td><td class="c2">DF / MF bits</td><td class="c3">ip.flags</td></tr>
+          <tr><td class="c1 ct">Fragment Offset</td><td class="c2">Position in 8-byte blocks</td><td class="c3">ip.frag_offset</td></tr>
+          <tr><td class="c1 ct">TTL</td><td class="c2">Hops remaining</td><td class="c3">ip.ttl</td></tr>
+          <tr><td class="c1 ct">Protocol</td><td class="c2">Next layer number</td><td class="c3">ip.proto</td></tr>
+          <tr><td class="c1 ct">Source</td><td class="c2">Sender IP</td><td class="c3">ip.src</td></tr>
+          <tr><td class="c1 ct">Destination</td><td class="c2">Recipient IP</td><td class="c3">ip.dst</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       IPv6 HEADER
+  ═══════════════════════════ -->
+  <div class="section" id="ipv6-header">
+    <div class="section-label"><span class="dot dot-purple"></span>IPv6 Header — 40 bytes (fixed)</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-purple"><span>📦</span> Field reference</div>
+        <div style="padding:10px 12px;">
+          <div class="header-field-grid">
+            <div class="hf"><div class="hf-name">Version (4b)</div><div class="hf-desc">Always 6 for IPv6</div></div>
+            <div class="hf"><div class="hf-name">Traffic Class (8b)</div><div class="hf-desc">QoS — equivalent to IPv4 TOS/DSCP</div></div>
+            <div class="hf"><div class="hf-name">Flow Label (20b)</div><div class="hf-desc">Identifies packets of same flow for QoS</div></div>
+            <div class="hf"><div class="hf-name">Payload Length (16b)</div><div class="hf-desc">Size of payload ONLY — header not included (unlike IPv4)</div></div>
+            <div class="hf"><div class="hf-name">Next Header (8b)</div><div class="hf-desc">Like IPv4 Protocol field. Points to next layer or extension header.</div></div>
+            <div class="hf"><div class="hf-name">Hop Limit (8b)</div><div class="hf-desc">IPv6 equivalent of TTL — decremented at each hop</div></div>
+            <div class="hf"><div class="hf-name">Source Address (128b)</div><div class="hf-desc">16-byte sender IPv6 address</div></div>
+            <div class="hf"><div class="hf-name">Destination Address (128b)</div><div class="hf-desc">16-byte recipient IPv6 address</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-purple"><span>⚖</span> IPv4 vs IPv6 field name mapping</div>
+        <table class="cmd-table">
+          <tr><td class="c1 ct" style="color:var(--teal);">IPv4 field</td><td class="c2" style="color:var(--purple);">IPv6 equivalent</td><td class="c3">Notes</td></tr>
+          <tr><td class="c1 ct">Total Length</td><td class="c2" style="color:var(--purple);">Payload Length</td><td class="c3">IPv6 excludes 40-byte header</td></tr>
+          <tr><td class="c1 ct">TTL</td><td class="c2" style="color:var(--purple);">Hop Limit</td><td class="c3">Same function, different name</td></tr>
+          <tr><td class="c1 ct">Protocol</td><td class="c2" style="color:var(--purple);">Next Header</td><td class="c3">Same values (6=TCP, 17=UDP)</td></tr>
+          <tr><td class="c1 ct">IHL</td><td class="c2" style="color:var(--purple);">None</td><td class="c3">IPv6 header is always 40 bytes</td></tr>
+          <tr><td class="c1 ct">Checksum</td><td class="c2" style="color:var(--purple);">None</td><td class="c3">Removed — handled by upper layers</td></tr>
+          <tr><td class="c1 ct">Flags + Frag Offset</td><td class="c2" style="color:var(--purple);">Extension header</td><td class="c3">Fragmentation via separate header</td></tr>
+          <tr><td class="c1 ct">TOS</td><td class="c2" style="color:var(--purple);">Traffic Class</td><td class="c3">+ Flow Label for additional QoS</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       TCP HEADER
+  ═══════════════════════════ -->
+  <div class="section" id="tcp-header">
+    <div class="section-label"><span class="dot dot-blue"></span>TCP Header — 20 bytes (standard)</div>
+    <div class="cmd-block">
+      <div class="cmd-block-header hdr-blue"><span>📦</span> Field reference</div>
+      <div style="padding:10px 12px;">
+        <div class="header-field-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="hf"><div class="hf-name">Src Port (16b)</div><div class="hf-desc">Sending application's port</div></div>
+          <div class="hf"><div class="hf-name">Dst Port (16b)</div><div class="hf-desc">Receiving application's port</div></div>
+          <div class="hf"><div class="hf-name">Sequence Number (32b)</div><div class="hf-desc">Tracks byte order for reassembly</div></div>
+          <div class="hf"><div class="hf-name">Acknowledgment (32b)</div><div class="hf-desc">Next byte expected from sender</div></div>
+          <div class="hf"><div class="hf-name">Data Offset (4b)</div><div class="hf-desc">TCP header size in 32-bit words. Standard=5 (→ 20 bytes)</div></div>
+          <div class="hf"><div class="hf-name">Flags (9b)</div><div class="hf-desc">URG, ACK, PSH, RST, SYN, FIN + 3 reserved</div></div>
+          <div class="hf"><div class="hf-name">Window Size (16b)</div><div class="hf-desc">Flow control — bytes sender can receive</div></div>
+          <div class="hf"><div class="hf-name">Checksum (16b)</div><div class="hf-desc">Error detection for header and data</div></div>
+          <div class="hf"><div class="hf-name">Urgent Pointer (16b)</div><div class="hf-desc">Only valid when URG flag is set</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       TCP FLAGS
+  ═══════════════════════════ -->
+  <div class="section" id="flags">
+    <div class="section-label"><span class="dot dot-orange"></span>TCP Flags &amp; 3-Way Handshake</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span>🚩</span> Flag reference</div>
+        <div style="padding:8px 12px;">
+          <div class="flag-row"><span class="flag-pill fp-syn">SYN</span><span class="flag-desc">Synchronize — initiate connection</span><span class="flag-hex">0x002</span></div>
+          <div class="flag-row"><span class="flag-pill fp-ack">ACK</span><span class="flag-desc">Acknowledgment — confirms receipt</span><span class="flag-hex">0x010</span></div>
+          <div class="flag-row"><span class="flag-pill fp-synack">SYN-ACK</span><span class="flag-desc">Server handshake reply</span><span class="flag-hex">0x012</span></div>
+          <div class="flag-row"><span class="flag-pill fp-rst">RST</span><span class="flag-desc">Reset — abruptly close connection</span><span class="flag-hex">0x004</span></div>
+          <div class="flag-row"><span class="flag-pill fp-fin">FIN</span><span class="flag-desc">Finish — graceful connection close</span><span class="flag-hex">0x001</span></div>
+          <div class="flag-row"><span class="flag-pill fp-psh">PSH</span><span class="flag-desc">Push — send buffered data immediately</span><span class="flag-hex">0x008</span></div>
+          <div class="flag-row"><span class="flag-pill fp-urg">URG</span><span class="flag-desc">Urgent — process data immediately</span><span class="flag-hex">0x020</span></div>
+          <div class="flag-row"><span style="font-family:var(--mono); font-size:10.5px; color:var(--muted);">PSH+ACK</span><span class="flag-desc">Data transfer in progress</span><span class="flag-hex">0x018</span></div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span>🤝</span> 3-Way Handshake</div>
+        <div style="padding:10px 14px;">
+          <div class="math-box">
+            <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-bottom:6px;"><span>Client</span><span>Server</span></div>
+            <div class="math-example" style="text-align:center; margin-bottom:4px;">── <span style="color:var(--green);">SYN</span> ──────────────────────────→</div>
+            <div class="math-example" style="text-align:center; margin-bottom:4px;">←──────────────────────── <span style="color:var(--teal);">SYN-ACK</span> ──</div>
+            <div class="math-example" style="text-align:center;">── <span style="color:var(--blue);">ACK</span> ──────────────────────────→</div>
+            <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+              <div class="math-note">Step 1 — Client sends SYN (Seq=x)</div>
+              <div class="math-note">Step 2 — Server replies SYN-ACK (Seq=y, Ack=x+1)</div>
+              <div class="math-note">Step 3 — Client sends ACK (Ack=y+1) → connection open</div>
+            </div>
+          </div>
+          <div class="math-box" style="margin-top:6px;">
+            <div class="math-formula">4-Way Teardown:</div>
+            <div class="math-note">FIN → ACK → FIN → ACK</div>
+            <div class="math-note">Either side can initiate with FIN</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       IP FLAGS & FRAGMENTATION
+  ═══════════════════════════ -->
+  <div class="section" id="ip-flags">
+    <div class="section-label"><span class="dot dot-yellow"></span>IPv4 Flags &amp; Fragmentation Offset — combined interpretation</div>
+
+    <div class="callout callout-math">
+      <span class="callout-icon">🧮</span>
+      <div>
+        The IPv4 <strong>Flags</strong> field (3 bits) and <strong>Fragment Offset</strong> field (13 bits) are read together to determine a packet's fragmentation state. The two flag bits that matter are <strong>DF</strong> (Don't Fragment, bit 1) and <strong>MF</strong> (More Fragments, bit 2).
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-yellow"><span>✂</span> Flags + Fragment Offset — what each combination means</div>
+        <table class="cmd-table">
+          <tr style="background:var(--bg3);">
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:10.5px; color:var(--muted); font-weight:600;">Flags</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:10.5px; color:var(--muted); font-weight:600;">DF</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:10.5px; color:var(--muted); font-weight:600;">MF</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:10.5px; color:var(--muted); font-weight:600;">Frag Offset</td>
+            <td style="padding:5px 10px; font-size:11px; color:var(--muted); font-weight:600;">Meaning</td>
+          </tr>
+          <tr>
+            <td class="c1 cy">0x00</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--teal);">0</td>
+            <td style="padding:5px 10px; font-size:12px; color:var(--text);">Unfragmented packet — no fragmentation at all</td>
+          </tr>
+          <tr>
+            <td class="c1 cy">0x02</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--green);">1</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--teal);">0</td>
+            <td style="padding:5px 10px; font-size:12px; color:var(--text);"><strong>DF set</strong> — device says "do not fragment this packet"</td>
+          </tr>
+          <tr>
+            <td class="c1 cy">0x01</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--orange);">1</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--teal);">0</td>
+            <td style="padding:5px 10px; font-size:12px; color:var(--text);"><strong>First fragment</strong> — more fragments follow, this is the start</td>
+          </tr>
+          <tr>
+            <td class="c1 cy">0x01</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--orange);">1</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--yellow);">&gt; 0</td>
+            <td style="padding:5px 10px; font-size:12px; color:var(--text);"><strong>Middle fragment</strong> — more coming, not the first or last</td>
+          </tr>
+          <tr>
+            <td class="c1 cy">0x00</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--muted);">0</td>
+            <td style="padding:5px 10px; font-family:var(--mono); font-size:12px; color:var(--yellow);">&gt; 0</td>
+            <td style="padding:5px 10px; font-size:12px; color:var(--text);"><strong>Last fragment</strong> — MF cleared, offset shows position</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-yellow"><span>📌</span> Wireshark filter reference — flags</div>
+        <table class="cmd-table">
+          <tr><td class="c1 cy">ip.flags == 0x00</td><td class="c2">No flags set</td><td class="c3">Normal unfragmented packet</td></tr>
+          <tr><td class="c1 cy">ip.flags.df == 1</td><td class="c2">Don't Fragment bit set</td><td class="c3">Packet cannot be split</td></tr>
+          <tr><td class="c1 cy">ip.flags.mf == 1</td><td class="c2">More Fragments bit set</td><td class="c3">First or middle fragment</td></tr>
+          <tr><td class="c1 cy">ip.frag_offset == 0</td><td class="c2">Offset is zero</td><td class="c3">First or only fragment</td></tr>
+          <tr><td class="c1 cy">ip.frag_offset &gt; 0</td><td class="c2">Non-zero offset</td><td class="c3">Middle or last fragment</td></tr>
+          <tr><td class="c1 cy">ip.flags.mf == 1 &amp;&amp; ip.frag_offset == 0</td><td class="c2">MF=1, Offset=0</td><td class="c3">First fragment only</td></tr>
+          <tr><td class="c1 cy">ip.flags.mf == 0 &amp;&amp; ip.frag_offset &gt; 0</td><td class="c2">MF=0, Offset&gt;0</td><td class="c3">Last fragment only</td></tr>
+        </table>
+        <div style="padding:8px 12px; border-top:1px solid var(--border); font-size:12px; color:var(--muted);">
+          <div style="font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; color:var(--yellow);">How to identify all fragments of one datagram</div>
+          All fragments of the same original datagram share the same <strong style="color:var(--text);">Identification</strong> field value — filter with <code>ip.id == 0x1234</code> to group them.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-trap">
+      <span class="callout-icon">🚨</span>
+      <div>
+        <strong>DF + ICMP "Fragmentation Needed" = Path MTU Discovery in action.</strong> If a router can't forward a packet without fragmenting it but DF is set, it drops the packet and sends ICMP Type 3 Code 4 back to the sender. This is normal behavior — not an attack.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       HEX / DEC / BINARY
+  ═══════════════════════════ -->
+  <div class="section" id="hex-table">
+    <div class="section-label"><span class="dot dot-teal"></span>Hexadecimal · Decimal · Binary Conversion</div>
+
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>🔢</span> Conversion table — 0 to F</div>
+        <table class="cmd-table">
+          <tr style="background:var(--bg3);">
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--teal); font-weight:600; text-align:center;">Hex</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--yellow); font-weight:600; text-align:center;">Decimal</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--purple); font-weight:600; text-align:center;">Binary (4-bit)</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--teal); font-weight:600; text-align:center;">Hex</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--yellow); font-weight:600; text-align:center;">Decimal</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:10.5px; color:var(--purple); font-weight:600; text-align:center;">Binary (4-bit)</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">0</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">0</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0000</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">8</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">8</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1000</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">1</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">1</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0001</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">9</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">9</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1001</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">2</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">2</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0010</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">A</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">10</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1010</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">3</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">3</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0011</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">B</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">11</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1011</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">4</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">4</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0100</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">C</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">12</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1100</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">5</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">5</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0101</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">D</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">13</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1101</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">6</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">6</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0110</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">E</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">14</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1110</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">7</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">7</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">0111</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--teal); text-align:center; font-weight:500;">F</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--yellow); text-align:center;">15</td>
+            <td style="padding:5px 12px; font-family:var(--mono); font-size:12px; color:var(--purple); text-align:center;">1111</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>🔄</span> Conversion methods</div>
+        <div style="padding:10px 14px; display:flex; flex-direction:column; gap:10px;">
+
+          <div class="math-box">
+            <div class="math-formula">Decimal → Hexadecimal</div>
+            <div class="math-note">Repeatedly divide by 16. Remainders (bottom-up) = hex digits.</div>
+            <div style="height:5px;"></div>
+            <div class="math-note">Example: 425 → hex</div>
+            <div class="math-example">425 ÷ 16 = 26 remainder <span class="math-result">9</span></div>
+            <div class="math-example"> 26 ÷ 16 =  1 remainder <span class="math-result">A</span></div>
+            <div class="math-example">  1 ÷ 16 =  0 remainder <span class="math-result">1</span></div>
+            <div class="math-example">Read remainders bottom-up → <span class="math-result">0x1A9</span></div>
+          </div>
+
+          <div class="math-box">
+            <div class="math-formula">Hexadecimal → Decimal</div>
+            <div class="math-note">Multiply each digit by 16<sup>position</sup> (right = position 0).</div>
+            <div style="height:5px;"></div>
+            <div class="math-note">Example: 0x1A9 → decimal</div>
+            <div class="math-example">9 × 16⁰ =  9 × 1   = <span class="math-result">  9</span></div>
+            <div class="math-example">A × 16¹ = 10 × 16  = <span class="math-result">160</span></div>
+            <div class="math-example">1 × 16² =  1 × 256 = <span class="math-result">256</span></div>
+            <div class="math-example">Sum: 9 + 160 + 256 = <span class="math-result">425</span></div>
+          </div>
+
+          <div class="math-box">
+            <div class="math-formula">Hex → Binary</div>
+            <div class="math-note">Each hex digit = exactly 4 binary bits. Look up each digit in the table.</div>
+            <div style="height:5px;"></div>
+            <div class="math-example">0x1A9 → <span class="math-result">0001 1010 1001</span></div>
+            <div class="math-note" style="margin-top:3px;">1=0001 · A=1010 · 9=1001</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       COMMON PORTS
+  ═══════════════════════════ -->
+  <div class="section" id="ports">
+    <div class="section-label"><span class="dot dot-teal"></span>Common Port Numbers</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>🔌</span> Well-known ports (0–1023)</div>
+        <div style="padding:8px 12px;">
+          <div class="port-row"><span class="port-num">20 / 21</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">FTP</span><span class="port-note">Data / Control</span></div>
+          <div class="port-row"><span class="port-num">22</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">SSH</span><span class="port-note">Encrypted remote shell</span></div>
+          <div class="port-row"><span class="port-num">23</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">Telnet</span><span class="port-note">Cleartext remote shell</span></div>
+          <div class="port-row"><span class="port-num">25</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">SMTP</span><span class="port-note">Email sending</span></div>
+          <div class="port-row"><span class="port-num">53</span><span class="port-proto proto-both">TCP/UDP</span><span class="port-name">DNS</span><span class="port-note">UDP queries, TCP zone transfers</span></div>
+          <div class="port-row"><span class="port-num">67 / 68</span><span class="port-proto proto-udp">UDP</span><span class="port-name">DHCP</span><span class="port-note">Server / Client</span></div>
+          <div class="port-row"><span class="port-num">80</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">HTTP</span><span class="port-note">Unencrypted web</span></div>
+          <div class="port-row"><span class="port-num">88</span><span class="port-proto proto-both">TCP/UDP</span><span class="port-name">Kerberos</span><span class="port-note">AD authentication</span></div>
+          <div class="port-row"><span class="port-num">110</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">POP3</span><span class="port-note">Email retrieval</span></div>
+          <div class="port-row"><span class="port-num">135</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">RPC / EPMAP</span><span class="port-note">Windows RPC</span></div>
+          <div class="port-row"><span class="port-num">139</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">NetBIOS</span><span class="port-note">Legacy Windows naming</span></div>
+          <div class="port-row"><span class="port-num">143</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">IMAP</span><span class="port-note">Email access</span></div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-teal"><span>🔌</span> Well-known ports (continued)</div>
+        <div style="padding:8px 12px;">
+          <div class="port-row"><span class="port-num">161 / 162</span><span class="port-proto proto-udp">UDP</span><span class="port-name">SNMP</span><span class="port-note">Network monitoring</span></div>
+          <div class="port-row"><span class="port-num">389</span><span class="port-proto proto-both">TCP/UDP</span><span class="port-name">LDAP</span><span class="port-note">Directory services</span></div>
+          <div class="port-row"><span class="port-num">443</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">HTTPS</span><span class="port-note">TLS-encrypted web</span></div>
+          <div class="port-row"><span class="port-num">445</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">SMB</span><span class="port-note">Windows file sharing</span></div>
+          <div class="port-row"><span class="port-num">500</span><span class="port-proto proto-udp">UDP</span><span class="port-name">IKE / IPSec</span><span class="port-note">VPN key exchange</span></div>
+          <div class="port-row"><span class="port-num">514</span><span class="port-proto proto-udp">UDP</span><span class="port-name">Syslog</span><span class="port-note">System logging</span></div>
+          <div class="port-row"><span class="port-num">636</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">LDAPS</span><span class="port-note">Secure LDAP over TLS</span></div>
+          <div class="port-row"><span class="port-num">3389</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">RDP</span><span class="port-note">Remote Desktop Protocol</span></div>
+          <div class="port-row"><span class="port-num">502</span><span class="port-proto proto-tcp">TCP</span><span class="port-name">Modbus</span><span class="port-note">OT/ICS protocol</span></div>
+          <div class="port-row"><span class="port-num">20000</span><span class="port-proto proto-both">TCP/UDP</span><span class="port-name">DNP3</span><span class="port-note">OT/ICS protocol</span></div>
+          <div style="padding:6px 0; font-family:var(--mono); font-size:10.5px; color:var(--muted);">
+            Known: 0–1023 &nbsp;|&nbsp; Ephemeral: 1024–65535
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       PROTOCOL NUMBERS
+  ═══════════════════════════ -->
+  <div class="section" id="protocols">
+    <div class="section-label"><span class="dot dot-yellow"></span>IPv4 Protocol Field Numbers</div>
+    <div class="cmd-block">
+      <div class="cmd-block-header hdr-yellow"><span>#</span> ip.proto values — seen in IPv4 Protocol field / IPv6 Next Header</div>
+      <table class="cmd-table">
+        <tr><td class="c1 cy">1</td><td class="c2">ICMP — Internet Control Message Protocol</td><td class="c3">ip.proto == 1</td></tr>
+        <tr><td class="c1 cy">6</td><td class="c2">TCP — Transmission Control Protocol</td><td class="c3">ip.proto == 6</td></tr>
+        <tr><td class="c1 cy">17</td><td class="c2">UDP — User Datagram Protocol</td><td class="c3">ip.proto == 17</td></tr>
+        <tr><td class="c1 cy">41</td><td class="c2">IPv6 encapsulated in IPv4 (6in4 tunneling)</td><td class="c3">ip.proto == 41</td></tr>
+        <tr><td class="c1 cy">47</td><td class="c2">GRE — Generic Routing Encapsulation</td><td class="c3">ip.proto == 47</td></tr>
+        <tr><td class="c1 cy">50</td><td class="c2">ESP — Encapsulating Security Payload (IPSec)</td><td class="c3">ip.proto == 50</td></tr>
+        <tr><td class="c1 cy">51</td><td class="c2">AH — Authentication Header (IPSec)</td><td class="c3">ip.proto == 51</td></tr>
+        <tr><td class="c1 cy">58</td><td class="c2">ICMPv6 — IPv6 control messages</td><td class="c3">ip.proto == 58</td></tr>
+        <tr><td class="c1 cy">89</td><td class="c2">OSPF — Open Shortest Path First routing</td><td class="c3">ip.proto == 89</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════
+       INSPECTION TIPS
+  ═══════════════════════════ -->
+  <div class="section" id="tips">
+    <div class="section-label"><span class="dot dot-red"></span>Inspection Tips &amp; Workflows</div>
+    <div class="grid-2">
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span>🔎</span> Reading a packet in the details pane</div>
+        <table class="cmd-table">
+          <tr><td class="c1" style="color:var(--red);">Frame</td><td class="c2">Physical capture metadata</td><td class="c3">Frame length, capture time, interface</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Ethernet II</td><td class="c2">L2 — MAC addresses, Ethertype</td><td class="c3">Src/Dst MAC, protocol type (0x0800=IPv4)</td></tr>
+          <tr><td class="c1" style="color:var(--red);">IPv4 / IPv6</td><td class="c2">L3 — IP addresses, TTL</td><td class="c3">Src/Dst IP, protocol, total length, TTL</td></tr>
+          <tr><td class="c1" style="color:var(--red);">TCP / UDP</td><td class="c2">L4 — ports, flags, seq/ack</td><td class="c3">Src/Dst port, flags, seq number, data offset</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Data / Payload</td><td class="c2">Application layer content</td><td class="c3">Raw bytes — may need Follow Stream to read</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span>🛠</span> Common inspection workflows</div>
+        <table class="cmd-table">
+          <tr><td class="c1" style="color:var(--red);">Follow stream</td><td class="c2">Reassemble a full conversation</td><td class="c3">Right-click → Follow → TCP Stream</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Find string</td><td class="c2">Search for text in payloads</td><td class="c3">Ctrl+F → search in "String" mode</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Identify retransmits</td><td class="c2">Flag network issues</td><td class="c3">tcp.analysis.retransmission</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Find big packets</td><td class="c2">Large file transfers</td><td class="c3">frame.len &gt; 1400</td></tr>
+          <tr><td class="c1" style="color:var(--red);">SYN scan detection</td><td class="c2">Port scanning pattern</td><td class="c3">tcp.flags == 0x002 (SYN only, no ACK)</td></tr>
+          <tr><td class="c1" style="color:var(--red);">DNS queries</td><td class="c2">What names were resolved</td><td class="c3">dns.flags.response == 0</td></tr>
+          <tr><td class="c1" style="color:var(--red);">Export objects</td><td class="c2">Extract files from HTTP/SMB</td><td class="c3">File → Export Objects → HTTP</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Quick triage steps for an unknown pcap:</strong><br>
+        1. <code>Statistics → Protocol Hierarchy</code> — what protocols are present?<br>
+        2. <code>Statistics → Conversations</code> — who is talking to whom, how much data?<br>
+        3. Filter to the interesting IP/port with display filters<br>
+        4. Right-click → Follow Stream to read the full exchange<br>
+        5. <code>Ctrl+F</code> to search for keywords (passwords, credentials, commands) in packet data
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <div>
+        <strong>Key things to check in the details pane:</strong><br>
+        • <strong>TTL</strong> — low TTL may indicate a spoofed source or traceroute scan<br>
+        • <strong>DF flag set + ICMP "fragmentation needed"</strong> — Path MTU discovery in action<br>
+        • <strong>Repeated RST packets</strong> — port scan or connection rejection<br>
+        • <strong>Sequence number anomalies</strong> — possible injection or hijacking attempt<br>
+        • <strong>Large DNS TXT records</strong> — possible DNS tunneling or exfiltration
+      </div>
+    </div>
+
+    <div class="callout callout-math">
+      <span class="callout-icon">🧮</span>
+      <div>
+        <strong>Quick math recap:</strong>
+        &nbsp;&nbsp;<strong>IPv4 payload</strong> = <code>ip.len − (ip.hdr_len × 4)</code>
+        &nbsp;·&nbsp; <strong>TCP payload</strong> = <code>ip.len − ip.hdr_len − tcp.hdr_len</code>
+        &nbsp;·&nbsp; <strong>IPv6 payload</strong> = <code>ipv6.plen</code> (already excludes 40-byte header)
+        &nbsp;·&nbsp; <strong>Fragment byte position</strong> = <code>ip.frag_offset × 8</code>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+</body>
+</html>
