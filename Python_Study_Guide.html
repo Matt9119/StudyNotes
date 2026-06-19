@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Study Guide — UCWT</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    /* Python yellow/amber accent */
+    --accent-btn:      #B45309;
+    --accent-btn-text: #FEF3C7;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e; --bg-secondary: #2c2c2e;
+      --text: #f2f2f7; --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.20);
+      --accent-btn: #92400E; --accent-btn-text: #FEF3C7;
+    }
+    .badge-yellow { background:#2A1E00 !important; color:#FCD34D !important; }
+    .badge-amber  { background:#2A1000 !important; color:#FCA46A !important; }
+    .badge-green  { background:#0A3322 !important; color:#86EFAC !important; }
+    .badge-blue   { background:#0A1A2E !important; color:#93C5FD !important; }
+    .badge-purple { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .badge-red    { background:#3A0A0A !important; color:#FCA5A5 !important; }
+    .badge-teal   { background:#042A22 !important; color:#67E8C4 !important; }
+    .callout-tip  { background:#0A3322 !important; border-color:#16A34A !important; }
+    .callout-trap { background:#3A1500 !important; border-color:#EA580C !important; }
+    .callout-key  { background:#2A1E00 !important; border-color:#D97706 !important; }
+    .callout-tip  .callout-label { color:#86EFAC !important; }
+    .callout-trap .callout-label { color:#FCA46A !important; }
+    .callout-key  .callout-label { color:#FCD34D !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .phase-num { background:#2A1E00 !important; color:#FCD34D !important; }
+    .ref-table thead th { background:#2c2c2e !important; }
+    .day-btn.active { background: var(--accent-btn) !important; color: var(--accent-btn-text) !important; border-color: var(--accent-btn) !important; }
+    #toc-list a.toc-active { color:#FCD34D !important; background:#2A1E00 !important; }
+  }
+
+  body { font-family:var(--font); font-size:15px; color:var(--text); background:var(--bg); line-height:1.6; padding:0; margin:0; }
+
+  .page-layout { display:flex; align-items:flex-start; max-width:780px; margin:0 auto; padding:0 1.25rem; gap:1.5rem; }
+  .guide { flex:1; min-width:0; padding:1.25rem 0 5rem; }
+
+  .guide-header { margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:0.5px solid var(--border-strong); }
+  .guide-header h1 { font-size:20px; font-weight:600; letter-spacing:-0.02em; }
+  .guide-header p  { font-size:12px; color:var(--text-muted); margin-top:3px; font-family:var(--mono); }
+
+  .day-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .day-btn { padding:5px 13px; border:0.5px solid var(--border-strong); border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; background:var(--bg); color:var(--text-muted); transition:all 0.15s; font-family:var(--font); }
+  .day-btn.active { background:var(--accent-btn); color:var(--accent-btn-text); border-color:var(--accent-btn); }
+  .day-btn:hover:not(.active) { background:var(--bg-secondary); }
+
+  .day-section { display:none; }
+  .day-section.active { display:block; }
+
+  .section-badge { display:inline-block; font-size:11px; font-weight:500; padding:2px 10px; border-radius:20px; margin-bottom:8px; }
+  .badge-yellow { background:#FEF9C3; color:#713F0C; }
+  .badge-amber  { background:#FFEDD5; color:#7C2D12; }
+  .badge-green  { background:#DCFCE7; color:#15532A; }
+  .badge-blue   { background:#DBEAFE; color:#1E3A8A; }
+  .badge-purple { background:#EDE9FE; color:#3B0764; }
+  .badge-red    { background:#FEE2E2; color:#7F1D1D; }
+  .badge-teal   { background:#CCFBF1; color:#0F4C3A; }
+
+  .topic-title { font-size:17px; font-weight:500; margin-bottom:4px; }
+
+  .card { background:var(--bg); border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1rem; }
+
+  .callout { border-radius:var(--radius-md); padding:.75rem 1rem; margin-bottom:1rem; border-left:3px solid; }
+  .callout-tip  { background:#F0FDF4; border-color:#16A34A; }
+  .callout-trap { background:#FFF7ED; border-color:#EA580C; }
+  .callout-key  { background:#FFFBEB; border-color:#D97706; }
+  .callout-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .callout-tip  .callout-label { color:#16A34A; }
+  .callout-trap .callout-label { color:#EA580C; }
+  .callout-key  .callout-label { color:#D97706; }
+  .callout p, .callout li { font-size:13px; }
+  .callout ul { padding-left:1rem; margin-top:4px; }
+  .callout li { margin-bottom:2px; }
+
+  ul.guide-list { padding-left:1.1rem; margin:.5rem 0; }
+  ul.guide-list li { margin-bottom:5px; font-size:14px; }
+  ol.guide-list { padding-left:1.3rem; margin:.5rem 0; }
+  ol.guide-list li { margin-bottom:6px; font-size:14px; }
+
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; margin:.75rem 0; }
+  .cmp-table th { padding:7px 10px; text-align:left; font-weight:500; font-size:12px; border-bottom:0.5px solid var(--border-strong); color:var(--text-muted); }
+  .cmp-table td { padding:7px 10px; border-bottom:0.5px solid var(--border); vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+
+  .cmd { display:inline-block; font-family:var(--mono); font-size:12px; background:var(--bg-secondary); border:0.5px solid var(--border); border-radius:4px; padding:1px 6px; color:var(--text); }
+
+  h3.sh { font-size:14px; font-weight:500; margin:1rem 0 .5rem; border-bottom:.5px solid var(--border); padding-bottom:4px; }
+  h4.sh4 { font-size:13px; font-weight:500; margin:.75rem 0 .25rem; color:var(--text-muted); }
+  .kt { font-weight:500; }
+  .divider { height:.5px; background:var(--border); margin:1.5rem 0; }
+
+  .perm-row { padding:6px 0; border-bottom:.5px solid var(--border); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-label { font-weight:500; font-size:12px; margin-bottom:2px; }
+
+  /* code snippet blocks */
+  .code-block {
+    background:var(--bg-secondary); border:0.5px solid var(--border-strong);
+    border-radius:var(--radius-md); padding:.75rem 1rem; margin:.5rem 0;
+    font-family:var(--mono); font-size:12px; line-height:1.7;
+    overflow-x:auto; white-space:pre;
+  }
+  .cc { color:var(--text-muted); }          /* comment */
+  .ck { color:#B45309; font-weight:500; }   /* keyword */
+  .cs { color:#0f766e; }                    /* string */
+  .cn { color:#1d4ed8; }                    /* number */
+  .cf { color:#7c3aed; }                    /* function/builtin */
+
+  @media (prefers-color-scheme:dark) {
+    .ck { color:#FCD34D; }
+    .cs { color:#67E8C4; }
+    .cn { color:#93C5FD; }
+    .cf { color:#C4B5FD; }
+  }
+
+  /* quick ref tables */
+  .ref-section { margin-top:1.75rem; }
+  .ref-section-title { font-family:var(--mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); margin-bottom:.6rem; display:flex; align-items:center; gap:.5rem; }
+  .ref-section-title::after { content:''; flex:1; height:.5px; background:var(--border-strong); }
+  .ref-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:1.25rem; }
+  .ref-table thead th { padding:6px 10px; text-align:left; font-weight:500; font-size:11px; background:var(--bg-secondary); color:var(--text-muted); border-bottom:.5px solid var(--border-strong); }
+  .ref-table thead th:first-child { border-radius:6px 0 0 0; }
+  .ref-table thead th:last-child  { border-radius:0 6px 0 0; }
+  .ref-table tbody td { padding:6px 10px; border-bottom:.5px solid var(--border); vertical-align:top; }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); }
+  .ref-table .rd { font-size:12px; color:var(--text-muted); }
+  .ref-table .re { font-family:var(--mono); font-size:11px; color:#0f766e; }
+  @media (prefers-color-scheme:dark) { .ref-table .re { color:#67E8C4; } }
+
+  /* TOC sidebar */
+  .toc-sidebar { width:155px; flex-shrink:0; position:sticky; top:1.25rem; max-height:calc(100vh - 2rem); overflow-y:auto; padding:1.25rem 0 1rem; scrollbar-width:none; }
+  .toc-sidebar::-webkit-scrollbar { display:none; }
+  .toc-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.6rem; padding-bottom:0.5rem; border-bottom:0.5px solid var(--border-strong); font-family:var(--mono); }
+  #toc-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:1px; }
+  #toc-list a { display:block; font-size:11px; line-height:1.4; text-decoration:none; border-radius:4px; color:var(--text-muted); padding:4px 6px; transition:all 0.15s; }
+  #toc-list a:hover { color:var(--text); background:var(--bg-secondary); }
+  #toc-list a.toc-active { color:#713F0C; background:#FEF9C3; font-weight:500; }
+  #toc-list a.toc-main { font-size:11px; font-weight:500; }
+  #toc-list a.toc-sub  { font-size:10.5px; padding-left:14px; opacity:0.8; }
+
+  /* back to top */
+  #back-to-top { position:fixed; bottom:1.5rem; right:1.5rem; padding:0 14px; height:38px; border-radius:20px; background:var(--accent-btn); color:var(--accent-btn-text); font-size:13px; font-family:var(--mono); text-decoration:none; display:none; align-items:center; gap:6px; border:1px solid rgba(255,255,255,0.15); opacity:0; pointer-events:none; transition:opacity 0.25s; z-index:999; }
+  #back-to-top.visible { opacity:1; pointer-events:auto; }
+
+  @media (max-width:640px) {
+    .page-layout { padding:0 0.85rem; gap:0; }
+    .toc-sidebar { display:none; }
+    #back-to-top { display:flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+<div class="guide">
+
+<div class="guide-header">
+  <h1>Python Study Guide</h1>
+  <p>// UCWT — Days 1–4 | Fundamentals · Control Flow · File I/O · OCO &amp; DCO</p>
+</div>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+  <button class="day-btn" onclick="showDay(4)">Day 4</button>
+</div>
+
+
+<!-- ═══════════════════════════ DAY 1 ═══════════════════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-yellow">Python Fundamentals</div>
+  <div class="topic-title">Intro to Python</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Two key characteristics</div>Python is an <span class="kt">interpreted</span> language and an <span class="kt">object-oriented programming (OOP)</span> language.</div>
+    <div class="perm-row"><div class="perm-label">PEP8</div>Python Enhancement Proposal 8 — the standard style guide for writing and formatting Python code. Follow it for proper, readable code.</div>
+  </div>
+
+  <h3 class="sh">Types of languages</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Type</th><th>How it works</th><th>Python?</th></tr>
+      <tr><td><span class="kt">Compiled</span></td><td>Entire code translated to machine code by a compiler before running</td><td>No</td></tr>
+      <tr><td><span class="kt">Interpreted</span></td><td>Reads and executes each line one at a time</td><td>✅ Yes</td></tr>
+      <tr><td><span class="kt">Procedural</span></td><td>Sequences of instructions executed in order with specific inputs/outputs</td><td>No</td></tr>
+      <tr><td><span class="kt">OOP</span></td><td>Oriented around pre-defined data types (objects) — reusable, adaptable, maintainable</td><td>✅ Yes</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Building blocks of OOP</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Classes</div>Data types that act as <strong>blueprints</strong> for objects, attributes, and methods.</div>
+    <div class="perm-row"><div class="perm-label">Objects</div>Classes that have been <strong>created with defined data</strong> — an instance of a class.</div>
+    <div class="perm-row"><div class="perm-label">Methods</div><strong>Functions inside classes</strong> that describe the behaviors of an object.</div>
+    <div class="perm-row"><div class="perm-label">Attributes</div>Defined in classes and represent the <strong>state</strong> of an object.</div>
+  </div>
+
+  <h3 class="sh">Python: the good and the bad</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>✅ The Good</th><th>⚠ The Bad</th></tr>
+      <tr><td>Interpreted — easy to run and highly portable</td><td>Much slower than compiled languages like C/C++</td></tr>
+      <tr><td>OOP — great at reusing code through classes and functions</td><td>Less memory-efficient than procedural languages</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Running Python — 3 ways</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Command Line</div>Execute a one-liner directly: <span class="cmd">python -c "print('hello world')"</span></div>
+    <div class="perm-row"><div class="perm-label">Python Shell (Interactive)</div>Type <span class="cmd">python</span> in the CLI to enter interactive mode. Great for testing small snippets.</div>
+    <div class="perm-row"><div class="perm-label">Execute Scripts via CLI</div>Run <span class="cmd">.py</span> or <span class="cmd">.pyc</span> files directly: <span class="cmd">python script.py</span></div>
+  </div>
+
+  <h3 class="sh">Built-in help tools</h3>
+  <div class="card">
+    <div class="perm-row"><span class="cmd">help()</span><div>Starts an interactive help session in the shell.</div></div>
+    <div class="perm-row"><span class="cmd">help(&lt;option&gt;)</span><div>Prints help documentation for the given object.</div></div>
+    <div class="perm-row"><span class="cmd">dir(&lt;option&gt;)</span><div>Prints an object's list of available attributes and methods.</div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-amber">Language Essentials — Syntax</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Syntax type</th><th>Description</th><th>Example</th></tr>
+      <tr><td><span class="kt">Keywords</span></td><td>Reserved words that invoke built-in Python functionality</td><td><span class="cmd">if, else, for, while</span></td></tr>
+      <tr><td><span class="kt">Literals</span></td><td>Unassigned string or number values</td><td><span class="cmd">"hello"</span>, <span class="cmd">3.14</span></td></tr>
+      <tr><td><span class="kt">Operators (Numeric)</span></td><td>Used for numeric calculations</td><td><span class="cmd">+, -, /, *, %</span></td></tr>
+      <tr><td><span class="kt">Operators (Comparison)</span></td><td>Compare two values</td><td><span class="cmd">==, !=, &gt;, &lt;, is, in</span></td></tr>
+      <tr><td><span class="kt">Operators (Logical)</span></td><td>Boolean True/False logic</td><td><span class="cmd">not, and, or</span></td></tr>
+      <tr><td><span class="kt">Delimiters</span></td><td>Separate parameters or define data structures</td><td><span class="cmd">' " {} [] ()</span></td></tr>
+      <tr><td><span class="kt">Comments</span></td><td>Code ignored by the interpreter</td><td><span class="cmd">#</span> inline, <span class="cmd">"""..."""</span> docstring</td></tr>
+      <tr><td><span class="kt">Variables</span></td><td>Hold a reference to a literal or data structure's memory location</td><td><span class="cmd">a = 1</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Python uses <strong>whitespace and indentation</strong> to define blocks of code — not braces. A block is a group of statements at the same indentation level. Inconsistent indentation will crash your script.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-green">Variables &amp; Data Types</div>
+
+  <h3 class="sh">Variable rules</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li>Names must start with a <strong>letter or underscore</strong> — not a number.</li>
+      <li>Names are <strong>case-sensitive</strong> (<span class="cmd">myVar</span> ≠ <span class="cmd">myvar</span>).</li>
+      <li>Python <strong>automatically assigns</strong> a variable's type unless you explicitly cast it.</li>
+      <li>Code on the <strong>right side of <span class="cmd">=</span> always executes first</strong>.</li>
+      <li>Python does <strong>not</strong> clean up old memory when a variable is reassigned — avoid storing sensitive data in variables.</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">Variable types</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Type</th><th>Description</th><th>Function</th><th>Example</th><th>Mutable?</th></tr>
+      <tr><td><span class="kt">Integer</span></td><td>Whole numbers</td><td><span class="cmd">int()</span></td><td><span class="cmd">1, -5000</span></td><td>No</td></tr>
+      <tr><td><span class="kt">Float</span></td><td>Decimal numbers (up to 16 decimal places)</td><td><span class="cmd">float()</span></td><td><span class="cmd">3.14, -0.5</span></td><td>No</td></tr>
+      <tr><td><span class="kt">String</span></td><td>Character strings — immutable, zero-indexed</td><td><span class="cmd">str()</span></td><td><span class="cmd">"hello"</span></td><td>No</td></tr>
+      <tr><td><span class="kt">Byte</span></td><td>Collection of bytes — used to transfer data over networks</td><td><span class="cmd">bytes()</span></td><td><span class="cmd">b'data'</span></td><td>No</td></tr>
+      <tr><td><span class="kt">Boolean</span></td><td>Logical variable — only True or False</td><td><span class="cmd">bool()</span></td><td><span class="cmd">True, False</span></td><td>No</td></tr>
+      <tr><td><span class="kt">List</span></td><td>Un-typed, variable-length, ordered collection</td><td><span class="cmd">list()</span></td><td><span class="cmd">["a","b","c"]</span></td><td>✅ Yes</td></tr>
+      <tr><td><span class="kt">Tuple</span></td><td>Un-typed, fixed-length, ordered collection</td><td><span class="cmd">tuple()</span></td><td><span class="cmd">(name, class)</span></td><td>No</td></tr>
+      <tr><td><span class="kt">Dictionary</span></td><td>Un-typed, variable-length collection of key:value pairs</td><td><span class="cmd">dict()</span></td><td><span class="cmd">{"a":1,"b":2}</span></td><td>✅ Yes</td></tr>
+      <tr><td><span class="kt">Set</span></td><td>Un-typed, unordered collection of unique values</td><td><span class="cmd">set()</span></td><td><span class="cmd">{1,2,3}</span></td><td>✅ Yes</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>To make an empty set use <span class="cmd">set()</span> — NOT <span class="cmd">{}</span>. Curly braces with nothing inside create an <strong>empty dictionary</strong>, not a set.</p>
+  </div>
+
+  <h3 class="sh">Logical operator order of operations — NAO</h3>
+  <div class="card">
+    <ol class="guide-list">
+      <li>Parentheses <span class="cmd">()</span></li>
+      <li><span class="cmd">not</span></li>
+      <li><span class="cmd">and</span></li>
+      <li><span class="cmd">or</span></li>
+    </ol>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:6px; font-style:italic;">Memory tip: <strong>NAO</strong> — Not, And, Or</div>
+  </div>
+
+  <h3 class="sh">Arithmetic operators (in order of precedence)</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Operator</th><th>Name</th><th>Example</th><th>Output</th></tr>
+      <tr><td><span class="cmd">**</span></td><td>Exponent</td><td><span class="cmd">3 ** 2</span></td><td>9</td></tr>
+      <tr><td><span class="cmd">* / // %</span></td><td>Multiply, Divide, Floor Divide, Modulo</td><td><span class="cmd">5 % 3</span></td><td>2</td></tr>
+      <tr><td><span class="cmd">+ -</span></td><td>Add, Subtract</td><td><span class="cmd">7 - 2</span></td><td>5</td></tr>
+    </table>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">Note: <span class="cmd">*</span>, <span class="cmd">/</span>, <span class="cmd">//</span>, and <span class="cmd">%</span> all share the same precedence level.</div>
+  </div>
+
+  <h3 class="sh">Comparison operators</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Output</th></tr>
+      <tr><td><span class="cmd">==</span></td><td>Equal to</td><td><span class="cmd">5 == 5</span></td><td>True</td></tr>
+      <tr><td><span class="cmd">!=</span></td><td>Not equal to</td><td><span class="cmd">5 != 5</span></td><td>False</td></tr>
+      <tr><td><span class="cmd">&gt;</span> / <span class="cmd">&lt;</span></td><td>Greater / Less than</td><td><span class="cmd">7 &gt; 5</span></td><td>True</td></tr>
+      <tr><td><span class="cmd">&gt;=</span> / <span class="cmd">&lt;=</span></td><td>Greater/Less than or equal</td><td><span class="cmd">5 &gt;= 5</span></td><td>True</td></tr>
+      <tr><td><span class="cmd">is</span></td><td>Same object in memory</td><td><span class="cmd">5 is 5</span></td><td>True</td></tr>
+      <tr><td><span class="cmd">is not</span></td><td>Not the same object in memory</td><td><span class="cmd">5 is not 5</span></td><td>False</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Built-in integer / number functions</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Function</th><th>Description</th><th>Example</th><th>Output</th></tr>
+      <tr><td><span class="cmd">int("Ff00", 16)</span></td><td>Convert string to integer with given base</td><td><span class="cmd">int("Ff00", 16)</span></td><td>65280</td></tr>
+      <tr><td><span class="cmd">hex()</span></td><td>Returns hex value of an integer</td><td><span class="cmd">hex(65280)</span></td><td>'0xff00'</td></tr>
+      <tr><td><span class="cmd">bin()</span></td><td>Returns binary value of an integer</td><td><span class="cmd">bin(197)</span></td><td>'0b11000101'</td></tr>
+      <tr><td><span class="cmd">ord()</span></td><td>Returns Unicode code point of a character</td><td><span class="cmd">ord("A")</span></td><td>65</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>Python can represent integers as binary, hexadecimal, or Unicode — but will <strong>always print them as Base-10 decimal</strong> unless you explicitly convert with <span class="cmd">hex()</span> or <span class="cmd">bin()</span>.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Strings, Lists, Tuples, Sets &amp; Dicts</div>
+
+  <h3 class="sh">Strings</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Immutable, zero-indexed</div>First element is always index <span class="cmd">0</span>. Cannot be changed after creation.</div>
+    <div class="perm-row"><div class="perm-label">Slicing</div><span class="cmd">string[start:stop:step]</span> — extract a substring.</div>
+    <div class="perm-row"><div class="perm-label">.format()</div>Dynamically insert variables into a string: <span class="cmd">"Hello {}".format(name)</span></div>
+    <div class="perm-row"><div class="perm-label">Escape characters</div>Backslash <span class="cmd">\</span> inserts special/illegal characters into strings.</div>
+    <div class="perm-row"><div class="perm-label">.encode() / .decode()</div>Convert string → bytestring (<span class="cmd">.encode()</span>) or bytestring → string (<span class="cmd">.decode()</span>). Bytestrings are used to transfer data over networks.</div>
+  </div>
+
+  <h3 class="sh">Lists</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Mutable, ordered, zero-indexed</div>Can contain any object type, including other lists (nested).</div>
+    <div class="perm-row"><div class="perm-label">.append()</div>Add to the end. Cannot assign beyond the last index — must use this.</div>
+    <div class="perm-row"><div class="perm-label">.insert(i, obj)</div>Insert at a specific index.</div>
+    <div class="perm-row"><div class="perm-label">.split() / .join()</div>Convert string → list (<span class="cmd">.split()</span>) or list → string (<span class="cmd">", ".join(list)</span>).</div>
+    <div class="perm-row"><div class="perm-label">map(func, list)</div>Apply a function to every element of a list or iterable.</div>
+    <div class="perm-row"><div class="perm-label">zip(list1, list2)</div>Groups items at the same index into tuples. Drops extras if lists are unequal length.</div>
+    <div class="perm-row"><div class="perm-label">Nested access</div><span class="cmd">matrix = [[1,2,3],[4,5]]</span> → <span class="cmd">matrix[0][1]</span> = 2</div>
+  </div>
+
+  <h3 class="sh">Tuples, Sets &amp; Dictionaries</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Tuple</div>Immutable, ordered, zero-indexed. Used to "pack" a fixed group of values. More efficient than lists.</div>
+    <div class="perm-row"><div class="perm-label">Set</div>Mutable, unordered, unique values only. Use <span class="cmd">set()</span> for empty — not <span class="cmd">{}</span>.</div>
+    <div class="perm-row"><div class="perm-label">Dictionary</div>Mutable key:value pairs. Keys must be unique. Values can repeat. Very fast lookup.</div>
+  </div>
+
+  <h3 class="sh">Type casting</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Explicit casting</div>Pass a variable to a type function: <span class="cmd">str(100)</span> → <span class="cmd">"100"</span></div>
+    <div class="perm-row"><div class="perm-label">Implicit casting</div>Python auto-casts in some situations — <span class="cmd">int + float = float</span>, <span class="cmd">str + str = concatenate</span>.</div>
+    <div class="perm-row"><div class="perm-label">True copies</div>Variables are <strong>pointers</strong> to data. To copy a list/dict/set without linking to the original, use <span class="cmd">.copy()</span>.</div>
+  </div>
+
+  <!-- Day 1 Quick Reference -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 1 — Quick Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>Concept</th><th>Key fact</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Interpreted</td><td class="rd">Executes line-by-line at runtime (vs compiled = pre-translated to machine code)</td></tr>
+        <tr><td class="rc">PEP8</td><td class="rd">Standard Python style guide — follow for proper formatting</td></tr>
+        <tr><td class="rc">python -c "..."</td><td class="rd">Run a one-liner from the command line</td></tr>
+        <tr><td class="rc">help() / dir()</td><td class="rd">Interactive help / list object attributes</td></tr>
+        <tr><td class="rc">Indentation</td><td class="rd">Defines code blocks — Python uses whitespace, not braces</td></tr>
+        <tr><td class="rc"># comment</td><td class="rd">Single-line comment / """ docstring """</td></tr>
+        <tr><td class="rc">Mutable types</td><td class="rd">List, Dictionary, Set — can be changed after creation</td></tr>
+        <tr><td class="rc">Immutable types</td><td class="rd">Int, Float, String, Bytes, Boolean, Tuple</td></tr>
+        <tr><td class="rc">Zero-indexed</td><td class="rd">First element is always index 0 (strings, lists, tuples)</td></tr>
+        <tr><td class="rc">NAO order</td><td class="rd">Logical operators: Not → And → Or (inside parentheses first)</td></tr>
+        <tr><td class="rc">set() vs {}</td><td class="rd">{} = empty dict. set() = empty set.</td></tr>
+        <tr><td class="rc">.copy()</td><td class="rd">Create a true independent copy of list/dict/set</td></tr>
+        <tr><td class="rc">int + float</td><td class="rd">Implicit cast → result is float</td></tr>
+        <tr><td class="rc">int * str</td><td class="rd">Multiplies the string contents (e.g. "ab" * 3 = "ababab")</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day1 -->
+
+
+<!-- ═══════════════════════════ DAY 2 ═══════════════════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="section-badge badge-yellow">Control Flow</div>
+  <div class="topic-title">Control Statements</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What is control flow?</div>The order in which individual statements are executed and how decisions are made within a program.</div>
+    <div class="perm-row"><div class="perm-label">3 types</div><span class="kt">Condition-based</span> (run if true) · <span class="kt">Count-based</span> (run N times) · <span class="kt">Collection-based</span> (run over iterable)</div>
+  </div>
+
+  <h3 class="sh">Condition-based statements</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">if</div>Executes block if expression evaluates to <span class="cmd">True</span>.</div>
+    <div class="perm-row"><div class="perm-label">elif</div>Checked only if prior <span class="cmd">if</span>/<span class="cmd">elif</span> was False. <strong>Only the first True block executes.</strong></div>
+    <div class="perm-row"><div class="perm-label">else</div>Runs when all preceding conditions are False.</div>
+    <div class="perm-row"><div class="perm-label">match / case</div>Concise pattern matching. <span class="cmd">case _:</span> is the catch-all (like <span class="cmd">else</span>). Only first matching case executes.</div>
+    <div class="perm-row"><div class="perm-label">while</div>Conditional loop — executes as long as condition is <span class="cmd">True</span> or until a <span class="cmd">break</span> fires.</div>
+  </div>
+
+<div class="code-block"><span class="cc"># if / elif / else pattern</span>
+<span class="ck">if</span> x &gt; 10:
+    <span class="cf">print</span>(<span class="cs">"big"</span>)
+<span class="ck">elif</span> x &gt; 5:
+    <span class="cf">print</span>(<span class="cs">"medium"</span>)
+<span class="ck">else</span>:
+    <span class="cf">print</span>(<span class="cs">"small"</span>)</div>
+
+  <h3 class="sh">Collection-based — for loop</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">for item in list</div>Steps through every element of a list or iterable.</div>
+    <div class="perm-row"><div class="perm-label">enumerate(list)</div>Returns both the <strong>index and value</strong> on each iteration.</div>
+  </div>
+
+<div class="code-block"><span class="cc"># enumerate — get index AND value</span>
+<span class="ck">for</span> i, val <span class="ck">in</span> <span class="cf">enumerate</span>(my_list):
+    <span class="cf">print</span>(i, val)</div>
+
+  <h3 class="sh">Count-based — range() &amp; len()</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">range()</div>Generates a sequence of numbers. Used in for loops or standalone to create a list.</div>
+    <div class="perm-row"><div class="perm-label">len()</div>Returns object's length. Useful when iterating by index.</div>
+    <div class="perm-row"><div class="perm-label">List comprehension</div>Shorthand for building lists using <span class="cmd">for</span>, <span class="cmd">if</span>, and <span class="cmd">range()</span> in one line.</div>
+  </div>
+
+<div class="code-block"><span class="cc"># range in for loop</span>
+<span class="ck">for</span> i <span class="ck">in</span> <span class="cf">range</span>(<span class="cn">0</span>, <span class="cn">10</span>):
+    <span class="cf">print</span>(i)
+
+<span class="cc"># list comprehension</span>
+squares = [x**<span class="cn">2</span> <span class="ck">for</span> x <span class="ck">in</span> <span class="cf">range</span>(<span class="cn">10</span>)]</div>
+
+  <h3 class="sh">Nested loops &amp; loop control</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Nested loops</div>Inner loop runs completely for each single iteration of the outer loop.</div>
+    <div class="perm-row"><div class="perm-label">break</div>Exits the <strong>closest enclosing</strong> while or for loop entirely.</div>
+    <div class="perm-row"><div class="perm-label">continue</div>Skips the rest of the current iteration and jumps to the <strong>next</strong> one.</div>
+    <div class="perm-row"><div class="perm-label">No do-while</div>Python has no <span class="cmd">do-while</span> — simulate with a <span class="cmd">while True</span> loop and <span class="cmd">break</span>.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-amber">Functions</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">def keyword</div>Defines a function. Code only runs when the function is <strong>called (invoked)</strong>.</div>
+    <div class="perm-row"><div class="perm-label">Arguments</div>Passed in after the function name. Can be optional or have default values.</div>
+    <div class="perm-row"><div class="perm-label">Local scope</div>Variables inside a function exist <em>only</em> inside it (local variables).</div>
+    <div class="perm-row"><div class="perm-label">Global scope</div>Variables outside all functions are global. Modify inside a function with <span class="cmd">global varname</span> — not recommended.</div>
+    <div class="perm-row"><div class="perm-label">return</div>Best practice to use <span class="cmd">return</span> to pass a local value up to a higher scope.</div>
+    <div class="perm-row"><div class="perm-label">pass</div>Lets Python recognize a code block with no implementation yet (placeholder).</div>
+  </div>
+
+<div class="code-block"><span class="cc"># basic function with return</span>
+<span class="ck">def</span> <span class="cf">add_numbers</span>(a, b=<span class="cn">0</span>):   <span class="cc"># b has a default value</span>
+    result = a + b
+    <span class="ck">return</span> result
+
+total = <span class="cf">add_numbers</span>(<span class="cn">5</span>, <span class="cn">3</span>)   <span class="cc"># total = 8</span></div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-green">Modules</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What is a module</div>A collection of reusable functions and data structures that add additional functionality.</div>
+    <div class="perm-row"><div class="perm-label">import</div>Load a module with <span class="cmd">import module_name</span>.</div>
+    <div class="perm-row"><div class="perm-label">__name__</div>Set to <span class="cmd">"__main__"</span> when run directly, or the module name when imported. Use <span class="cmd">if __name__ == "__main__":</span> to prevent a module from executing when imported.</div>
+  </div>
+
+  <h3 class="sh">collections module</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">defaultdict</div>Creates a dictionary with a default value for undefined keys — queries never raise a <span class="cmd">KeyError</span>.</div>
+    <div class="perm-row"><div class="perm-label">Counter</div>Creates a dictionary that automatically <strong>counts the number of times a key is used</strong>. Useful for frequency analysis and simple cipher decryption.</div>
+  </div>
+
+  <h3 class="sh">Proper script structure</h3>
+  <div class="card">
+    <ol class="guide-list">
+      <li><span class="cmd">import</span> statements (if any)</li>
+      <li>Docstring and comments</li>
+      <li>Function declarations (with docstrings)</li>
+      <li><span class="cmd">main()</span> function declaration</li>
+      <li>Check for main: <span class="cmd">if __name__ == "__main__":</span></li>
+      <li>Global variable declarations (if any)</li>
+      <li>Call to <span class="cmd">main()</span></li>
+    </ol>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>Importing a user-defined module <strong>executes it by default</strong>. Prevent this by checking <span class="cmd">if __name__ == "__main__":</span> — the module's code only runs when called directly, not when imported.</p>
+  </div>
+
+  <!-- Day 2 Quick Reference -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 2 — Quick Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>Concept / Keyword</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">if / elif / else</td><td class="rd">Only first True block executes</td><td class="re">if x &gt; 0: ...</td></tr>
+        <tr><td class="rc">match / case</td><td class="rd">Pattern matching — case _: is catch-all</td><td class="re">match val: case 1: ...</td></tr>
+        <tr><td class="rc">while</td><td class="rd">Loop while condition is True</td><td class="re">while x &gt; 0: x -= 1</td></tr>
+        <tr><td class="rc">for item in iterable</td><td class="rd">Collection-based loop</td><td class="re">for i in my_list: ...</td></tr>
+        <tr><td class="rc">enumerate(list)</td><td class="rd">Returns index AND value</td><td class="re">for i, v in enumerate(lst):</td></tr>
+        <tr><td class="rc">range(start, stop, step)</td><td class="rd">Generate a number sequence</td><td class="re">range(0, 10, 2)</td></tr>
+        <tr><td class="rc">len(obj)</td><td class="rd">Returns object's length</td><td class="re">len(my_list)</td></tr>
+        <tr><td class="rc">break</td><td class="rd">Exit closest enclosing loop</td><td class="re">if x == 5: break</td></tr>
+        <tr><td class="rc">continue</td><td class="rd">Skip to next iteration</td><td class="re">if x == 3: continue</td></tr>
+        <tr><td class="rc">def / return</td><td class="rd">Define function / return value</td><td class="re">def f(x): return x+1</td></tr>
+        <tr><td class="rc">pass</td><td class="rd">Empty placeholder block</td><td class="re">def f(): pass</td></tr>
+        <tr><td class="rc">global</td><td class="rd">Modify global var inside function (use sparingly)</td><td class="re">global counter</td></tr>
+        <tr><td class="rc">import</td><td class="rd">Load a module</td><td class="re">import collections</td></tr>
+        <tr><td class="rc">Counter</td><td class="rd">Auto-count dict from collections</td><td class="re">Counter(my_list)</td></tr>
+        <tr><td class="rc">defaultdict</td><td class="rd">Dict with default for missing keys</td><td class="re">defaultdict(int)</td></tr>
+        <tr><td class="rc">__name__ == "__main__"</td><td class="rd">Prevents module from auto-executing on import</td><td class="re">if __name__=="__main__":</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day2 -->
+
+
+<!-- ═══════════════════════════ DAY 3 ═══════════════════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="section-badge badge-yellow">File Manipulation &amp; Data Analysis</div>
+  <div class="topic-title">User Input &amp; Error Checking</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Assume untrustworthy</div>User input should <strong>always be verified</strong> — unverified input can cause crashes.</div>
+    <div class="perm-row"><div class="perm-label">Traceback</div>When Python hits an unhandled error, it crashes and prints a traceback showing the line number and error type.</div>
+    <div class="perm-row"><div class="perm-label">try / except</div>Handle errors gracefully without crashing. Can catch specific error types or use a catch-all <span class="cmd">except</span>.</div>
+  </div>
+
+<div class="code-block"><span class="cc"># try / except pattern</span>
+<span class="ck">try</span>:
+    result = <span class="cn">10</span> / user_input
+<span class="ck">except</span> ZeroDivisionError:
+    <span class="cf">print</span>(<span class="cs">"Cannot divide by zero"</span>)
+<span class="ck">except</span> TypeError:
+    <span class="cf">print</span>(<span class="cs">"Wrong type"</span>)
+<span class="ck">except</span>:                  <span class="cc"># catch-all</span>
+    <span class="cf">print</span>(<span class="cs">"Unknown error"</span>)</div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-amber">Reading &amp; Writing Files</div>
+
+  <h3 class="sh">Opening files</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Assign reader (manual close)</div><span class="cmd">reader = open("file.txt")</span> — must close manually with <span class="cmd">reader.close()</span>.</div>
+    <div class="perm-row"><div class="perm-label">With statement (auto close)</div><span class="cmd">with open("file.txt") as reader:</span> — automatically closes when the block exits. Preferred.</div>
+  </div>
+
+  <h3 class="sh">File open modes</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Character</th><th>Mode</th></tr>
+      <tr><td><span class="cmd">'r'</span></td><td>Open for reading (default)</td></tr>
+      <tr><td><span class="cmd">'w'</span></td><td>Open for writing — overwrites existing content</td></tr>
+      <tr><td><span class="cmd">'a'</span></td><td>Append — write to the end of an existing file</td></tr>
+      <tr><td><span class="cmd">'rb'</span> / <span class="cmd">'wb'</span></td><td>Binary read/write mode — uses byte data</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Reading &amp; writing functions</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Function</th><th>Description</th></tr>
+      <tr><td><span class="cmd">.read(size=n)</span></td><td>Read n bytes from the file</td></tr>
+      <tr><td><span class="cmd">.readline(size=n)</span></td><td>Read n characters from a single line</td></tr>
+      <tr><td><span class="cmd">.readlines()</span></td><td>Read all remaining lines — returns each line as a list item</td></tr>
+      <tr><td><span class="cmd">.write(string)</span></td><td>Write a string to the file</td></tr>
+      <tr><td><span class="cmd">.writelines(seq)</span></td><td>Write a sequence (e.g. list of strings) — does NOT add newline characters</td></tr>
+    </table>
+  </div>
+
+<div class="code-block"><span class="cc"># read all lines from a file (preferred pattern)</span>
+<span class="ck">with</span> <span class="cf">open</span>(<span class="cs">"data.txt"</span>, <span class="cs">"r"</span>) <span class="ck">as</span> f:
+    lines = f.<span class="cf">readlines</span>()
+    <span class="ck">for</span> line <span class="ck">in</span> lines:
+        <span class="cf">print</span>(line.strip())</div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>Always use the <span class="cmd">with open()</span> syntax — it guarantees the file is closed even if an error occurs inside the block. Forgetting to close files can cause data corruption or resource leaks.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-green">Data Analysis</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it is</div>Collecting, transforming, and organizing data to make predictions and informed decisions.</div>
+    <div class="perm-row"><div class="perm-label">Short/Long-Tail Analysis</div>Quick visualization technique that shows what <strong>normal vs abnormal</strong> data looks like — most common values cluster (short tail), rare/outlier values trail off (long tail).</div>
+    <div class="perm-row"><div class="perm-label">Counter</div>Specialized dictionary from <span class="cmd">collections</span> that counts object frequency. One use: <strong>decrypting simple ciphers</strong> through frequency analysis.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Datetime Module</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Class</th><th>Description / Attributes</th></tr>
+      <tr><td><span class="cmd">date</span></td><td>Gregorian date — year, month, day</td></tr>
+      <tr><td><span class="cmd">time</span></td><td>24-hour time — hour, minute, second, microsecond, tzinfo</td></tr>
+      <tr><td><span class="cmd">datetime</span></td><td>Combination of date and time</td></tr>
+      <tr><td><span class="cmd">timedelta</span></td><td>Duration between two dates, times, or datetimes</td></tr>
+      <tr><td><span class="cmd">tzinfo</span></td><td>Abstract base for timezone info</td></tr>
+      <tr><td><span class="cmd">timezone</span></td><td>Implements tzinfo as a fixed UTC offset</td></tr>
+      <tr><td><span class="cmd">strptime()</span></td><td>Parses a date string into a <span class="cmd">datetime</span> object for analysis and reformatting</td></tr>
+    </table>
+  </div>
+
+<div class="code-block"><span class="ck">from</span> datetime <span class="ck">import</span> datetime
+
+<span class="cc"># parse a date string into a datetime object</span>
+dt = datetime.<span class="cf">strptime</span>(<span class="cs">"2024-06-15"</span>, <span class="cs">"%Y-%m-%d"</span>)
+<span class="cf">print</span>(dt.year, dt.month, dt.day)</div>
+
+  <!-- Day 3 Quick Reference -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 3 — Quick Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>Concept / Function</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">try / except</td><td class="rd">Handle errors without crashing</td><td class="re">try: ... except TypeError: ...</td></tr>
+        <tr><td class="rc">TypeError</td><td class="rd">Wrong data type passed</td><td class="rd">Built-in error keyword</td></tr>
+        <tr><td class="rc">ZeroDivisionError</td><td class="rd">Division by zero</td><td class="rd">Built-in error keyword</td></tr>
+        <tr><td class="rc">open("file", "r")</td><td class="rd">Open file for reading</td><td class="re">with open("f.txt","r") as f:</td></tr>
+        <tr><td class="rc">open("file", "w")</td><td class="rd">Open and overwrite</td><td class="re">f.write("hello")</td></tr>
+        <tr><td class="rc">open("file", "a")</td><td class="rd">Append to end of file</td><td class="re">f.write("more")</td></tr>
+        <tr><td class="rc">open("file", "rb")</td><td class="rd">Binary read mode</td><td class="rd">For byte data</td></tr>
+        <tr><td class="rc">.read(n)</td><td class="rd">Read n bytes</td><td class="re">f.read(100)</td></tr>
+        <tr><td class="rc">.readline()</td><td class="rd">Read one line</td><td class="re">f.readline()</td></tr>
+        <tr><td class="rc">.readlines()</td><td class="rd">Read all lines into a list</td><td class="re">lines = f.readlines()</td></tr>
+        <tr><td class="rc">.write(str)</td><td class="rd">Write string to file</td><td class="re">f.write("text")</td></tr>
+        <tr><td class="rc">.writelines(seq)</td><td class="rd">Write sequence — no auto newlines</td><td class="re">f.writelines(my_list)</td></tr>
+        <tr><td class="rc">Counter(iterable)</td><td class="rd">Count frequency of each item</td><td class="re">Counter("hello")</td></tr>
+        <tr><td class="rc">strptime(str, fmt)</td><td class="rd">Parse date string into datetime object</td><td class="re">datetime.strptime(s, "%Y-%m-%d")</td></tr>
+        <tr><td class="rc">timedelta</td><td class="rd">Duration between two datetime values</td><td class="re">d2 - d1 = timedelta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day3 -->
+
+
+<!-- ═══════════════════════════ DAY 4 ═══════════════════════════ -->
+<div class="day-section" id="day4">
+
+  <div class="section-badge badge-yellow">OCO &amp; DCO with Python</div>
+  <div class="topic-title">Networking — Scapy</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What is Scapy</div>An extensive <strong>packet crafting module</strong> — sniff, read, write, craft, forge, and modify packets directly in Python.</div>
+    <div class="perm-row"><div class="perm-label">PacketList</div>Scapy represents captured traffic as a <span class="cmd">PacketList</span> object — structured and accessed like a Python list.</div>
+    <div class="perm-row"><div class="perm-label">Layer access</div><span class="cmd">PacketList[pkt_num][layer_name]</span> — layer names are case-sensitive.</div>
+    <div class="perm-row"><div class="perm-label">.haslayer()</div><span class="cmd">pkt.haslayer("TCP")</span> — check if a packet contains a given layer.</div>
+    <div class="perm-row"><div class="perm-label">Looping</div>Use a <span class="cmd">for</span> loop to iterate through all packets in a <span class="cmd">PacketList</span>.</div>
+  </div>
+
+  <h3 class="sh">Case-sensitive Scapy layer names</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Layer name</th><th>OSI layer</th></tr>
+      <tr><td><span class="cmd">Ether</span></td><td>Layer 2 — Ethernet</td></tr>
+      <tr><td><span class="cmd">IP</span></td><td>Layer 3 — IPv4</td></tr>
+      <tr><td><span class="cmd">TCP</span></td><td>Layer 4 — TCP</td></tr>
+      <tr><td><span class="cmd">UDP</span></td><td>Layer 4 — UDP</td></tr>
+      <tr><td><span class="cmd">DNS</span></td><td>Application — DNS</td></tr>
+      <tr><td><span class="cmd">RAW</span></td><td>Raw payload / application data</td></tr>
+    </table>
+  </div>
+
+<div class="code-block"><span class="cc"># iterate through a Scapy PacketList</span>
+<span class="ck">from</span> scapy.all <span class="ck">import</span> rdpcap
+
+packets = <span class="cf">rdpcap</span>(<span class="cs">"capture.pcap"</span>)
+<span class="ck">for</span> pkt <span class="ck">in</span> packets:
+    <span class="ck">if</span> pkt.<span class="cf">haslayer</span>(<span class="cs">"TCP"</span>):
+        <span class="cf">print</span>(pkt[<span class="cs">"IP"</span>].src, pkt[<span class="cs">"TCP"</span>].dport)</div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-amber">Sockets</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">socket module</div>Enables connections and data transfers over IP using UDP or TCP. Supports both IPv4 and IPv6.</div>
+    <div class="perm-row"><div class="perm-label">socket.SOCK_DGRAM</div>Identifies a <strong>UDP</strong> socket.</div>
+    <div class="perm-row"><div class="perm-label">socket.SOCK_STREAM</div>Identifies a <strong>TCP</strong> socket — enables two-way communications.</div>
+    <div class="perm-row"><div class="perm-label">socket.error</div>Common error caused by connection timeout.</div>
+  </div>
+
+  <h3 class="sh">TCP Client vs TCP Server</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Role</th><th>Functions used</th><th>Purpose</th></tr>
+      <tr><td><span class="kt">TCP Client</span></td><td><span class="cmd">.connect()</span></td><td>Initiate the TCP 3-way handshake to a server</td></tr>
+      <tr><td><span class="kt">TCP Server</span></td><td><span class="cmd">.bind()</span> → <span class="cmd">.listen()</span> → <span class="cmd">.accept()</span></td><td>Bind to port, listen for connections, accept incoming client</td></tr>
+    </table>
+  </div>
+
+<div class="code-block"><span class="ck">import</span> socket
+
+<span class="cc"># TCP client example</span>
+s = socket.<span class="cf">socket</span>(socket.AF_INET, socket.SOCK_STREAM)
+s.<span class="cf">connect</span>((<span class="cs">"192.168.1.1"</span>, <span class="cn">4444</span>))
+
+<span class="cc"># TCP server example</span>
+srv = socket.<span class="cf">socket</span>(socket.AF_INET, socket.SOCK_STREAM)
+srv.<span class="cf">bind</span>((<span class="cs">""</span>, <span class="cn">4444</span>))
+srv.<span class="cf">listen</span>(<span class="cn">1</span>)
+conn, addr = srv.<span class="cf">accept</span>()</div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Pro tip</div>
+    <p>On Linux, <strong>Netcat</strong> can simulate a socket server by setting up a listener: <span class="cmd">nc -lvp 4444</span>. Useful for testing Python socket clients without writing a full server.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-green">Subprocess Module</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it does</div>Spawns new system processes, connects to their stdin/stdout/stderr, and retrieves return codes.</div>
+  </div>
+
+  <h3 class="sh">Subprocess functions</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Function</th><th>Syntax</th><th>Description</th></tr>
+      <tr><td><span class="kt">Popen</span></td><td><span class="cmd">subprocess.Popen(cmd)</span></td><td>Spawns a process — allows you to see output while it runs</td></tr>
+      <tr><td><span class="kt">communicate</span></td><td><span class="cmd">proc.communicate()</span></td><td>Returns <span class="cmd">(output, error)</span> from a process's execution</td></tr>
+      <tr><td><span class="kt">call</span></td><td><span class="cmd">subprocess.call(cmd)</span></td><td>Spawns process, waits for it to finish, returns <span class="cmd">0</span> (success) or non-zero (fail)</td></tr>
+      <tr><td><span class="kt">run</span></td><td><span class="cmd">subprocess.run(cmd)</span></td><td>Returns a process object — may not capture errors</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Key subprocess arguments</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Argument</th><th>Description</th></tr>
+      <tr><td><span class="cmd">stdin</span></td><td>Captures input to a child subprocess</td></tr>
+      <tr><td><span class="cmd">stdout</span></td><td>Captures output from a child subprocess</td></tr>
+      <tr><td><span class="cmd">stderr</span></td><td>Captures errors from a child subprocess</td></tr>
+      <tr><td><span class="cmd">shell</span></td><td>Specifies if command runs through the system shell</td></tr>
+      <tr><td><span class="cmd">subprocess.PIPE</span></td><td>Pipes stdin/stdout/stderr to <span class="cmd">.communicate()</span></td></tr>
+      <tr><td><span class="cmd">text=True</span></td><td>Returns output as a Python string instead of bytes</td></tr>
+    </table>
+  </div>
+
+<div class="code-block"><span class="ck">import</span> subprocess
+
+<span class="cc"># run a command and capture output</span>
+proc = subprocess.<span class="cf">Popen</span>(
+    [<span class="cs">"ls"</span>, <span class="cs">"-la"</span>],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=<span class="ck">True</span>
+)
+output, error = proc.<span class="cf">communicate</span>()
+<span class="cf">print</span>(output)</div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Creating Python Executables</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Goal</div>One OCO objective is establishing a <strong>foothold</strong> on a target system — a Python backdoor is one method.</div>
+    <div class="perm-row"><div class="perm-label">Problem</div>A Python backdoor only works if the target has Python installed.</div>
+    <div class="perm-row"><div class="perm-label">Solution — PyInstaller</div>Converts <span class="cmd">.py</span> scripts to standalone Windows executables (<span class="cmd">.exe</span>). No Python install required on the target.</div>
+    <div class="perm-row"><div class="perm-label">HTTP Server</div>Python's built-in HTTP Server module can be used to transfer files across a network — useful for payload delivery or exfil.</div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Exam trap</div>
+    <p>Know the difference between OCO (Offensive Cyber Operations — establish foothold, backdoors, exfil) and DCO (Defensive Cyber Operations — detect, analyze, respond). Python's networking tools serve both sides depending on context and intent.</p>
+  </div>
+
+  <!-- Day 4 Quick Reference -->
+  <div class="ref-section">
+    <div class="ref-section-title">Day 4 — Quick Reference</div>
+    <table class="ref-table">
+      <thead><tr><th>Concept / Function</th><th>Description</th><th>Example / Note</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Scapy rdpcap()</td><td class="rd">Read a pcap file into a PacketList</td><td class="re">packets = rdpcap("file.pcap")</td></tr>
+        <tr><td class="rc">pkt.haslayer("TCP")</td><td class="rd">Check if packet has a layer</td><td class="rd">Case-sensitive layer name</td></tr>
+        <tr><td class="rc">pkt["IP"].src</td><td class="rd">Access a field from a specific layer</td><td class="re">pkt["TCP"].dport</td></tr>
+        <tr><td class="rc">Scapy layers</td><td class="rd">Ether, IP, TCP, UDP, DNS, RAW</td><td class="rd">All case-sensitive</td></tr>
+        <tr><td class="rc">socket.SOCK_STREAM</td><td class="rd">TCP socket type</td><td class="rd">Two-way comms</td></tr>
+        <tr><td class="rc">socket.SOCK_DGRAM</td><td class="rd">UDP socket type</td><td class="rd">Connectionless</td></tr>
+        <tr><td class="rc">.connect(host, port)</td><td class="rd">TCP client — initiates handshake</td><td class="re">s.connect(("host", 80))</td></tr>
+        <tr><td class="rc">.bind() / .listen() / .accept()</td><td class="rd">TCP server setup sequence</td><td class="rd">In that order</td></tr>
+        <tr><td class="rc">socket.error</td><td class="rd">Common socket error — connection timeout</td><td class="rd">Wrap in try/except</td></tr>
+        <tr><td class="rc">subprocess.Popen</td><td class="rd">Spawn process, see output while running</td><td class="re">proc = Popen(["ls","-la"])</td></tr>
+        <tr><td class="rc">proc.communicate()</td><td class="rd">Get (output, error) from process</td><td class="re">out, err = proc.communicate()</td></tr>
+        <tr><td class="rc">subprocess.call</td><td class="rd">Run process, wait, return exit code</td><td class="rd">0 = success</td></tr>
+        <tr><td class="rc">subprocess.PIPE</td><td class="rd">Pipe stdin/stdout/stderr to communicate()</td><td class="rd">Use as value for stdout=</td></tr>
+        <tr><td class="rc">text=True</td><td class="rd">Return output as string, not bytes</td><td class="rd">Subprocess argument</td></tr>
+        <tr><td class="rc">PyInstaller</td><td class="rd">Convert .py script to .exe</td><td class="rd">No Python needed on target</td></tr>
+        <tr><td class="rc">nc -lvp 4444</td><td class="rd">Netcat listener (simulates TCP server on Linux)</td><td class="rd">Useful for testing sockets</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /day4 -->
+
+</div><!-- end .guide -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this page</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  function showDay(n) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('day' + n).classList.add('active');
+    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  let observer = null;
+
+  function buildTOC() {
+    const activeDay = document.querySelector('.day-section.active');
+    const tocList   = document.getElementById('toc-list');
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
+    if (items.length === 0) return;
+
+    items.forEach((el, i) => {
+      el.id = 'toc-anchor-' + i;
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href        = '#toc-anchor-' + i;
+      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
+      a.textContent = el.textContent.trim();
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const links = tocList.querySelectorAll('a');
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('toc-active'));
+          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('toc-active');
+            active.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      });
+    }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+
+    items.forEach(el => observer.observe(el));
+  }
+
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  buildTOC();
+</script>
+
+</body>
+</html>
