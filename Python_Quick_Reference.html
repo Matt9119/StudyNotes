@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Quick Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0e1015;
+  --bg2:         #161a22;
+  --bg3:         #1c2130;
+  --bg4:         #212838;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #dde4ed;
+  --muted:       #6e7f96;
+  /* Python yellow/amber */
+  --yellow:      #fbbf24;
+  --yellow-dim:  rgba(251,191,36,0.10);
+  --yellow-mid:  rgba(251,191,36,0.18);
+  --amber:       #f59e0b;
+  --blue:        #60a5fa;
+  --blue-dim:    rgba(96,165,250,0.10);
+  --green:       #4ade80;
+  --green-dim:   rgba(74,222,128,0.10);
+  --red:         #f87171;
+  --red-dim:     rgba(248,113,113,0.10);
+  --purple:      #c084fc;
+  --purple-dim:  rgba(192,132,252,0.10);
+  --teal:        #2dd4bf;
+  --teal-dim:    rgba(45,212,191,0.10);
+  --orange:      #fb923c;
+  --orange-dim:  rgba(251,146,60,0.10);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+  /* syntax colors */
+  --sy-kw:   #fbbf24;  /* keyword */
+  --sy-fn:   #c084fc;  /* function/builtin */
+  --sy-str:  #4ade80;  /* string */
+  --sy-num:  #60a5fa;  /* number */
+  --sy-cm:   #4e5d6e;  /* comment */
+  --sy-op:   #f87171;  /* operator/special */
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; padding: 0; }
+.shell { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+/* ── HEADER ── */
+.header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.75rem; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+.header-title { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--yellow); letter-spacing: -.01em; }
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+.tag { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); }
+.tag-py { border-color: rgba(251,191,36,.4); color: var(--yellow); }
+
+/* ── NAV ── */
+.nav-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.nav-pill { font-family: var(--mono); font-size: 10.5px; font-weight: 500; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); background: var(--bg2); cursor: pointer; text-decoration: none; transition: all .15s; letter-spacing: .02em; }
+.nav-pill:hover { color: var(--text); border-color: var(--yellow); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 2rem; }
+.section-label { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+.section-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+.dot-blue   { background: var(--blue);   box-shadow: 0 0 5px var(--blue); }
+.dot-green  { background: var(--green);  box-shadow: 0 0 5px var(--green); }
+.dot-purple { background: var(--purple); }
+.dot-red    { background: var(--red); }
+.dot-teal   { background: var(--teal); box-shadow: 0 0 5px var(--teal); }
+.dot-orange { background: var(--orange); }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 750px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+
+/* ── BLOCK ── */
+.block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.block-hdr { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 6px 12px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .04em; display: flex; align-items: center; gap: 6px; }
+.h-y { color: var(--yellow); }
+.h-b { color: var(--blue); }
+.h-g { color: var(--green); }
+.h-p { color: var(--purple); }
+.h-r { color: var(--red); }
+.h-t { color: var(--teal); }
+.h-o { color: var(--orange); }
+
+/* ── SYNTAX HIGHLIGHT ── */
+.py {
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.75;
+  padding: 10px 14px; color: var(--text); overflow-x: auto;
+}
+.py .kw  { color: var(--sy-kw);  font-weight: 500; }
+.py .fn  { color: var(--sy-fn); }
+.py .st  { color: var(--sy-str); }
+.py .nu  { color: var(--sy-num); }
+.py .cm  { color: var(--sy-cm); font-style: italic; }
+.py .op  { color: var(--sy-op); }
+.py .cl  { color: var(--teal); font-weight: 500; }  /* class name */
+.py .va  { color: var(--text); }  /* variable */
+
+/* ── REF TABLE (compact) ── */
+.rt { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rt tr { border-bottom: 1px solid var(--border); }
+.rt tr:last-child { border-bottom: none; }
+.rt tr:hover { background: rgba(255,255,255,0.02); }
+.rt td { padding: 5px 10px; vertical-align: top; }
+.c1 { font-family: var(--mono); font-size: 11.5px; color: var(--yellow); white-space: nowrap; width: 1%; padding-right:12px; font-weight: 500; }
+.c1b { color: var(--blue); }
+.c1g { color: var(--green); }
+.c1p { color: var(--purple); }
+.c1t { color: var(--teal); }
+.c2  { font-size: 12px; color: var(--muted); width: 35%; }
+.c3  { font-family: var(--mono); font-size: 11px; color: var(--green); }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; border-left: 3px solid; font-size: 12px; display: flex; gap: 8px; }
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.cy { background: var(--yellow-dim); border-color: var(--yellow); }
+.co { background: var(--orange-dim); border-color: var(--orange); }
+.cg { background: var(--green-dim);  border-color: var(--green); }
+.cr { background: var(--red-dim);    border-color: var(--red); }
+
+code { font-family: var(--mono); font-size: 11.5px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 3px; padding: 1px 5px; color: var(--yellow); }
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-title">python<span>/</span>quickref</div>
+      <div class="header-sub">// syntax · examples · methods · patterns</div>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <span class="tag tag-py">Python 3</span>
+      <span class="tag">PEP8</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-pills">
+    <a class="nav-pill" href="#types">Variables &amp; Types</a>
+    <a class="nav-pill" href="#operators">Operators</a>
+    <a class="nav-pill" href="#strings">Strings</a>
+    <a class="nav-pill" href="#lists">Lists</a>
+    <a class="nav-pill" href="#tuples-sets">Tuples &amp; Sets</a>
+    <a class="nav-pill" href="#dicts">Dictionaries</a>
+    <a class="nav-pill" href="#control">Control Flow</a>
+    <a class="nav-pill" href="#functions">Functions</a>
+    <a class="nav-pill" href="#comprehension">Comprehension</a>
+    <a class="nav-pill" href="#errors">Error Handling</a>
+    <a class="nav-pill" href="#files">File I/O</a>
+    <a class="nav-pill" href="#builtins">Built-ins</a>
+    <a class="nav-pill" href="#modules">Modules</a>
+    <a class="nav-pill" href="#classes">Classes</a>
+    <a class="nav-pill" href="#scapy">Scapy</a>
+    <a class="nav-pill" href="#sockets">Sockets</a>
+    <a class="nav-pill" href="#subprocess">Subprocess</a>
+  </div>
+
+
+  <!-- ═══ VARIABLES & TYPES ═══ -->
+  <div class="section" id="types">
+    <div class="section-label"><span class="dot dot-yellow"></span>Variables &amp; Types</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-y">Declaration &amp; type checking</div>
+        <div class="py">
+<span class="cm"># declare variables — no type needed</span>
+<span class="va">x</span>       = <span class="nu">42</span>
+<span class="va">pi</span>      = <span class="nu">3.14</span>
+<span class="va">name</span>    = <span class="st">"alice"</span>
+<span class="va">flag</span>    = <span class="kw">True</span>
+<span class="va">nothing</span> = <span class="kw">None</span>
+
+<span class="cm"># check type</span>
+<span class="fn">type</span>(x)          <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">isinstance</span>(x, <span class="fn">int</span>)  <span class="cm"># True</span>
+
+<span class="cm"># multiple assignment</span>
+<span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span> = <span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>
+<span class="va">x</span> = <span class="va">y</span> = <span class="nu">0</span>        <span class="cm"># both = 0</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-y">Type casting</div>
+        <div class="py">
+<span class="cm"># explicit type casting</span>
+<span class="fn">int</span>(<span class="st">"42"</span>)       <span class="cm"># 42     (str → int)</span>
+<span class="fn">float</span>(<span class="st">"3.14"</span>)  <span class="cm"># 3.14  (str → float)</span>
+<span class="fn">str</span>(<span class="nu">100</span>)       <span class="cm"># "100" (int → str)</span>
+<span class="fn">bool</span>(<span class="nu">0</span>)        <span class="cm"># False (0 = falsy)</span>
+<span class="fn">bool</span>(<span class="st">""</span>)       <span class="cm"># False (empty = falsy)</span>
+<span class="fn">int</span>(<span class="st">"Ff"</span>, <span class="nu">16</span>)  <span class="cm"># 255   (hex str → int)</span>
+<span class="fn">hex</span>(<span class="nu">255</span>)       <span class="cm"># '0xff'</span>
+<span class="fn">bin</span>(<span class="nu">10</span>)        <span class="cm"># '0b1010'</span>
+<span class="fn">ord</span>(<span class="st">"A"</span>)       <span class="cm"># 65   (char → unicode)</span>
+<span class="fn">chr</span>(<span class="nu">65</span>)        <span class="cm"># 'A'  (unicode → char)</span></div>
+      </div>
+
+    </div>
+
+    <div class="callout cy"><span class="callout-icon">💡</span><div><strong>Falsy values:</strong> <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>()</code>, <code>None</code>, <code>False</code> — everything else is truthy. Python never cleans up old memory when re-assigning — avoid storing sensitive data in variables.</div></div>
+  </div>
+
+
+  <!-- ═══ OPERATORS ═══ -->
+  <div class="section" id="operators">
+    <div class="section-label"><span class="dot dot-blue"></span>Operators</div>
+    <div class="grid-3">
+
+      <div class="block">
+        <div class="block-hdr h-b">Arithmetic</div>
+        <table class="rt">
+          <tr><td class="c1 c1b">+</td><td class="c2">Add</td><td class="c3">3 + 2 → 5</td></tr>
+          <tr><td class="c1 c1b">-</td><td class="c2">Subtract</td><td class="c3">7 - 2 → 5</td></tr>
+          <tr><td class="c1 c1b">*</td><td class="c2">Multiply</td><td class="c3">3 * 4 → 12</td></tr>
+          <tr><td class="c1 c1b">/</td><td class="c2">Divide (float)</td><td class="c3">9 / 2 → 4.5</td></tr>
+          <tr><td class="c1 c1b">//</td><td class="c2">Floor divide (int)</td><td class="c3">9 // 2 → 4</td></tr>
+          <tr><td class="c1 c1b">%</td><td class="c2">Modulo (remainder)</td><td class="c3">5 % 3 → 2</td></tr>
+          <tr><td class="c1 c1b">**</td><td class="c2">Exponent</td><td class="c3">3 ** 2 → 9</td></tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-b">Comparison</div>
+        <table class="rt">
+          <tr><td class="c1 c1b">==</td><td class="c2">Equal to</td><td class="c3">5 == 5 → True</td></tr>
+          <tr><td class="c1 c1b">!=</td><td class="c2">Not equal</td><td class="c3">5 != 3 → True</td></tr>
+          <tr><td class="c1 c1b">&gt; / &lt;</td><td class="c2">Greater / Less</td><td class="c3">7 &gt; 5 → True</td></tr>
+          <tr><td class="c1 c1b">&gt;= / &lt;=</td><td class="c2">Greater/Less or equal</td><td class="c3">5 &gt;= 5 → True</td></tr>
+          <tr><td class="c1 c1b">is</td><td class="c2">Same object in memory</td><td class="c3">a is b</td></tr>
+          <tr><td class="c1 c1b">is not</td><td class="c2">Not same memory object</td><td class="c3">a is not b</td></tr>
+          <tr><td class="c1 c1b">in</td><td class="c2">Member of sequence</td><td class="c3">"a" in "cat" → True</td></tr>
+          <tr><td class="c1 c1b">not in</td><td class="c2">Not member of sequence</td><td class="c3">5 not in [1,2] → True</td></tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-b">Assignment &amp; Logical</div>
+        <table class="rt">
+          <tr><td class="c1 c1b">+=</td><td class="c2">Add and assign</td><td class="c3">x += 1</td></tr>
+          <tr><td class="c1 c1b">-=</td><td class="c2">Subtract and assign</td><td class="c3">x -= 1</td></tr>
+          <tr><td class="c1 c1b">*=</td><td class="c2">Multiply and assign</td><td class="c3">x *= 2</td></tr>
+          <tr><td class="c1 c1b">/=</td><td class="c2">Divide and assign</td><td class="c3">x /= 2</td></tr>
+          <tr><td class="c1 c1b">%=</td><td class="c2">Modulo and assign</td><td class="c3">x %= 3</td></tr>
+          <tr><td class="c1 c1b">and</td><td class="c2">Logical AND</td><td class="c3">True and False → False</td></tr>
+          <tr><td class="c1 c1b">or</td><td class="c2">Logical OR</td><td class="c3">True or False → True</td></tr>
+          <tr><td class="c1 c1b">not</td><td class="c2">Logical NOT</td><td class="c3">not True → False</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ STRINGS ═══ -->
+  <div class="section" id="strings">
+    <div class="section-label"><span class="dot dot-green"></span>Strings</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-g">Creation &amp; formatting</div>
+        <div class="py">
+<span class="cm"># creation</span>
+<span class="va">s</span> = <span class="st">"hello world"</span>
+<span class="va">s</span> = <span class="st">'single quotes work too'</span>
+<span class="va">s</span> = <span class="st">"""triple quotes
+span multiple lines"""</span>
+
+<span class="cm"># f-string (preferred for formatting)</span>
+<span class="va">name</span> = <span class="st">"alice"</span>
+<span class="va">age</span>  = <span class="nu">30</span>
+<span class="fn">print</span>(<span class="st">f"Name: </span>{<span class="va">name</span>}<span class="st">, Age: </span>{<span class="va">age</span>}<span class="st">"</span>)
+
+<span class="cm"># .format() method</span>
+<span class="fn">print</span>(<span class="st">"Hello {}"</span>.<span class="fn">format</span>(<span class="va">name</span>))
+<span class="fn">print</span>(<span class="st">"{0} is {1}"</span>.<span class="fn">format</span>(<span class="va">name</span>, <span class="va">age</span>))
+
+<span class="cm"># escape characters</span>
+<span class="st">"\n"</span>  <span class="cm"># newline</span>
+<span class="st">"\t"</span>  <span class="cm"># tab</span>
+<span class="st">"\\"</span>  <span class="cm"># literal backslash</span>
+
+<span class="cm"># raw string (ignores escape chars)</span>
+<span class="va">path</span> = <span class="st">r"C:\Users\admin"</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-g">Slicing &amp; indexing</div>
+        <div class="py">
+<span class="va">s</span> = <span class="st">"hello world"</span>
+<span class="cm">#    0123456789...</span>
+
+<span class="va">s</span>[<span class="nu">0</span>]      <span class="cm"># 'h'       first char</span>
+<span class="va">s</span>[<span class="op">-</span><span class="nu">1</span>]     <span class="cm"># 'd'       last char</span>
+<span class="va">s</span>[<span class="nu">0</span>:<span class="nu">5</span>]    <span class="cm"># 'hello'   start to 5</span>
+<span class="va">s</span>[<span class="nu">6</span>:]     <span class="cm"># 'world'   6 to end</span>
+<span class="va">s</span>[:<span class="nu">5</span>]     <span class="cm"># 'hello'   start to 5</span>
+<span class="va">s</span>[::<span class="nu">2</span>]    <span class="cm"># 'hlowrd'  every 2nd</span>
+<span class="va">s</span>[::<span class="op">-</span><span class="nu">1</span>]   <span class="cm"># 'dlrow olleh' reversed</span>
+
+<span class="cm"># syntax: s[start : stop : step]</span>
+<span class="cm"># stop index is NOT included</span></div>
+      </div>
+
+    </div>
+
+    <div class="grid-2" style="margin-top:1rem;">
+
+      <div class="block">
+        <div class="block-hdr h-g">Common string methods</div>
+        <table class="rt">
+          <tr><td class="c1 c1g">.upper()</td><td class="c2">All uppercase</td><td class="c3">"hi".upper() → "HI"</td></tr>
+          <tr><td class="c1 c1g">.lower()</td><td class="c2">All lowercase</td><td class="c3">"HI".lower() → "hi"</td></tr>
+          <tr><td class="c1 c1g">.strip()</td><td class="c2">Remove leading/trailing whitespace</td><td class="c3">" hi ".strip() → "hi"</td></tr>
+          <tr><td class="c1 c1g">.split(d)</td><td class="c2">Split into list on delimiter</td><td class="c3">"a,b".split(",") → ["a","b"]</td></tr>
+          <tr><td class="c1 c1g">.join(lst)</td><td class="c2">Join list into string</td><td class="c3">",".join(["a","b"]) → "a,b"</td></tr>
+          <tr><td class="c1 c1g">.replace(a,b)</td><td class="c2">Replace substring</td><td class="c3">"hi".replace("h","b") → "bi"</td></tr>
+          <tr><td class="c1 c1g">.find(s)</td><td class="c2">Index of first occurrence (-1 = not found)</td><td class="c3">"hello".find("ll") → 2</td></tr>
+          <tr><td class="c1 c1g">.startswith()</td><td class="c2">Starts with prefix?</td><td class="c3">"hi".startswith("h") → True</td></tr>
+          <tr><td class="c1 c1g">.endswith()</td><td class="c2">Ends with suffix?</td><td class="c3">"hi".endswith("i") → True</td></tr>
+          <tr><td class="c1 c1g">.count(s)</td><td class="c2">Count occurrences</td><td class="c3">"hello".count("l") → 2</td></tr>
+          <tr><td class="c1 c1g">.encode()</td><td class="c2">String → bytestring</td><td class="c3">"hi".encode() → b'hi'</td></tr>
+          <tr><td class="c1 c1g">.decode()</td><td class="c2">Bytestring → string</td><td class="c3">b'hi'.decode() → "hi"</td></tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-g">String checks &amp; manipulation</div>
+        <div class="py">
+<span class="cm"># check methods (return bool)</span>
+<span class="st">"abc"</span>.<span class="fn">isalpha</span>()    <span class="cm"># True  (all letters)</span>
+<span class="st">"123"</span>.<span class="fn">isdigit</span>()    <span class="cm"># True  (all digits)</span>
+<span class="st">"abc1"</span>.<span class="fn">isalnum</span>()   <span class="cm"># True  (letters+digits)</span>
+<span class="st">"   "</span>.<span class="fn">isspace</span>()    <span class="cm"># True  (whitespace)</span>
+
+<span class="cm"># len, in, not in</span>
+<span class="fn">len</span>(<span class="st">"hello"</span>)          <span class="cm"># 5</span>
+<span class="st">"ell"</span> <span class="kw">in</span> <span class="st">"hello"</span>     <span class="cm"># True</span>
+
+<span class="cm"># concatenation</span>
+<span class="st">"Hello"</span> + <span class="st">" World"</span>   <span class="cm"># "Hello World"</span>
+<span class="st">"ab"</span> * <span class="nu">3</span>             <span class="cm"># "ababab"</span>
+
+<span class="cm"># encode / decode (networking use)</span>
+<span class="va">data</span> = <span class="st">"payload"</span>.<span class="fn">encode</span>(<span class="st">"utf-8"</span>)  <span class="cm"># bytes</span>
+<span class="va">text</span> = <span class="va">data</span>.<span class="fn">decode</span>(<span class="st">"utf-8"</span>)    <span class="cm"># str</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ LISTS ═══ -->
+  <div class="section" id="lists">
+    <div class="section-label"><span class="dot dot-blue"></span>Lists</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-b">Creation, slicing &amp; nesting</div>
+        <div class="py">
+<span class="cm"># create</span>
+<span class="va">lst</span>  = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="st">"four"</span>, <span class="kw">True</span>]
+<span class="va">empty</span> = []
+<span class="va">lst</span>  = <span class="fn">list</span>((<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>))  <span class="cm"># from tuple</span>
+
+<span class="cm"># index &amp; slice</span>
+<span class="va">lst</span>[<span class="nu">0</span>]      <span class="cm"># first element</span>
+<span class="va">lst</span>[<span class="op">-</span><span class="nu">1</span>]     <span class="cm"># last element</span>
+<span class="va">lst</span>[<span class="nu">1</span>:<span class="nu">3</span>]    <span class="cm"># index 1 and 2</span>
+<span class="va">lst</span>[::<span class="op">-</span><span class="nu">1</span>]   <span class="cm"># reversed</span>
+
+<span class="cm"># nested list access</span>
+<span class="va">m</span> = [[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>],[<span class="nu">4</span>,<span class="nu">5</span>,<span class="nu">6</span>]]
+<span class="va">m</span>[<span class="nu">0</span>][<span class="nu">1</span>]    <span class="cm"># 2  (row 0, col 1)</span>
+
+<span class="cm"># copy (true copy, not reference)</span>
+<span class="va">copy</span> = <span class="va">lst</span>.<span class="fn">copy</span>()
+<span class="va">copy</span> = <span class="va">lst</span>[:]    <span class="cm"># also works</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-b">List methods</div>
+        <table class="rt">
+          <tr><td class="c1 c1b">.append(x)</td><td class="c2">Add x to end</td><td class="c3">lst.append(4)</td></tr>
+          <tr><td class="c1 c1b">.insert(i, x)</td><td class="c2">Insert x at index i</td><td class="c3">lst.insert(0, "a")</td></tr>
+          <tr><td class="c1 c1b">.extend(iter)</td><td class="c2">Add all items from iterable</td><td class="c3">lst.extend([4,5])</td></tr>
+          <tr><td class="c1 c1b">.remove(x)</td><td class="c2">Remove first occurrence of x</td><td class="c3">lst.remove(2)</td></tr>
+          <tr><td class="c1 c1b">.pop(i)</td><td class="c2">Remove and return item at index</td><td class="c3">lst.pop() → last</td></tr>
+          <tr><td class="c1 c1b">.index(x)</td><td class="c2">Index of first x</td><td class="c3">lst.index(3) → 2</td></tr>
+          <tr><td class="c1 c1b">.count(x)</td><td class="c2">Count occurrences of x</td><td class="c3">lst.count(2)</td></tr>
+          <tr><td class="c1 c1b">.sort()</td><td class="c2">Sort in place</td><td class="c3">lst.sort(reverse=True)</td></tr>
+          <tr><td class="c1 c1b">.reverse()</td><td class="c2">Reverse in place</td><td class="c3">lst.reverse()</td></tr>
+          <tr><td class="c1 c1b">.clear()</td><td class="c2">Remove all items</td><td class="c3">lst.clear()</td></tr>
+          <tr><td class="c1 c1b">len(lst)</td><td class="c2">Number of elements</td><td class="c3">len([1,2,3]) → 3</td></tr>
+          <tr><td class="c1 c1b">sorted(lst)</td><td class="c2">Return new sorted list</td><td class="c3">sorted(lst)</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="block" style="margin-top:1rem;">
+      <div class="block-hdr h-b">map(), zip(), split(), join()</div>
+      <div class="py">
+<span class="cm"># map() — apply function to every element</span>
+<span class="va">nums</span> = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]
+<span class="va">doubled</span> = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x * <span class="nu">2</span>, <span class="va">nums</span>))   <span class="cm"># [2, 4, 6]</span>
+
+<span class="cm"># zip() — pair items from multiple lists (drops extras)</span>
+<span class="va">a</span>, <span class="va">b</span> = [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>], [<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>]
+<span class="fn">list</span>(<span class="fn">zip</span>(<span class="va">a</span>, <span class="va">b</span>))   <span class="cm"># [(1,'a'), (2,'b'), (3,'c')]</span>
+
+<span class="cm"># split string → list</span>
+<span class="va">line</span>  = <span class="st">"one,two,three"</span>
+<span class="va">parts</span> = <span class="va">line</span>.<span class="fn">split</span>(<span class="st">","</span>)   <span class="cm"># ['one', 'two', 'three']</span>
+
+<span class="cm"># join list → string</span>
+<span class="st">","</span>.<span class="fn">join</span>(<span class="va">parts</span>)             <span class="cm"># 'one,two,three'</span></div>
+    </div>
+  </div>
+
+
+  <!-- ═══ TUPLES & SETS ═══ -->
+  <div class="section" id="tuples-sets">
+    <div class="section-label"><span class="dot dot-purple"></span>Tuples &amp; Sets</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-p">Tuples — immutable, ordered</div>
+        <div class="py">
+<span class="cm"># create</span>
+<span class="va">t</span> = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)
+<span class="va">t</span> = <span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>         <span class="cm"># parens optional</span>
+<span class="va">single</span> = (<span class="nu">42</span>,)       <span class="cm"># note trailing comma!</span>
+<span class="va">t</span> = <span class="fn">tuple</span>([<span class="nu">1</span>, <span class="nu">2</span>])   <span class="cm"># from list</span>
+
+<span class="cm"># access (same as list, but immutable)</span>
+<span class="va">t</span>[<span class="nu">0</span>]      <span class="cm"># 1</span>
+<span class="va">t</span>[<span class="op">-</span><span class="nu">1</span>]     <span class="cm"># last element</span>
+
+<span class="cm"># unpacking</span>
+<span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span> = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)
+<span class="va">first</span>, *<span class="va">rest</span> = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>)
+<span class="cm"># first=1, rest=[2,3,4]</span>
+
+<span class="cm"># tuple methods</span>
+<span class="va">t</span>.<span class="fn">count</span>(<span class="nu">1</span>)    <span class="cm"># count occurrences</span>
+<span class="va">t</span>.<span class="fn">index</span>(<span class="nu">2</span>)    <span class="cm"># index of value</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-p">Sets — mutable, unordered, unique</div>
+        <div class="py">
+<span class="cm"># create — use set() for empty!</span>
+<span class="va">s</span> = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">2</span>, <span class="nu">1</span>}  <span class="cm"># {1, 2, 3}</span>
+<span class="va">s</span> = <span class="fn">set</span>([<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">2</span>,<span class="nu">3</span>]) <span class="cm"># from list (dedup)</span>
+<span class="va">empty</span> = <span class="fn">set</span>()        <span class="cm"># NOT {}</span>
+
+<span class="cm"># add / remove</span>
+<span class="va">s</span>.<span class="fn">add</span>(<span class="nu">4</span>)
+<span class="va">s</span>.<span class="fn">remove</span>(<span class="nu">2</span>)        <span class="cm"># raises KeyError if missing</span>
+<span class="va">s</span>.<span class="fn">discard</span>(<span class="nu">99</span>)      <span class="cm"># safe — no error if missing</span>
+
+<span class="cm"># set operations</span>
+<span class="va">a</span> | <span class="va">b</span>    <span class="cm"># union</span>
+<span class="va">a</span> &amp; <span class="va">b</span>    <span class="cm"># intersection</span>
+<span class="va">a</span> - <span class="va">b</span>    <span class="cm"># difference (in a, not b)</span>
+<span class="va">a</span> ^ <span class="va">b</span>    <span class="cm"># symmetric diff (in one, not both)</span>
+
+<span class="nu">3</span> <span class="kw">in</span> <span class="va">s</span>    <span class="cm"># membership test — O(1) fast</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ DICTIONARIES ═══ -->
+  <div class="section" id="dicts">
+    <div class="section-label"><span class="dot dot-yellow"></span>Dictionaries</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-y">Creation &amp; access</div>
+        <div class="py">
+<span class="cm"># create</span>
+<span class="va">d</span> = {<span class="st">"name"</span>: <span class="st">"alice"</span>, <span class="st">"age"</span>: <span class="nu">30</span>}
+<span class="va">d</span> = <span class="fn">dict</span>(name=<span class="st">"alice"</span>, age=<span class="nu">30</span>)
+<span class="va">empty</span> = {}
+
+<span class="cm"># access</span>
+<span class="va">d</span>[<span class="st">"name"</span>]              <span class="cm"># "alice" (KeyError if missing)</span>
+<span class="va">d</span>.<span class="fn">get</span>(<span class="st">"name"</span>)          <span class="cm"># "alice" (None if missing)</span>
+<span class="va">d</span>.<span class="fn">get</span>(<span class="st">"x"</span>, <span class="st">"default"</span>) <span class="cm"># "default" if key missing</span>
+
+<span class="cm"># add / update / delete</span>
+<span class="va">d</span>[<span class="st">"city"</span>] = <span class="st">"NYC"</span>   <span class="cm"># add new key</span>
+<span class="va">d</span>.<span class="fn">update</span>({<span class="st">"age"</span>: <span class="nu">31</span>}) <span class="cm"># update</span>
+<span class="kw">del</span> <span class="va">d</span>[<span class="st">"age"</span>]          <span class="cm"># delete key</span>
+<span class="va">d</span>.<span class="fn">pop</span>(<span class="st">"city"</span>)         <span class="cm"># remove &amp; return value</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-y">Iteration &amp; methods</div>
+        <div class="py">
+<span class="va">d</span> = {<span class="st">"a"</span>: <span class="nu">1</span>, <span class="st">"b"</span>: <span class="nu">2</span>, <span class="st">"c"</span>: <span class="nu">3</span>}
+
+<span class="cm"># iterate keys, values, or both</span>
+<span class="kw">for</span> <span class="va">k</span> <span class="kw">in</span> <span class="va">d</span>:               <span class="cm"># keys only</span>
+<span class="kw">for</span> <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">values</span>():      <span class="cm"># values only</span>
+<span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>():   <span class="cm"># key AND value</span>
+
+<span class="cm"># useful methods</span>
+<span class="va">d</span>.<span class="fn">keys</span>()    <span class="cm"># all keys</span>
+<span class="va">d</span>.<span class="fn">values</span>()  <span class="cm"># all values</span>
+<span class="va">d</span>.<span class="fn">items</span>()   <span class="cm"># (key, value) tuples</span>
+<span class="st">"a"</span> <span class="kw">in</span> <span class="va">d</span>    <span class="cm"># True (check key exists)</span>
+<span class="fn">len</span>(<span class="va">d</span>)      <span class="cm"># number of key-value pairs</span>
+<span class="va">d</span>.<span class="fn">clear</span>()   <span class="cm"># remove all pairs</span>
+<span class="va">d</span>.<span class="fn">copy</span>()    <span class="cm"># true copy</span>
+
+<span class="cm"># dict comprehension</span>
+<span class="va">sq</span> = {<span class="va">k</span>: <span class="va">v</span>**<span class="nu">2</span> <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>()}</div>
+      </div>
+
+    </div>
+
+    <div class="block" style="margin-top:1rem;">
+      <div class="block-hdr h-y">collections — defaultdict &amp; Counter</div>
+      <div class="py">
+<span class="kw">from</span> collections <span class="kw">import</span> defaultdict, Counter
+
+<span class="cm"># defaultdict — never raises KeyError</span>
+<span class="va">dd</span> = <span class="fn">defaultdict</span>(<span class="fn">int</span>)  <span class="cm"># default value is 0</span>
+<span class="va">dd</span>[<span class="st">"missing"</span>] += <span class="nu">1</span>      <span class="cm"># works! → {"missing": 1}</span>
+
+<span class="cm"># Counter — count object frequency</span>
+<span class="va">c</span> = <span class="fn">Counter</span>(<span class="st">"hello world"</span>)      <span class="cm"># count chars</span>
+<span class="va">c</span> = <span class="fn">Counter</span>([<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"a"</span>])     <span class="cm"># Counter({'a':2,'b':1})</span>
+<span class="va">c</span>.<span class="fn">most_common</span>(<span class="nu">3</span>)                <span class="cm"># top 3 items</span></div>
+    </div>
+  </div>
+
+
+  <!-- ═══ CONTROL FLOW ═══ -->
+  <div class="section" id="control">
+    <div class="section-label"><span class="dot dot-orange"></span>Control Flow</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-o">if / elif / else &amp; match</div>
+        <div class="py">
+<span class="cm"># if / elif / else</span>
+<span class="kw">if</span> <span class="va">x</span> &gt; <span class="nu">10</span>:
+    <span class="fn">print</span>(<span class="st">"big"</span>)
+<span class="kw">elif</span> <span class="va">x</span> &gt; <span class="nu">5</span>:
+    <span class="fn">print</span>(<span class="st">"medium"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"small"</span>)
+
+<span class="cm"># one-liner (ternary)</span>
+<span class="va">label</span> = <span class="st">"big"</span> <span class="kw">if</span> <span class="va">x</span> &gt; <span class="nu">10</span> <span class="kw">else</span> <span class="st">"small"</span>
+
+<span class="cm"># match / case (Python 3.10+)</span>
+<span class="kw">match</span> <span class="va">command</span>:
+    <span class="kw">case</span> <span class="st">"quit"</span>:
+        <span class="fn">exit</span>()
+    <span class="kw">case</span> <span class="st">"help"</span>:
+        <span class="fn">print</span>(<span class="st">"showing help"</span>)
+    <span class="kw">case</span> _:           <span class="cm"># catch-all</span>
+        <span class="fn">print</span>(<span class="st">"unknown"</span>)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-o">for &amp; while loops</div>
+        <div class="py">
+<span class="cm"># for loop</span>
+<span class="kw">for</span> <span class="va">item</span> <span class="kw">in</span> [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]:
+    <span class="fn">print</span>(<span class="va">item</span>)
+
+<span class="cm"># for with enumerate (index + value)</span>
+<span class="kw">for</span> <span class="va">i</span>, <span class="va">v</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="va">my_list</span>):
+    <span class="fn">print</span>(<span class="va">i</span>, <span class="va">v</span>)
+
+<span class="cm"># for with range</span>
+<span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">5</span>):           <span class="cm"># 0 1 2 3 4</span>
+<span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">2</span>, <span class="nu">10</span>, <span class="nu">2</span>):   <span class="cm"># 2 4 6 8</span>
+
+<span class="cm"># while loop</span>
+<span class="va">x</span> = <span class="nu">0</span>
+<span class="kw">while</span> <span class="va">x</span> &lt; <span class="nu">5</span>:
+    <span class="va">x</span> += <span class="nu">1</span>
+
+<span class="cm"># simulate do-while with break</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="va">val</span> = <span class="fn">input</span>(<span class="st">"Enter: "</span>)
+    <span class="kw">if</span> <span class="va">val</span> != <span class="st">""</span>: <span class="kw">break</span>
+
+<span class="cm"># break and continue</span>
+<span class="kw">if</span> <span class="va">x</span> == <span class="nu">3</span>: <span class="kw">break</span>     <span class="cm"># exit loop</span>
+<span class="kw">if</span> <span class="va">x</span> == <span class="nu">2</span>: <span class="kw">continue</span>  <span class="cm"># skip iteration</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ FUNCTIONS ═══ -->
+  <div class="section" id="functions">
+    <div class="section-label"><span class="dot dot-teal"></span>Functions</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-t">def, args, return, scope</div>
+        <div class="py">
+<span class="cm"># basic function</span>
+<span class="kw">def</span> <span class="fn">greet</span>(<span class="va">name</span>):
+    <span class="kw">return</span> <span class="st">f"Hello, </span>{<span class="va">name</span>}<span class="st">!"</span>
+
+<span class="cm"># default argument</span>
+<span class="kw">def</span> <span class="fn">add</span>(<span class="va">a</span>, <span class="va">b</span>=<span class="nu">0</span>):
+    <span class="kw">return</span> <span class="va">a</span> + <span class="va">b</span>
+
+<span class="cm"># *args — variable positional args</span>
+<span class="kw">def</span> <span class="fn">total</span>(*<span class="va">nums</span>):
+    <span class="kw">return</span> <span class="fn">sum</span>(<span class="va">nums</span>)
+<span class="fn">total</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)   <span class="cm"># → 6</span>
+
+<span class="cm"># **kwargs — variable keyword args</span>
+<span class="kw">def</span> <span class="fn">info</span>(**<span class="va">kwargs</span>):
+    <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">kwargs</span>.<span class="fn">items</span>():
+        <span class="fn">print</span>(<span class="st">f"</span>{<span class="va">k</span>}<span class="st">: </span>{<span class="va">v</span>}<span class="st">"</span>)
+<span class="fn">info</span>(name=<span class="st">"alice"</span>, age=<span class="nu">30</span>)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-t">lambda, global, pass, return multiple</div>
+        <div class="py">
+<span class="cm"># lambda (anonymous function)</span>
+<span class="va">square</span> = <span class="kw">lambda</span> <span class="va">x</span>: <span class="va">x</span> ** <span class="nu">2</span>
+<span class="va">square</span>(<span class="nu">5</span>)   <span class="cm"># 25</span>
+
+<span class="cm"># lambda with map()</span>
+<span class="va">res</span> = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> <span class="va">x</span>: <span class="va">x</span>*<span class="nu">2</span>, [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>]))
+
+<span class="cm"># return multiple values (as tuple)</span>
+<span class="kw">def</span> <span class="fn">min_max</span>(<span class="va">lst</span>):
+    <span class="kw">return</span> <span class="fn">min</span>(<span class="va">lst</span>), <span class="fn">max</span>(<span class="va">lst</span>)
+<span class="va">lo</span>, <span class="va">hi</span> = <span class="fn">min_max</span>([<span class="nu">3</span>,<span class="nu">1</span>,<span class="nu">4</span>])
+
+<span class="cm"># global keyword</span>
+<span class="va">count</span> = <span class="nu">0</span>
+<span class="kw">def</span> <span class="fn">increment</span>():
+    <span class="kw">global</span> <span class="va">count</span>
+    <span class="va">count</span> += <span class="nu">1</span>
+
+<span class="cm"># pass — empty placeholder</span>
+<span class="kw">def</span> <span class="fn">todo</span>():
+    <span class="kw">pass</span>
+
+<span class="cm"># docstring</span>
+<span class="kw">def</span> <span class="fn">my_func</span>():
+    <span class="st">"""Brief description of what this does."""</span>
+    <span class="kw">return</span> <span class="kw">True</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ COMPREHENSION ═══ -->
+  <div class="section" id="comprehension">
+    <div class="section-label"><span class="dot dot-green"></span>Comprehension</div>
+    <div class="block">
+      <div class="block-hdr h-g">List, dict, set &amp; generator comprehension</div>
+      <div class="py">
+<span class="cm"># list comprehension</span>
+<span class="va">squares</span> = [<span class="va">x</span>**<span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">10</span>)]                  <span class="cm"># [0, 1, 4, 9, 16...]</span>
+<span class="va">evens</span>   = [<span class="va">x</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">20</span>) <span class="kw">if</span> <span class="va">x</span> % <span class="nu">2</span> == <span class="nu">0</span>]    <span class="cm"># [0, 2, 4, 6...18]</span>
+<span class="va">pairs</span>   = [(<span class="va">x</span>,<span class="va">y</span>) <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> [<span class="nu">1</span>,<span class="nu">2</span>] <span class="kw">for</span> <span class="va">y</span> <span class="kw">in</span> [<span class="nu">3</span>,<span class="nu">4</span>]]  <span class="cm"># [(1,3),(1,4),(2,3),(2,4)]</span>
+
+<span class="cm"># dict comprehension</span>
+<span class="va">sq_dict</span> = {<span class="va">x</span>: <span class="va">x</span>**<span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">5</span>)}              <span class="cm"># {0:0, 1:1, 2:4, 3:9, 4:16}</span>
+<span class="va">filtered</span>= {<span class="va">k</span>: <span class="va">v</span> <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>() <span class="kw">if</span> <span class="va">v</span> &gt; <span class="nu">1</span>}    <span class="cm"># only keep v > 1</span>
+
+<span class="cm"># set comprehension</span>
+<span class="va">unique_sq</span> = {<span class="va">x</span>**<span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> [-<span class="nu">2</span>, -<span class="nu">1</span>, <span class="nu">0</span>, <span class="nu">1</span>, <span class="nu">2</span>]}         <span class="cm"># {0, 1, 4}</span>
+
+<span class="cm"># generator (memory-efficient — use () not [])</span>
+<span class="va">gen</span> = (<span class="va">x</span>**<span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1000000</span>))  <span class="cm"># doesn't store all values in memory</span>
+<span class="fn">next</span>(<span class="va">gen</span>)                                  <span class="cm"># get next value on demand</span></div>
+    </div>
+  </div>
+
+
+  <!-- ═══ ERROR HANDLING ═══ -->
+  <div class="section" id="errors">
+    <div class="section-label"><span class="dot dot-red"></span>Error Handling</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-r">try / except / else / finally</div>
+        <div class="py">
+<span class="cm"># basic try / except</span>
+<span class="kw">try</span>:
+    <span class="va">result</span> = <span class="nu">10</span> / <span class="va">x</span>
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="fn">print</span>(<span class="st">"can't divide by zero"</span>)
+<span class="kw">except</span> TypeError <span class="kw">as</span> <span class="va">e</span>:
+    <span class="fn">print</span>(<span class="st">f"type error: </span>{<span class="va">e</span>}<span class="st">"</span>)
+<span class="kw">except</span>:                   <span class="cm"># catch-all</span>
+    <span class="fn">print</span>(<span class="st">"unknown error"</span>)
+<span class="kw">else</span>:                     <span class="cm"># runs if NO exception</span>
+    <span class="fn">print</span>(<span class="st">"success"</span>)
+<span class="kw">finally</span>:                  <span class="cm"># ALWAYS runs</span>
+    <span class="fn">print</span>(<span class="st">"done"</span>)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-r">Common built-in exceptions</div>
+        <table class="rt">
+          <tr><td class="c1 c1b" style="color:var(--red);">ValueError</td><td class="c2">Right type but bad value</td><td class="c3">int("abc")</td></tr>
+          <tr><td class="c1" style="color:var(--red);">TypeError</td><td class="c2">Wrong data type</td><td class="c3">"a" + 1</td></tr>
+          <tr><td class="c1" style="color:var(--red);">ZeroDivisionError</td><td class="c2">Division by zero</td><td class="c3">5 / 0</td></tr>
+          <tr><td class="c1" style="color:var(--red);">KeyError</td><td class="c2">Dict key doesn't exist</td><td class="c3">d["missing"]</td></tr>
+          <tr><td class="c1" style="color:var(--red);">IndexError</td><td class="c2">List index out of range</td><td class="c3">lst[99]</td></tr>
+          <tr><td class="c1" style="color:var(--red);">AttributeError</td><td class="c2">Object has no such attribute</td><td class="c3">None.upper()</td></tr>
+          <tr><td class="c1" style="color:var(--red);">FileNotFoundError</td><td class="c2">File doesn't exist</td><td class="c3">open("x.txt")</td></tr>
+          <tr><td class="c1" style="color:var(--red);">NameError</td><td class="c2">Variable not defined</td><td class="c3">print(x)</td></tr>
+          <tr><td class="c1" style="color:var(--red);">ImportError</td><td class="c2">Module not found</td><td class="c3">import xyz</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ FILE I/O ═══ -->
+  <div class="section" id="files">
+    <div class="section-label"><span class="dot dot-yellow"></span>File I/O</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-y">Read patterns</div>
+        <div class="py">
+<span class="cm"># best practice — with statement (auto-closes)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">content</span> = <span class="va">f</span>.<span class="fn">read</span>()          <span class="cm"># entire file as string</span>
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">line</span>  = <span class="va">f</span>.<span class="fn">readline</span>()        <span class="cm"># one line at a time</span>
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">lines</span> = <span class="va">f</span>.<span class="fn">readlines</span>()       <span class="cm"># all lines → list</span>
+
+<span class="cm"># iterate line-by-line (memory efficient)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="kw">for</span> <span class="va">line</span> <span class="kw">in</span> <span class="va">f</span>:
+        <span class="fn">print</span>(<span class="va">line</span>.<span class="fn">strip</span>())
+
+<span class="cm"># read binary (e.g. pcap)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data.bin"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">data</span> = <span class="va">f</span>.<span class="fn">read</span>()</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-y">Write patterns &amp; modes</div>
+        <div class="py">
+<span class="cm"># write (overwrites file)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.txt"</span>, <span class="st">"w"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">f</span>.<span class="fn">write</span>(<span class="st">"hello\n"</span>)
+    <span class="va">f</span>.<span class="fn">writelines</span>([<span class="st">"line1\n"</span>, <span class="st">"line2\n"</span>])
+
+<span class="cm"># append (add to end of file)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"log.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">f</span>.<span class="fn">write</span>(<span class="st">"new entry\n"</span>)</div>
+
+        <div style="padding:8px 12px; border-top:1px solid var(--border);">
+          <table class="rt">
+            <tr><td class="c1 c1g" style="font-size:11px;">'r'</td><td class="c2">Read (default) — error if not found</td></tr>
+            <tr><td class="c1 c1g" style="font-size:11px;">'w'</td><td class="c2">Write — creates or overwrites</td></tr>
+            <tr><td class="c1 c1g" style="font-size:11px;">'a'</td><td class="c2">Append — adds to end</td></tr>
+            <tr><td class="c1 c1g" style="font-size:11px;">'x'</td><td class="c2">Create — error if already exists</td></tr>
+            <tr><td class="c1 c1g" style="font-size:11px;">'rb'/'wb'</td><td class="c2">Binary read/write</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ BUILT-INS ═══ -->
+  <div class="section" id="builtins">
+    <div class="section-label"><span class="dot dot-purple"></span>Built-in Functions</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-p">Commonly used</div>
+        <table class="rt">
+          <tr><td class="c1 c1p">print(x)</td><td class="c2">Output to stdout</td><td class="c3">print("hi", end="")</td></tr>
+          <tr><td class="c1 c1p">input(prompt)</td><td class="c2">Read user input (returns str)</td><td class="c3">x = input("Enter: ")</td></tr>
+          <tr><td class="c1 c1p">len(obj)</td><td class="c2">Length of object</td><td class="c3">len([1,2,3]) → 3</td></tr>
+          <tr><td class="c1 c1p">type(obj)</td><td class="c2">Type of object</td><td class="c3">type(42) → int</td></tr>
+          <tr><td class="c1 c1p">range(n)</td><td class="c2">Generate number sequence</td><td class="c3">range(0,10,2)</td></tr>
+          <tr><td class="c1 c1p">enumerate()</td><td class="c2">Index + value pairs</td><td class="c3">for i,v in enumerate(lst)</td></tr>
+          <tr><td class="c1 c1p">zip(a, b)</td><td class="c2">Pair items from iterables</td><td class="c3">list(zip([1,2],["a","b"]))</td></tr>
+          <tr><td class="c1 c1p">map(fn, iter)</td><td class="c2">Apply function to iterable</td><td class="c3">list(map(str, [1,2,3]))</td></tr>
+          <tr><td class="c1 c1p">filter(fn, iter)</td><td class="c2">Keep items where fn returns True</td><td class="c3">list(filter(bool, lst))</td></tr>
+          <tr><td class="c1 c1p">sorted(iter)</td><td class="c2">New sorted list (non-destructive)</td><td class="c3">sorted(lst, reverse=True)</td></tr>
+          <tr><td class="c1 c1p">sum(iter)</td><td class="c2">Sum of iterable</td><td class="c3">sum([1,2,3]) → 6</td></tr>
+          <tr><td class="c1 c1p">min() / max()</td><td class="c2">Smallest / largest value</td><td class="c3">min([3,1,2]) → 1</td></tr>
+          <tr><td class="c1 c1p">abs(x)</td><td class="c2">Absolute value</td><td class="c3">abs(-5) → 5</td></tr>
+          <tr><td class="c1 c1p">round(x, n)</td><td class="c2">Round to n decimal places</td><td class="c3">round(3.14159, 2) → 3.14</td></tr>
+          <tr><td class="c1 c1p">isinstance(obj, T)</td><td class="c2">Check if obj is type T</td><td class="c3">isinstance(x, int)</td></tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-p">String / number conversion</div>
+        <table class="rt">
+          <tr><td class="c1 c1p">int(x)</td><td class="c2">Convert to integer</td><td class="c3">int("42") → 42</td></tr>
+          <tr><td class="c1 c1p">float(x)</td><td class="c2">Convert to float</td><td class="c3">float("3.14") → 3.14</td></tr>
+          <tr><td class="c1 c1p">str(x)</td><td class="c2">Convert to string</td><td class="c3">str(42) → "42"</td></tr>
+          <tr><td class="c1 c1p">bool(x)</td><td class="c2">Convert to boolean</td><td class="c3">bool(0) → False</td></tr>
+          <tr><td class="c1 c1p">list(x)</td><td class="c2">Convert to list</td><td class="c3">list("abc") → ['a','b','c']</td></tr>
+          <tr><td class="c1 c1p">tuple(x)</td><td class="c2">Convert to tuple</td><td class="c3">tuple([1,2]) → (1,2)</td></tr>
+          <tr><td class="c1 c1p">set(x)</td><td class="c2">Convert to set (dedup)</td><td class="c3">set([1,2,2]) → {1,2}</td></tr>
+          <tr><td class="c1 c1p">dict(x)</td><td class="c2">Convert to dict</td><td class="c3">dict(a=1,b=2)</td></tr>
+          <tr><td class="c1 c1p">hex(n)</td><td class="c2">Int → hex string</td><td class="c3">hex(255) → '0xff'</td></tr>
+          <tr><td class="c1 c1p">bin(n)</td><td class="c2">Int → binary string</td><td class="c3">bin(10) → '0b1010'</td></tr>
+          <tr><td class="c1 c1p">ord(c)</td><td class="c2">Char → unicode int</td><td class="c3">ord("A") → 65</td></tr>
+          <tr><td class="c1 c1p">chr(n)</td><td class="c2">Unicode int → char</td><td class="c3">chr(65) → 'A'</td></tr>
+          <tr><td class="c1 c1p">int(s, 16)</td><td class="c2">Hex string → int</td><td class="c3">int("ff",16) → 255</td></tr>
+          <tr><td class="c1 c1p">dir(obj)</td><td class="c2">List object attributes/methods</td><td class="c3">dir(str)</td></tr>
+          <tr><td class="c1 c1p">help(obj)</td><td class="c2">Print documentation</td><td class="c3">help(list.append)</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ MODULES ═══ -->
+  <div class="section" id="modules">
+    <div class="section-label"><span class="dot dot-blue"></span>Modules &amp; Imports</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-b">Import syntax &amp; __name__</div>
+        <div class="py">
+<span class="cm"># import entire module</span>
+<span class="kw">import</span> os
+<span class="kw">import</span> datetime
+
+<span class="cm"># import with alias</span>
+<span class="kw">import</span> collections <span class="kw">as</span> col
+
+<span class="cm"># import specific item</span>
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+<span class="cm"># import everything (not recommended)</span>
+<span class="kw">from</span> os <span class="kw">import</span> *
+
+<span class="cm"># __name__ guard — prevent auto-exec on import</span>
+<span class="kw">def</span> <span class="fn">main</span>():
+    <span class="fn">print</span>(<span class="st">"running"</span>)
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    <span class="fn">main</span>()     <span class="cm"># only runs when called directly</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-b">Useful standard library modules</div>
+        <table class="rt">
+          <tr><td class="c1 c1b">os</td><td class="c2">OS interaction, file paths</td><td class="c3">os.path.exists("f.txt")</td></tr>
+          <tr><td class="c1 c1b">sys</td><td class="c2">System-specific params</td><td class="c3">sys.argv[1]</td></tr>
+          <tr><td class="c1 c1b">datetime</td><td class="c2">Dates and times</td><td class="c3">datetime.now()</td></tr>
+          <tr><td class="c1 c1b">collections</td><td class="c2">Specialized data structures</td><td class="c3">Counter, defaultdict</td></tr>
+          <tr><td class="c1 c1b">re</td><td class="c2">Regular expressions</td><td class="c3">re.findall(r"\d+", s)</td></tr>
+          <tr><td class="c1 c1b">json</td><td class="c2">JSON encode/decode</td><td class="c3">json.loads(s)</td></tr>
+          <tr><td class="c1 c1b">random</td><td class="c2">Random numbers/choices</td><td class="c3">random.randint(1,10)</td></tr>
+          <tr><td class="c1 c1b">socket</td><td class="c2">Network connections</td><td class="c3">socket.SOCK_STREAM</td></tr>
+          <tr><td class="c1 c1b">subprocess</td><td class="c2">Spawn system processes</td><td class="c3">subprocess.run([...])</td></tr>
+          <tr><td class="c1 c1b">hashlib</td><td class="c2">Hashing functions</td><td class="c3">hashlib.md5(b"data")</td></tr>
+          <tr><td class="c1 c1b">struct</td><td class="c2">Pack/unpack binary data</td><td class="c3">struct.pack("!H", 80)</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ CLASSES ═══ -->
+  <div class="section" id="classes">
+    <div class="section-label"><span class="dot dot-teal"></span>Classes (OOP Basics)</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-t">Defining a class</div>
+        <div class="py">
+<span class="kw">class</span> <span class="cl">Animal</span>:
+    <span class="cm"># class attribute (shared by all instances)</span>
+    <span class="va">species</span> = <span class="st">"Unknown"</span>
+
+    <span class="cm"># __init__ = constructor</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>, <span class="va">age</span>):
+        <span class="va">self</span>.name = <span class="va">name</span>   <span class="cm"># instance attribute</span>
+        <span class="va">self</span>.age  = <span class="va">age</span>
+
+    <span class="cm"># method</span>
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"{</span><span class="va">self</span>.name<span class="st">} speaks"</span>
+
+    <span class="cm"># __str__ — string representation</span>
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"Animal({</span><span class="va">self</span>.name<span class="st">})"</span>
+
+<span class="cm"># create instance</span>
+<span class="va">dog</span> = <span class="cl">Animal</span>(<span class="st">"Rex"</span>, <span class="nu">5</span>)
+<span class="va">dog</span>.<span class="fn">speak</span>()            <span class="cm"># "Rex speaks"</span>
+<span class="fn">print</span>(<span class="va">dog</span>)             <span class="cm"># "Animal(Rex)"</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-t">Inheritance</div>
+        <div class="py">
+<span class="kw">class</span> <span class="cl">Dog</span>(<span class="cl">Animal</span>):   <span class="cm"># inherits Animal</span>
+    <span class="va">species</span> = <span class="st">"Canine"</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>, <span class="va">age</span>, <span class="va">breed</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(<span class="va">name</span>, <span class="va">age</span>)  <span class="cm"># call parent</span>
+        <span class="va">self</span>.breed = <span class="va">breed</span>
+
+    <span class="cm"># override parent method</span>
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"{</span><span class="va">self</span>.name<span class="st">} says Woof!"</span>
+
+<span class="va">d</span> = <span class="cl">Dog</span>(<span class="st">"Rex"</span>, <span class="nu">5</span>, <span class="st">"Lab"</span>)
+<span class="va">d</span>.<span class="fn">speak</span>()                <span class="cm"># "Rex says Woof!"</span>
+<span class="fn">isinstance</span>(<span class="va">d</span>, <span class="cl">Animal</span>)    <span class="cm"># True</span></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ SCAPY ═══ -->
+  <div class="section" id="scapy">
+    <div class="section-label"><span class="dot dot-orange"></span>Scapy</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-o">Read &amp; iterate packets</div>
+        <div class="py">
+<span class="kw">from</span> scapy.all <span class="kw">import</span> rdpcap, wrpcap, sniff
+
+<span class="cm"># read pcap file</span>
+<span class="va">pkts</span> = <span class="fn">rdpcap</span>(<span class="st">"capture.pcap"</span>)
+
+<span class="cm"># iterate all packets</span>
+<span class="kw">for</span> <span class="va">pkt</span> <span class="kw">in</span> <span class="va">pkts</span>:
+    <span class="fn">print</span>(<span class="va">pkt</span>.<span class="fn">summary</span>())
+
+<span class="cm"># check if packet has a layer</span>
+<span class="kw">if</span> <span class="va">pkt</span>.<span class="fn">haslayer</span>(<span class="st">"TCP"</span>):
+    <span class="fn">print</span>(<span class="va">pkt</span>[<span class="st">"TCP"</span>].dport)
+
+<span class="cm"># access specific packet and layer field</span>
+<span class="va">pkts</span>[<span class="nu">0</span>][<span class="st">"IP"</span>].src     <span class="cm"># source IP of packet 0</span>
+<span class="va">pkts</span>[<span class="nu">0</span>][<span class="st">"TCP"</span>].flags  <span class="cm"># TCP flags</span>
+<span class="va">pkts</span>[<span class="nu">0</span>][<span class="st">"DNS"</span>].qd.qname <span class="cm"># DNS query name</span>
+
+<span class="cm"># write packets to pcap</span>
+<span class="fn">wrpcap</span>(<span class="st">"output.pcap"</span>, <span class="va">pkts</span>)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-o">Craft &amp; send packets</div>
+        <div class="py">
+<span class="kw">from</span> scapy.all <span class="kw">import</span> Ether, IP, TCP, UDP, send, sendp
+
+<span class="cm"># craft an IP/TCP packet</span>
+<span class="va">pkt</span> = <span class="cl">IP</span>(dst=<span class="st">"192.168.1.1"</span>) / <span class="cl">TCP</span>(dport=<span class="nu">80</span>)
+
+<span class="cm"># add Ethernet layer</span>
+<span class="va">pkt</span> = <span class="cl">Ether</span>() / <span class="cl">IP</span>(dst=<span class="st">"10.0.0.1"</span>) / <span class="cl">TCP</span>()
+
+<span class="cm"># send at L3 (IP layer)</span>
+<span class="fn">send</span>(<span class="va">pkt</span>)
+
+<span class="cm"># send at L2 (Ethernet layer)</span>
+<span class="fn">sendp</span>(<span class="va">pkt</span>, iface=<span class="st">"eth0"</span>)
+
+<span class="cm"># layer names (case-sensitive!)</span>
+<span class="cm"># Ether · IP · TCP · UDP · DNS · RAW</span>
+
+<span class="cm"># sniff live traffic</span>
+<span class="va">pkts</span> = <span class="fn">sniff</span>(count=<span class="nu">10</span>, filter=<span class="st">"tcp"</span>)</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ SOCKETS ═══ -->
+  <div class="section" id="sockets">
+    <div class="section-label"><span class="dot dot-blue"></span>Sockets</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-b">TCP client &amp; server</div>
+        <div class="py">
+<span class="kw">import</span> socket
+
+<span class="cm"># ── TCP CLIENT ──</span>
+<span class="va">s</span> = socket.<span class="fn">socket</span>(socket.AF_INET,    <span class="cm"># IPv4</span>
+                   socket.SOCK_STREAM) <span class="cm"># TCP</span>
+<span class="va">s</span>.<span class="fn">connect</span>((<span class="st">"192.168.1.1"</span>, <span class="nu">4444</span>))
+<span class="va">s</span>.<span class="fn">send</span>(<span class="st">b"hello"</span>)
+<span class="va">data</span> = <span class="va">s</span>.<span class="fn">recv</span>(<span class="nu">1024</span>)   <span class="cm"># receive up to 1024 bytes</span>
+<span class="va">s</span>.<span class="fn">close</span>()
+
+<span class="cm"># ── TCP SERVER ──</span>
+<span class="va">srv</span> = socket.<span class="fn">socket</span>(socket.AF_INET, socket.SOCK_STREAM)
+<span class="va">srv</span>.<span class="fn">bind</span>((<span class="st">""</span>, <span class="nu">4444</span>))        <span class="cm"># bind to all interfaces</span>
+<span class="va">srv</span>.<span class="fn">listen</span>(<span class="nu">1</span>)               <span class="cm"># queue 1 connection</span>
+<span class="va">conn</span>, <span class="va">addr</span> = <span class="va">srv</span>.<span class="fn">accept</span>()   <span class="cm"># wait for client</span>
+<span class="fn">print</span>(<span class="st">f"Connected: </span>{<span class="va">addr</span>}<span class="st">"</span>)
+<span class="va">conn</span>.<span class="fn">close</span>()
+<span class="va">srv</span>.<span class="fn">close</span>()</div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-b">UDP &amp; IPv6 sockets</div>
+        <div class="py">
+<span class="kw">import</span> socket
+
+<span class="cm"># ── UDP (connectionless) ──</span>
+<span class="va">s</span> = socket.<span class="fn">socket</span>(socket.AF_INET,   <span class="cm"># IPv4</span>
+                   socket.SOCK_DGRAM) <span class="cm"># UDP</span>
+<span class="va">s</span>.<span class="fn">sendto</span>(<span class="st">b"data"</span>, (<span class="st">"8.8.8.8"</span>, <span class="nu">53</span>))
+<span class="va">data</span>, <span class="va">addr</span> = <span class="va">s</span>.<span class="fn">recvfrom</span>(<span class="nu">512</span>)
+
+<span class="cm"># ── IPv6 TCP ──</span>
+<span class="va">s6</span> = socket.<span class="fn">socket</span>(socket.AF_INET6,  <span class="cm"># IPv6</span>
+                    socket.SOCK_STREAM) <span class="cm"># TCP</span>
+<span class="va">s6</span>.<span class="fn">connect</span>((<span class="st">"::1"</span>, <span class="nu">8080</span>))
+
+<span class="cm"># ── error handling ──</span>
+<span class="kw">try</span>:
+    <span class="va">s</span>.<span class="fn">connect</span>((<span class="st">"host"</span>, <span class="nu">9999</span>))
+<span class="kw">except</span> socket.error <span class="kw">as</span> <span class="va">e</span>:
+    <span class="fn">print</span>(<span class="st">f"Socket error: </span>{<span class="va">e</span>}<span class="st">"</span>)</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══ SUBPROCESS ═══ -->
+  <div class="section" id="subprocess">
+    <div class="section-label"><span class="dot dot-red"></span>Subprocess</div>
+    <div class="grid-2">
+
+      <div class="block">
+        <div class="block-hdr h-r">Popen, run, call</div>
+        <div class="py">
+<span class="kw">import</span> subprocess
+
+<span class="cm"># run — simple, returns CompletedProcess</span>
+<span class="va">r</span> = subprocess.<span class="fn">run</span>(
+    [<span class="st">"ls"</span>, <span class="st">"-la"</span>],
+    capture_output=<span class="kw">True</span>,
+    text=<span class="kw">True</span>         <span class="cm"># output as str not bytes</span>
+)
+<span class="fn">print</span>(<span class="va">r</span>.stdout)
+<span class="fn">print</span>(<span class="va">r</span>.returncode)  <span class="cm"># 0 = success</span>
+
+<span class="cm"># call — run and wait, returns exit code</span>
+<span class="va">code</span> = subprocess.<span class="fn">call</span>([<span class="st">"ping"</span>, <span class="st">"-c1"</span>, <span class="st">"8.8.8.8"</span>])
+
+<span class="cm"># Popen — more control, non-blocking</span>
+<span class="va">proc</span> = subprocess.<span class="fn">Popen</span>(
+    [<span class="st">"nmap"</span>, <span class="st">"-sV"</span>, <span class="st">"target"</span>],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=<span class="kw">True</span>
+)
+<span class="va">out</span>, <span class="va">err</span> = <span class="va">proc</span>.<span class="fn">communicate</span>()  <span class="cm"># wait &amp; get output</span></div>
+      </div>
+
+      <div class="block">
+        <div class="block-hdr h-r">shell=True &amp; stdin</div>
+        <div class="py">
+<span class="cm"># shell=True — run through system shell</span>
+<span class="cm"># (useful for pipes but less secure)</span>
+<span class="va">r</span> = subprocess.<span class="fn">run</span>(
+    <span class="st">"cat /etc/passwd | grep root"</span>,
+    shell=<span class="kw">True</span>,
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+)
+
+<span class="cm"># send input to a process via stdin</span>
+<span class="va">proc</span> = subprocess.<span class="fn">Popen</span>(
+    [<span class="st">"python3"</span>],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    text=<span class="kw">True</span>
+)
+<span class="va">out</span>, _ = <span class="va">proc</span>.<span class="fn">communicate</span>(<span class="st">"print(1+1)\n"</span>)
+
+<span class="cm"># subprocess argument quick ref</span>
+<span class="cm"># stdout=PIPE  → capture output</span>
+<span class="cm"># stderr=PIPE  → capture errors</span>
+<span class="cm"># stdin=PIPE   → send input</span>
+<span class="cm"># text=True    → str not bytes</span>
+<span class="cm"># shell=True   → run in shell</span></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /shell -->
+</body>
+</html>
