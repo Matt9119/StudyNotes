@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offensive Cyber Master Cut Sheet — UCWT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── TOKENS (dark default, light override below) ── */
+:root {
+  --bg:          #0e1117;
+  --bg2:         #161b22;
+  --bg3:         #1c2128;
+  --bg4:         #21262d;
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+  --text:        #e6edf3;
+  --muted:       #7d8590;
+  --green:       #3fb950;
+  --green-dim:   rgba(63,185,80,0.12);
+  --cyan:        #56d364;
+  --yellow:      #d29922;
+  --yellow-dim:  rgba(210,153,34,0.12);
+  --orange:      #f0883e;
+  --orange-dim:  rgba(240,136,62,0.12);
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.12);
+  --red:         #f85149;
+  --red-dim:     rgba(248,81,73,0.12);
+  --purple:      #bc8cff;
+  --purple-dim:  rgba(188,140,255,0.12);
+  --teal:        #2dd4bf;
+  --teal-dim:    rgba(45,212,191,0.12);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:#ffffff; --bg2:#f5f5f3; --bg3:#ececea; --bg4:#e4e4e1;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+    --text:#1a1a1a; --muted:#6b6b6b;
+    --green-dim:rgba(63,185,80,0.14); --yellow-dim:rgba(210,153,34,0.14);
+    --orange-dim:rgba(240,136,62,0.14); --blue-dim:rgba(88,166,255,0.14);
+    --red-dim:rgba(248,81,73,0.14); --purple-dim:rgba(188,140,255,0.14);
+    --teal-dim:rgba(45,212,191,0.16);
+  }
+}
+html[data-theme="dark"] {
+  --bg: #0e1117; --bg2:#161b22; --bg3:#1c2128; --bg4:#21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text:#e6edf3; --muted:#7d8590;
+  --green-dim:rgba(63,185,80,0.12); --yellow-dim:rgba(210,153,34,0.12);
+  --orange-dim:rgba(240,136,62,0.12); --blue-dim:rgba(88,166,255,0.12);
+  --red-dim:rgba(248,81,73,0.12); --purple-dim:rgba(188,140,255,0.12);
+  --teal-dim:rgba(45,212,191,0.12);
+}
+html[data-theme="light"] {
+  --bg:#ffffff; --bg2:#f5f5f3; --bg3:#ececea; --bg4:#e4e4e1;
+  --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+  --text:#1a1a1a; --muted:#6b6b6b;
+  --green-dim:rgba(63,185,80,0.14); --yellow-dim:rgba(210,153,34,0.14);
+  --orange-dim:rgba(240,136,62,0.14); --blue-dim:rgba(88,166,255,0.14);
+  --red-dim:rgba(248,81,73,0.14); --purple-dim:rgba(188,140,255,0.14);
+  --teal-dim:rgba(45,212,191,0.16);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.page-layout { display: flex; align-items: flex-start; max-width: 1280px; margin: 0 auto; gap: 1.5rem; padding: 0 1.25rem; }
+.shell { flex: 1; min-width: 0; padding: 1.5rem 0 5rem; }
+
+/* ── HEADER ── */
+.header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.header-title { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--red); letter-spacing: -0.01em; }
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.header-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); letter-spacing: .04em; }
+.tag-draft { color: var(--orange); border-color: var(--orange); }
+#theme-toggle { font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 5px; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted); cursor: pointer; }
+#theme-toggle:hover { color: var(--text); border-color: var(--green); }
+
+/* ── TOP-LEVEL TABS ── */
+.tab-nav { display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab-btn { font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted); cursor: pointer; transition: all .15s; letter-spacing: .02em; }
+.tab-btn:hover:not(.active) { color: var(--text); border-color: var(--green); }
+.tab-btn.active.off { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.tab-btn.active.ports { background: var(--teal-dim); color: var(--teal); border-color: var(--teal); }
+.tab-btn.active.win { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); }
+.tab-btn.active.nix { background: var(--green-dim); color: var(--green); border-color: var(--green); }
+.tab-btn.active.notes { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── SUB NAV (nav pills) ── */
+.nav-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.nav-pill { font-family: var(--mono); font-size: 10.5px; font-weight: 500; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); background: var(--bg2); cursor: pointer; text-decoration: none; transition: all .15s; letter-spacing: .02em; }
+.nav-pill:hover { color: var(--text); border-color: var(--green); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 2rem; }
+.section-label { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+.section-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.dot-green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.dot-blue   { background: var(--blue);  box-shadow: 0 0 6px var(--blue); }
+.dot-yellow { background: var(--yellow);}
+.dot-orange { background: var(--orange);}
+.dot-red    { background: var(--red);   box-shadow: 0 0 6px var(--red); }
+.dot-purple { background: var(--purple);}
+.dot-cyan   { background: var(--cyan); }
+.dot-teal   { background: var(--teal); box-shadow: 0 0 6px var(--teal); }
+
+.phase-num { display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; border-radius:50%; background: var(--red-dim); color: var(--red); font-family: var(--mono); font-size: 10px; font-weight:700; flex-shrink:0; }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── COMMAND BLOCK ── */
+.cmd-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cmd-block-header { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 6px 12px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--green); letter-spacing: .04em; display: flex; align-items: center; gap: 6px; }
+.cmd-block-header.hdr-blue { color: var(--blue); }
+.cmd-block-header.hdr-red { color: var(--red); }
+.cmd-block-header.hdr-teal { color: var(--teal); }
+.cmd-block-header.hdr-purple { color: var(--purple); }
+.cmd-table { width: 100%; border-collapse: collapse; }
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table tr:hover { background: rgba(127,127,127,0.05); }
+.cmd-table td { padding: 5px 10px; vertical-align: top; }
+.cmd-table .c1 { font-family: var(--mono); font-size: 11.5px; color: var(--blue); white-space: nowrap; width: 1%; padding-right: 12px; font-weight: 500; }
+.cmd-table .c2 { font-size: 12px; color: var(--muted); width: 35%; }
+.cmd-table .c3 { font-family: var(--mono); font-size: 11px; color: var(--green); opacity: .85; }
+
+/* ── FLAG LIST (nmap/scanline style) ── */
+.flag-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.flag-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.flag-table thead th { background: var(--bg4); padding: 6px 12px; text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--border2); }
+.flag-table tbody td { padding: 6px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.flag-table tbody tr:last-child td { border-bottom: none; }
+.flag-table tbody tr:hover { background: rgba(127,127,127,0.05); }
+.flg { font-family: var(--mono); font-size: 11.5px; color: var(--orange); white-space: nowrap; font-weight: 500; }
+
+/* ── TOOL / REF TABLE ── */
+.ref-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.ref-wrap-title { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 7px 14px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .04em; }
+.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ref-table thead th { background: var(--bg4); padding: 6px 12px; text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--border2); letter-spacing: .03em; }
+.ref-table tbody td { padding: 6px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:hover { background: rgba(127,127,127,0.05); }
+.fp { font-family: var(--mono); font-size: 11px; color: var(--blue); white-space: nowrap; }
+.fd { font-size: 11.5px; color: var(--muted); }
+.port-badge { font-family: var(--mono); font-size: 10.5px; padding: 1px 7px; border-radius: 10px; }
+.badge-tcp { background: var(--blue-dim); color: var(--blue); }
+.badge-udp { background: var(--purple-dim); color: var(--purple); }
+.badge-both { background: var(--green-dim); color: var(--green); }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; border-left: 3px solid; font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.callout-tip  { background: var(--green-dim);  border-color: var(--green);  }
+.callout-warn { background: var(--orange-dim); border-color: var(--orange); }
+.callout-info { background: var(--blue-dim);   border-color: var(--blue);   }
+.callout-todo { background: var(--red-dim);    border-color: var(--red);    }
+
+.needs-detail { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-left: 8px; background: var(--red-dim); color: var(--red); letter-spacing: .03em; vertical-align: middle; }
+
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; color: var(--blue); }
+
+/* ── SETUP STEP LIST ── */
+.setup-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.setup-title { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 7px 14px; font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: .04em; display: flex; align-items: center; gap: 6px; }
+.setup-body { padding: 10px 14px; }
+.setup-step { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.setup-step:last-child { border-bottom: none; }
+.step-num { min-width: 20px; height: 20px; border-radius: 50%; background: var(--orange-dim); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+.step-body { flex: 1; }
+.step-text { font-size: 12.5px; color: var(--text); }
+.step-cmd { font-family: var(--mono); font-size: 11px; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 6px 10px; margin-top: 5px; color: var(--green); overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+
+/* ── TOC SIDEBAR ── */
+.toc-sidebar { width: 165px; flex-shrink: 0; position: sticky; top: 1.25rem; max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.5rem 0 1rem; scrollbar-width: none; }
+.toc-sidebar::-webkit-scrollbar { display: none; }
+.toc-title { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: .6rem; padding-bottom: .5rem; border-bottom: 1px solid var(--border2); }
+#toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+#toc-list a { display: block; font-size: 11px; line-height: 1.4; text-decoration: none; border-radius: 4px; color: var(--muted); padding: 4px 6px; transition: all .15s; }
+#toc-list a:hover { color: var(--text); background: var(--bg2); }
+#toc-list a.toc-active { color: var(--green); background: var(--green-dim); font-weight: 500; }
+
+/* ── BACK TO TOP (mobile only) ── */
+#back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0 14px; height: 38px; border-radius: 20px; background: var(--green); color: #0e1117; font-size: 13px; font-family: var(--mono); font-weight: 600; text-decoration: none; display: none; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 999; }
+#back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 900px) { .toc-sidebar { display: none; } #back-to-top { display: flex; } }
+
+/* ── NOTES TAB ── */
+.notes-layout { display: flex; gap: 1rem; align-items: flex-start; }
+.box-list-wrap { width: 210px; flex-shrink: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.box-list-title { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 8px 12px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--yellow); letter-spacing: .04em; display:flex; align-items:center; justify-content:space-between; }
+#add-box-btn { font-family: var(--mono); font-size: 14px; line-height:1; background: none; border: 1px solid var(--border2); color: var(--muted); border-radius: 4px; width: 20px; height: 20px; cursor: pointer; }
+#add-box-btn:hover { color: var(--yellow); border-color: var(--yellow); }
+#box-list { list-style: none; max-height: 420px; overflow-y: auto; }
+#box-list li { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 12px; color: var(--muted); }
+#box-list li:last-child { border-bottom: none; }
+#box-list li:hover { background: var(--bg3); color: var(--text); }
+#box-list li.active { background: var(--yellow-dim); color: var(--yellow); font-weight: 500; }
+#box-list li .del-box { font-size: 11px; opacity: .5; padding: 2px 5px; }
+#box-list li .del-box:hover { opacity: 1; color: var(--red); }
+.notes-editor { flex: 1; min-width: 0; }
+.notes-editor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+#box-name-input { font-family: var(--mono); font-size: 13px; font-weight: 600; background: none; border: none; border-bottom: 1px solid transparent; color: var(--text); padding: 2px 4px; flex: 1; min-width: 0; }
+#box-name-input:focus { outline: none; border-bottom: 1px solid var(--yellow); }
+#save-indicator { font-family: var(--mono); font-size: 10px; color: var(--muted); white-space: nowrap; }
+#notes-textarea { width: 100%; min-height: 480px; resize: vertical; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; color: var(--text); font-family: var(--mono); font-size: 12.5px; line-height: 1.6; }
+#notes-textarea:focus { outline: none; border-color: var(--yellow); }
+@media (max-width: 700px) { .notes-layout { flex-direction: column; } .box-list-wrap { width: 100%; } #box-list { max-height: 160px; } }
+</style>
+</head>
+<body>
+<div class="page-layout">
+<div class="shell">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">offensive<span>/</span>cutsheet</div>
+      <div class="header-sub">// master reference — methodology · ports &amp; protocols · Windows/Linux commands · private notes</div>
+    </div>
+    <div class="header-right">
+      <div class="header-meta">
+        <span class="tag tag-draft">🚧 gaps still being filled</span>
+        <span class="tag">UCWT · OCO</span>
+      </div>
+      <button id="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+  </div>
+
+  <!-- ── TOP-LEVEL TABS ── -->
+  <div class="tab-nav">
+    <button class="tab-btn active off" onclick="showTab('offcyber', this)">🎯 Offensive Cyber</button>
+    <button class="tab-btn ports" onclick="showTab('ports', this)">🔌 Ports &amp; Protocols</button>
+    <button class="tab-btn win" onclick="showTab('windows', this)">🪟 Windows Quick Ref</button>
+    <button class="tab-btn nix" onclick="showTab('linux', this)">🐧 Linux Quick Ref</button>
+    <button class="tab-btn notes" onclick="showTab('notes', this)">📝 My Notes</button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 1 — OFFENSIVE CYBER (SETUP + METHODOLOGY)
+  ══════════════════════════════════════════════════ -->
+  <div class="tab-pane active" id="offcyber">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#setup">Initial Setup</a>
+      <a class="nav-pill" href="#p1-recon">1 · Recon</a>
+      <a class="nav-pill" href="#p2-enum">2 · Enumeration</a>
+      <a class="nav-pill" href="#p3-access">3 · Gaining Access</a>
+      <a class="nav-pill" href="#p4-privesc">4 · Privilege Escalation</a>
+      <a class="nav-pill" href="#p5-tracks">5 · Covering Tracks</a>
+      <a class="nav-pill" href="#p6-report">6 · Reporting</a>
+      <a class="nav-pill" href="#troubleshoot">Troubleshooting</a>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">🧭</span>
+      <div><strong>Hacker Methodology — 6 phases:</strong> Reconnaissance → Enumeration/Scanning → Gaining Access (Exploitation) → Privilege Escalation (Exploitation) → Covering Tracks → Reporting. Everything below is organized against these phases.</div>
+    </div>
+
+    <!-- INITIAL SETUP -->
+    <div class="section" id="setup">
+      <div class="section-label"><span class="dot dot-orange"></span>Initial Setup — Before You Start</div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">📋</span>
+        <div><strong>Initial info you'll be given:</strong> Attack Platform IP, Redirector IP, Initial Target IP. Configure everything below before beginning the engagement.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="setup-block">
+          <div class="setup-title">🐉 Kali</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Open Kali and create tabs for each role (rename + color-code for readability): Kali, MSF (msfconsole), RDR (redirector), etc.</div>
+              </div>
+            </div>
+            <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-text">Configure the Kali proxy to use socks5 — edit <code>/etc/proxychains4.conf</code>. In vim: <code>Shift+G</code> to jump to bottom, insert mode, change <code>socks4</code> → <code>socks5</code>.</div>
+                <div class="step-cmd">vim /etc/proxychains4.conf</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-block">
+          <div class="setup-title">🔀 Redirector</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Establish a combined SSH tunnel (dynamic + remote port forwarding simultaneously) from the RDR tab:</div>
+                <div class="step-cmd">ssh -i &lt;identity_key&gt; -D &lt;attack_platform_proxy_port&gt; -R &lt;ssh_server_IP&gt;:&lt;ssh_server_bind_port&gt;:&lt;attack_platform_IP&gt;:&lt;listening_port&gt; &lt;redirector_username&gt;@&lt;redirector_server_IP&gt;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-block">
+          <div class="setup-title">💣 Metasploit (msfconsole globals)</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Set global variables so every module inherits them without re-typing:</div>
+                <div class="step-cmd">setg lhost &lt;redirector_ip&gt;
+setg lport &lt;redirector_port&gt;
+setg ReverseListenerBindAddress &lt;attack_platform_ip&gt;
+setg ReverseListenerBindPort &lt;attack_platform_port&gt;
+setg ReverseAllowProxy true
+setg Proxies socks5:127.0.0.1:9050</div>
+              </div>
+            </div>
+            <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-text">View all currently-set global variables:</div>
+                <div class="step-cmd">setg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-block">
+          <div class="setup-title">🦊 Firefox Browser Proxy</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body"><div class="step-text">Settings → search "proxy" → Manual Proxy Configuration.</div></div>
+            </div>
+            <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body"><div class="step-text">SOCKS Host = <code>127.0.0.1</code>, Port = <code>9050</code>. No Proxy for <code>1.1.1.1</code>.</div></div>
+            </div>
+            <div class="setup-step">
+              <div class="step-num">3</div>
+              <div class="step-body"><div class="step-text">Check "Proxy DNS when using SOCKS v5", then OK.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="setup-block">
+          <div class="setup-title">⛓️ Proxychains</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Prefix any command run from your attack platform to mask your true IP and potentially bypass restrictive firewalls:</div>
+                <div class="step-cmd">proxychains nmap -sT -Pn &lt;target&gt;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-block">
+          <div class="setup-title">🔓 John the Ripper</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Crack hashed credentials:</div>
+                <div class="step-cmd">john &lt;hash_file&gt;</div>
+              </div>
+            </div>
+            <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-text">Delete state files before cracking a new hash file, or John will resume the old session instead of starting fresh:</div>
+                <div class="step-cmd">rm ~/.john/john.pot ~/.john/john.rec</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PHASE 1 — RECON -->
+    <div class="section" id="p1-recon">
+      <div class="section-label"><span class="phase-num">1</span>Reconnaissance</div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>Passive/active info-gathering before you touch the target directly — footprinting the org, IP ranges, and public-facing footprint.</div>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🔎</span>Common recon actions</div>
+        <table class="cmd-table">
+          <tr><td class="c1">whois</td><td class="c2">Domain/IP registration info</td><td class="c3">whois example.com</td></tr>
+          <tr><td class="c1">dig / nslookup</td><td class="c2">DNS records, subdomains</td><td class="c3">dig ANY example.com</td></tr>
+          <tr><td class="c1">theHarvester</td><td class="c2">Emails, subdomains from public sources</td><td class="c3">theHarvester -d example.com -b all</td></tr>
+          <tr><td class="c1">ping</td><td class="c2">Basic host liveness (may be blocked)</td><td class="c3">ping -c 4 &lt;target&gt;</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHASE 2 — ENUMERATION / SCANNING -->
+    <div class="section" id="p2-enum">
+      <div class="section-label"><span class="phase-num">2</span>Enumeration / Scanning</div>
+
+      <div class="flag-block">
+        <div class="ref-wrap-title">nmap — key flags</div>
+        <table class="flag-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="flg">-sS</td><td class="fd">SYN ("half-open") scan — fast, stealthier, needs root</td></tr>
+            <tr><td class="flg">-sT</td><td class="fd">Full TCP connect scan — no root required, noisier</td></tr>
+            <tr><td class="flg">-sU</td><td class="fd">UDP scan</td></tr>
+            <tr><td class="flg">-sV</td><td class="fd">Service/version detection</td></tr>
+            <tr><td class="flg">-sC</td><td class="fd">Run default NSE scripts</td></tr>
+            <tr><td class="flg">-A</td><td class="fd">Aggressive: OS detect + version + scripts + traceroute</td></tr>
+            <tr><td class="flg">-O</td><td class="fd">OS detection</td></tr>
+            <tr><td class="flg">-p-</td><td class="fd">Scan all 65535 ports (or <code>-p 1-1000</code> for a range)</td></tr>
+            <tr><td class="flg">-Pn</td><td class="fd">Skip host discovery — treat host as up (needed if ICMP is blocked)</td></tr>
+            <tr><td class="flg">-T0 – T5</td><td class="fd">Timing template, 0=paranoid/slow, 5=insane/fast</td></tr>
+            <tr><td class="flg">-oA &lt;name&gt;</td><td class="fd">Save output in all formats (.nmap/.xml/.gnmap)</td></tr>
+            <tr><td class="flg">--script=vuln</td><td class="fd">Run NSE vulnerability-detection scripts</td></tr>
+            <tr><td class="flg">-v / -vv</td><td class="fd">Increase verbosity</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flag-block">
+        <div class="ref-wrap-title">Scanline — key flags <span class="needs-detail">verify against your lab build</span></div>
+        <table class="flag-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="flg">-t &lt;ports&gt;</td><td class="fd">TCP port(s) to scan, comma/range list</td></tr>
+            <tr><td class="flg">-u &lt;ports&gt;</td><td class="fd">UDP port(s) to scan</td></tr>
+            <tr><td class="flg">-p</td><td class="fd">Do not ping hosts before scanning (scan even if ping fails)</td></tr>
+            <tr><td class="flg">-b</td><td class="fd">Grab service banners on open ports</td></tr>
+            <tr><td class="flg">-h</td><td class="fd">Hide results for hosts with no open ports</td></tr>
+            <tr><td class="flg">-c &lt;n&gt;</td><td class="fd">Number of scanning threads</td></tr>
+            <tr><td class="flg">-o &lt;file&gt;</td><td class="fd">Write output to a file</td></tr>
+            <tr><td class="flg">-v</td><td class="fd">Verbose output</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 12px;">
+          <div class="callout callout-warn" style="margin-bottom:0;">
+            <span class="callout-icon">⚠</span>
+            <div>Scanline flag sets vary slightly by build/version — run <code>sl -?</code> (or your binary's help flag) once at lab start to confirm against what's installed on your attack platform.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕳️</span>Finding hidden files</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ls -la</td><td class="c2">Linux: show dotfiles (hidden by convention)</td><td class="c3">ls -la /var/www/</td></tr>
+          <tr><td class="c1">find / -name ".*"</td><td class="c2">Linux: search filesystem for dotfiles</td><td class="c3">find / -name ".*" -type f 2&gt;/dev/null</td></tr>
+          <tr><td class="c1">dir /a:h</td><td class="c2">Windows: list files with hidden attribute</td><td class="c3">dir /a:h</td></tr>
+          <tr><td class="c1">Get-ChildItem -Force</td><td class="c2">Windows PS: include hidden items</td><td class="c3">gci -Force</td></tr>
+          <tr><td class="c1">dir /r</td><td class="c2">Windows: reveal Alternate Data Streams (ADS)</td><td class="c3">dir /r C:\suspect_file</td></tr>
+          <tr><td class="c1">gobuster / dirb</td><td class="c2">Web: brute-force hidden directories/files</td><td class="c3">gobuster dir -u http://target -w wordlist.txt</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHASE 3 — GAINING ACCESS -->
+    <div class="section" id="p3-access">
+      <div class="section-label"><span class="phase-num">3</span>Gaining Access (Exploitation)</div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📟</span>msfconsole — core management</div>
+        <table class="cmd-table">
+          <tr><td class="c1">msfconsole</td><td class="c2">Launch the Metasploit console</td><td class="c3">msfconsole</td></tr>
+          <tr><td class="c1">help</td><td class="c2">Global or module-specific commands</td><td class="c3">help</td></tr>
+          <tr><td class="c1">back</td><td class="c2">Exit current module, return to base prompt</td><td class="c3">back</td></tr>
+          <tr><td class="c1">exit</td><td class="c2">Close the console</td><td class="c3">exit</td></tr>
+        </table>
+      </div>
+
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header hdr-red"><span class="icon">🔍</span>Searching &amp; selecting modules</div>
+          <table class="cmd-table">
+            <tr><td class="c1">search &lt;kw&gt;</td><td class="c2">Search modules</td><td class="c3">search type:exploit platform:windows</td></tr>
+            <tr><td class="c1">use &lt;path&gt;</td><td class="c2">Enter a module's context</td><td class="c3">use exploit/windows/smb/ms17_010_eternalblue</td></tr>
+            <tr><td class="c1">info</td><td class="c2">Details/requirements for active module</td><td class="c3">info</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header hdr-red"><span class="icon">⚙️</span>Module configuration</div>
+          <table class="cmd-table">
+            <tr><td class="c1">show options</td><td class="c2">Required/optional parameters</td><td class="c3">show options</td></tr>
+            <tr><td class="c1">show targets</td><td class="c2">Compatible OS/app versions</td><td class="c3">show targets</td></tr>
+            <tr><td class="c1">show payloads</td><td class="c2">Compatible payloads</td><td class="c3">show payloads</td></tr>
+            <tr><td class="c1">set &lt;PARAM&gt; &lt;val&gt;</td><td class="c2">Configure a setting</td><td class="c3">set RHOSTS 192.168.1.50</td></tr>
+            <tr><td class="c1">setg &lt;PARAM&gt; &lt;val&gt;</td><td class="c2">Global setting for all modules</td><td class="c3">setg LHOST 192.168.1.100</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">▶️</span>Execution &amp; session management</div>
+        <table class="cmd-table">
+          <tr><td class="c1">exploit / run</td><td class="c2">Launch the module</td><td class="c3">exploit</td></tr>
+          <tr><td class="c1">sessions</td><td class="c2">List active sessions</td><td class="c3">sessions</td></tr>
+          <tr><td class="c1">sessions -i &lt;ID&gt;</td><td class="c2">Interact with a session</td><td class="c3">sessions -i 1</td></tr>
+          <tr><td class="c1">background</td><td class="c2">Push session to background</td><td class="c3">background</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🧰</span>Useful auxiliary/scanner modules</div>
+        <table class="cmd-table">
+          <tr><td class="c1">shell_to_meterpreter</td><td class="c2">Upgrade a plain shell session to Meterpreter</td><td class="c3">sessions -u &lt;ID&gt;</td></tr>
+          <tr><td class="c1">smb_version</td><td class="c2">Identify OS build + SMB protocol version</td><td class="c3">auxiliary/scanner/smb/smb_version</td></tr>
+          <tr><td class="c1">smb_enumshares</td><td class="c2">List accessible SMB shares</td><td class="c3">auxiliary/scanner/smb/smb_enumshares</td></tr>
+          <tr><td class="c1">smb_enumusers</td><td class="c2">Enumerate local users via SID lookups</td><td class="c3">auxiliary/scanner/smb/smb_enumusers</td></tr>
+          <tr><td class="c1">smb_login</td><td class="c2">Test credential pairs across IP ranges</td><td class="c3">auxiliary/scanner/smb/smb_login</td></tr>
+          <tr><td class="c1">smb_ms17_010</td><td class="c2">Check for EternalBlue-class vulns</td><td class="c3">auxiliary/scanner/smb/smb_ms17_010</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">👾</span>Meterpreter commands</div>
+        <table class="cmd-table">
+          <tr><td class="c1">sysinfo</td><td class="c2">Target system name + OS architecture</td><td class="c3">sysinfo</td></tr>
+          <tr><td class="c1">getuid</td><td class="c2">Current session's user ID</td><td class="c3">getuid</td></tr>
+          <tr><td class="c1">hashdump</td><td class="c2">Dump password hashes</td><td class="c3">hashdump</td></tr>
+          <tr><td class="c1">execute -f &lt;cmd&gt;</td><td class="c2">Run a command/executable on target</td><td class="c3">execute -f calc.exe</td></tr>
+          <tr><td class="c1">download</td><td class="c2">Pull a file from target</td><td class="c3">download C:\loot.txt ./loot.txt</td></tr>
+          <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3">upload sl.exe C:\Windows\Temp\</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PHASE 4 — PRIVESC -->
+    <div class="section" id="p4-privesc">
+      <div class="section-label"><span class="phase-num">4</span>Privilege Escalation (Exploitation) <span class="needs-detail">needs detail</span></div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header hdr-blue"><span class="icon">🪟</span>Windows PrivEsc</div>
+          <table class="cmd-table">
+            <tr><td class="c1">whoami /priv</td><td class="c2">List current privileges</td><td class="c3">whoami /priv</td></tr>
+            <tr><td class="c1">systeminfo</td><td class="c2">Patch level (find missing patches)</td><td class="c3">systeminfo</td></tr>
+            <tr><td class="c1">TBD</td><td class="c2">Service misconfig / unquoted service paths</td><td class="c3">TBD</td></tr>
+            <tr><td class="c1">TBD</td><td class="c2">Token impersonation (JuicyPotato-class)</td><td class="c3">TBD</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🐧</span>Linux PrivEsc</div>
+          <table class="cmd-table">
+            <tr><td class="c1">find / -perm -4000</td><td class="c2">Hunt SUID binaries</td><td class="c3">find / -perm -4000 2&gt;/dev/null</td></tr>
+            <tr><td class="c1">sudo -l</td><td class="c2">List allowed sudo commands</td><td class="c3">sudo -l</td></tr>
+            <tr><td class="c1">uname -a</td><td class="c2">Kernel version, for exploit lookup</td><td class="c3">uname -a</td></tr>
+            <tr><td class="c1">TBD</td><td class="c2">Cron job / writable-path abuse</td><td class="c3">TBD</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>Bring your specific lab targets into the offensive chat and I'll fill in verified syntax/examples for whichever privesc paths you actually encounter.</div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 — COVERING TRACKS -->
+    <div class="section" id="p5-tracks">
+      <div class="section-label"><span class="phase-num">5</span>Covering Tracks <span class="needs-detail">needs detail</span></div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🧹</span>Log &amp; artifact cleanup — reference only</div>
+        <table class="cmd-table">
+          <tr><td class="c1">wevtutil cl</td><td class="c2">Windows: clear a specific event log</td><td class="c3">wevtutil cl Security</td></tr>
+          <tr><td class="c1">history -c</td><td class="c2">Linux: clear current shell history</td><td class="c3">history -c</td></tr>
+          <tr><td class="c1">TBD</td><td class="c2">Timestomp / file metadata restoration</td><td class="c3">TBD</td></tr>
+        </table>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div>Only perform track-covering actions inside your authorized lab scope, and follow your course's rules of engagement — this is training reference, not guidance for live/unauthorized systems.</div>
+      </div>
+    </div>
+
+    <!-- PHASE 6 — REPORTING -->
+    <div class="section" id="p6-report">
+      <div class="section-label"><span class="phase-num">6</span>Reporting <span class="needs-detail">needs detail</span></div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📄</span>What to capture along the way</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Screenshots</td><td class="c2">Proof of access at each phase</td><td class="c3">TBD tooling</td></tr>
+          <tr><td class="c1">Command log</td><td class="c2">Every command run + timestamp</td><td class="c3">script -a lab_session.log</td></tr>
+          <tr><td class="c1">Findings table</td><td class="c2">Vuln → impact → remediation</td><td class="c3">TBD template</td></tr>
+        </table>
+      </div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>If your course has a standard report template, share it and I can build a matching findings-log structure here.</div>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="section" id="troubleshoot">
+      <div class="section-label"><span class="dot dot-yellow"></span>Troubleshooting &amp; General Tips</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🩹</span>First things to check</div>
+          <table class="cmd-table">
+            <tr><td class="c1">--help / -h</td><td class="c2">Check exact syntax/flags for the installed tool version</td><td class="c3">nmap -h &nbsp;|&nbsp; sl -?</td></tr>
+            <tr><td class="c1">man &lt;cmd&gt;</td><td class="c2">Full manual page (Linux)</td><td class="c3">man proxychains4</td></tr>
+            <tr><td class="c1">which / type</td><td class="c2">Confirm tool is installed &amp; on PATH</td><td class="c3">which nmap</td></tr>
+            <tr><td class="c1">Case sensitivity</td><td class="c2">Linux paths/commands are case-sensitive; Windows generally isn't</td><td class="c3">/Etc ≠ /etc</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🌐</span>Connectivity &amp; pivoting</div>
+          <table class="cmd-table">
+            <tr><td class="c1">ping / Test-NetConnection</td><td class="c2">Confirm basic reachability first</td><td class="c3">tnc &lt;host&gt; -Port 445</td></tr>
+            <tr><td class="c1">Verify tunnel is up</td><td class="c2">Check the RDR tab's SSH session hasn't dropped</td><td class="c3">re-run the ssh -D -R command</td></tr>
+            <tr><td class="c1">proxychains config</td><td class="c2">Confirm socks5 + correct port match msf Proxies setting</td><td class="c3">cat /etc/proxychains4.conf</td></tr>
+            <tr><td class="c1">LHOST/LPORT mismatch</td><td class="c2">Most common reason a reverse shell never calls back</td><td class="c3">re-check setg values</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div><strong>General rule:</strong> when a command "does nothing," it's almost always syntax, PATH, a missing listener, or a proxy/tunnel that silently dropped — check those four before assuming the exploit itself is broken.</div>
+      </div>
+    </div>
+
+  </div><!-- /offcyber -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 2 — PORTS & PROTOCOLS
+  ══════════════════════════════════════════════════ -->
+  <div class="tab-pane" id="ports">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#win-ports">Windows — Common Exploit Ports</a>
+      <a class="nav-pill" href="#nix-ports">Linux — Common Exploit Ports</a>
+      <a class="nav-pill" href="#ext-ports">Extended Reference</a>
+    </div>
+
+    <div class="section" id="win-ports">
+      <div class="section-label"><span class="dot dot-blue"></span>Common Ports to Exploit — Windows</div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Port</th><th>Proto</th><th>Service</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">21</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">FTP</td></tr>
+            <tr><td class="fp">22</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">SSH</td></tr>
+            <tr><td class="fp">23</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">Telnet</td></tr>
+            <tr><td class="fp">53</td><td><span class="port-badge badge-both">TCP/UDP</span></td><td class="fd">DNS</td></tr>
+            <tr><td class="fp">80 / 443</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">HTTP / HTTPS</td></tr>
+            <tr><td class="fp">445</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">SMB</td></tr>
+            <tr><td class="fp">3389</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">RDP</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-ports">
+      <div class="section-label"><span class="dot dot-green"></span>Common Ports to Exploit — Linux</div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Port</th><th>Proto</th><th>Service</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">21</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">FTP</td></tr>
+            <tr><td class="fp">22</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">SSH</td></tr>
+            <tr><td class="fp">23</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">Telnet</td></tr>
+            <tr><td class="fp">111</td><td><span class="port-badge badge-both">TCP/UDP</span></td><td class="fd">RPCbind / NFS</td></tr>
+            <tr><td class="fp">139 / 445</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">SMB / Samba</td></tr>
+            <tr><td class="fp">5900</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">VNC Viewer</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="ext-ports">
+      <div class="section-label"><span class="dot dot-teal"></span>Extended Reference — Frequently Seen in Labs <span class="needs-detail">needs detail</span></div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Port</th><th>Proto</th><th>Service</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">25</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">SMTP</td><td class="fd">Mail relay — user enum via VRFY sometimes possible</td></tr>
+            <tr><td class="fp">88</td><td><span class="port-badge badge-both">TCP/UDP</span></td><td class="fd">Kerberos</td><td class="fd">AD auth — target for Kerberoasting/AS-REP roasting</td></tr>
+            <tr><td class="fp">135</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">MSRPC</td><td class="fd">Windows RPC endpoint mapper</td></tr>
+            <tr><td class="fp">139</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">NetBIOS-SSN</td><td class="fd">Legacy SMB over NetBIOS</td></tr>
+            <tr><td class="fp">143 / 993</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">IMAP / IMAPS</td><td class="fd">Mail retrieval</td></tr>
+            <tr><td class="fp">389 / 636</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">LDAP / LDAPS</td><td class="fd">AD directory queries</td></tr>
+            <tr><td class="fp">1433</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">MSSQL</td><td class="fd">xp_cmdshell abuse path if enabled</td></tr>
+            <tr><td class="fp">3306</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">MySQL</td><td class="fd">Default creds worth checking</td></tr>
+            <tr><td class="fp">5985 / 5986</td><td><span class="port-badge badge-tcp">TCP</span></td><td class="fd">WinRM</td><td class="fd">Remote PS — lateral movement target</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>This extended table is a starting reference — expand it with whatever services actually show up in your target boxes as you go.</div>
+      </div>
+    </div>
+
+  </div><!-- /ports -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 3 — WINDOWS QUICK REFERENCE
+  ══════════════════════════════════════════════════ -->
+  <div class="tab-pane" id="windows">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#win-files">Files</a>
+      <a class="nav-pill" href="#win-hidden">Hidden Files</a>
+      <a class="nav-pill" href="#win-perms">Permissions/ACL</a>
+      <a class="nav-pill" href="#win-registry">Registry</a>
+      <a class="nav-pill" href="#win-processes">Processes</a>
+      <a class="nav-pill" href="#win-services">Services</a>
+      <a class="nav-pill" href="#win-net">Networking</a>
+      <a class="nav-pill" href="#win-users">Users/AD</a>
+      <a class="nav-pill" href="#win-logging">Logging</a>
+      <a class="nav-pill" href="#win-recon">Offensive Recon Cmds</a>
+    </div>
+
+    <div class="section" id="win-files">
+      <div class="section-label"><span class="dot dot-blue"></span>File Management</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header hdr-blue"><span class="icon">📁</span>Navigation &amp; Listing</div>
+          <table class="cmd-table">
+            <tr><td class="c1">dir</td><td class="c2">List directory contents</td><td class="c3">dir /a</td></tr>
+            <tr><td class="c1">cd</td><td class="c2">Change directory</td><td class="c3">cd C:\Users\</td></tr>
+            <tr><td class="c1">tree</td><td class="c2">Show directory tree</td><td class="c3">tree /f</td></tr>
+            <tr><td class="c1">Get-ChildItem</td><td class="c2">PS: list items (alias: gci, ls)</td><td class="c3">gci -Recurse</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header hdr-blue"><span class="icon">📄</span>Create, Copy, Move, Delete</div>
+          <table class="cmd-table">
+            <tr><td class="c1">copy / xcopy</td><td class="c2">Copy file(s)</td><td class="c3">xcopy src dst /E</td></tr>
+            <tr><td class="c1">move</td><td class="c2">Move or rename</td><td class="c3">move a.txt b.txt</td></tr>
+            <tr><td class="c1">del</td><td class="c2">Delete file</td><td class="c3">del file.txt</td></tr>
+            <tr><td class="c1">Remove-Item</td><td class="c2">PS: delete file/folder</td><td class="c3">rm -Recurse .\temp</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="win-hidden">
+      <div class="section-label"><span class="dot dot-red"></span>Hidden Files &amp; Alternate Data Streams</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕳️</span>Finding what's not shown by default</div>
+        <table class="cmd-table">
+          <tr><td class="c1">dir /a:h</td><td class="c2">List files with the hidden attribute</td><td class="c3">dir /a:h</td></tr>
+          <tr><td class="c1">attrib</td><td class="c2">View/set file attributes (H=hidden, S=system)</td><td class="c3">attrib -h -s file.txt</td></tr>
+          <tr><td class="c1">Get-ChildItem -Force</td><td class="c2">PS: include hidden items</td><td class="c3">gci -Force -Recurse</td></tr>
+          <tr><td class="c1">dir /r</td><td class="c2">Reveal Alternate Data Streams (ADS) on a file</td><td class="c3">dir /r suspect.exe</td></tr>
+          <tr><td class="c1">Get-Item -Stream *</td><td class="c2">PS: list ADS on a specific file</td><td class="c3">gi file.txt -Stream *</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-perms">
+      <div class="section-label"><span class="dot dot-orange"></span>Permissions &amp; ACL (NTFS)</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🔒</span>icacls</div>
+          <table class="cmd-table">
+            <tr><td class="c1">icacls file</td><td class="c2">View ACL of file/folder</td><td class="c3">icacls C:\secret.txt</td></tr>
+            <tr><td class="c1">icacls /grant</td><td class="c2">Grant permission to user</td><td class="c3">icacls f /grant bob:F</td></tr>
+            <tr><td class="c1">icacls /remove</td><td class="c2">Remove user's ACE</td><td class="c3">icacls f /remove bob</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">👤</span>Ownership</div>
+          <table class="cmd-table">
+            <tr><td class="c1">takeown</td><td class="c2">Take ownership of file/folder</td><td class="c3">takeown /f C:\file</td></tr>
+            <tr><td class="c1">Get-Acl</td><td class="c2">PS: view ACL object</td><td class="c3">Get-Acl file.txt</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="win-registry">
+      <div class="section-label"><span class="dot dot-orange"></span>Registry</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🗝️</span>Registry Commands &amp; Hives</div>
+        <table class="cmd-table">
+          <tr><td class="c1">reg query</td><td class="c2">Query a registry key</td><td class="c3">reg query HKLM\Software</td></tr>
+          <tr><td class="c1">reg add</td><td class="c2">Add/modify a value</td><td class="c3">reg add HKCU\...\Run</td></tr>
+          <tr><td class="c1">HKLM</td><td class="c2">Local machine settings (needs admin)</td><td class="c3">system-wide config</td></tr>
+          <tr><td class="c1">HKCU</td><td class="c2">Current user settings</td><td class="c3">per-user config</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-processes">
+      <div class="section-label"><span class="dot dot-cyan"></span>Process Management</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">⚙️</span>View &amp; Control</div>
+        <table class="cmd-table">
+          <tr><td class="c1">tasklist</td><td class="c2">List running processes</td><td class="c3">tasklist /v</td></tr>
+          <tr><td class="c1">taskkill</td><td class="c2">Kill a process</td><td class="c3">taskkill /PID 1234 /F</td></tr>
+          <tr><td class="c1">Get-Process</td><td class="c2">PS: list processes</td><td class="c3">gps | sort CPU</td></tr>
+          <tr><td class="c1">Stop-Process</td><td class="c2">PS: kill a process</td><td class="c3">spps -Id 1234 -Force</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-services">
+      <div class="section-label"><span class="dot dot-purple"></span>Service Management</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔧</span>sc / Get-Service</div>
+        <table class="cmd-table">
+          <tr><td class="c1">sc query</td><td class="c2">Query service status</td><td class="c3">sc query wuauserv</td></tr>
+          <tr><td class="c1">sc start / stop</td><td class="c2">Start or stop a service</td><td class="c3">sc stop spooler</td></tr>
+          <tr><td class="c1">Get-Service</td><td class="c2">PS: list services</td><td class="c3">gsv | ? Status -eq Running</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-net">
+      <div class="section-label"><span class="dot dot-blue"></span>Networking</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span class="icon">🌐</span>Core Commands</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ipconfig /all</td><td class="c2">Show adapter config</td><td class="c3">ipconfig /all</td></tr>
+          <tr><td class="c1">netstat -ano</td><td class="c2">Active connections + PID</td><td class="c3">netstat -ano</td></tr>
+          <tr><td class="c1">nslookup</td><td class="c2">DNS lookup</td><td class="c3">nslookup example.com</td></tr>
+          <tr><td class="c1">Test-NetConnection</td><td class="c2">PS: port/connectivity test</td><td class="c3">tnc host -Port 445</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-users">
+      <div class="section-label"><span class="dot dot-green"></span>Users, Groups &amp; AD</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👥</span>Local &amp; Domain</div>
+        <table class="cmd-table">
+          <tr><td class="c1">net user</td><td class="c2">List/manage local users</td><td class="c3">net user alice /add</td></tr>
+          <tr><td class="c1">net localgroup</td><td class="c2">Manage local groups</td><td class="c3">net localgroup admins</td></tr>
+          <tr><td class="c1">whoami /groups</td><td class="c2">Show current user's groups</td><td class="c3">whoami /groups</td></tr>
+          <tr><td class="c1">net group /domain</td><td class="c2">Query domain group</td><td class="c3">net group "Domain Admins" /domain</td></tr>
+          <tr><td class="c1">Get-ADUser</td><td class="c2">PS/AD module: query user</td><td class="c3">Get-ADUser -Filter *</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-logging">
+      <div class="section-label"><span class="dot dot-red"></span>Logging &amp; Event Viewer</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📜</span>Event Logs</div>
+        <table class="cmd-table">
+          <tr><td class="c1">wevtutil</td><td class="c2">Query/clear event logs</td><td class="c3">wevtutil qe Security /c:5</td></tr>
+          <tr><td class="c1">Get-EventLog</td><td class="c2">PS: read classic logs</td><td class="c3">gel Security -Newest 20</td></tr>
+          <tr><td class="c1">Event ID 4624</td><td class="c2">Successful logon</td><td class="c3">Security log</td></tr>
+          <tr><td class="c1">Event ID 4625</td><td class="c2">Failed logon</td><td class="c3">Security log</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-recon">
+      <div class="section-label"><span class="dot dot-red"></span>Offensive-Angle Recon Commands <span class="needs-detail">needs detail</span></div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>Built-in Windows commands commonly used for enumeration during an engagement — expand with living-off-the-land techniques once tooling is finalized.</div>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕵️</span>Enumeration with native tools</div>
+        <table class="cmd-table">
+          <tr><td class="c1">systeminfo</td><td class="c2">OS, patches, hardware info</td><td class="c3">systeminfo</td></tr>
+          <tr><td class="c1">whoami /priv</td><td class="c2">Current privileges</td><td class="c3">whoami /priv</td></tr>
+          <tr><td class="c1">net view</td><td class="c2">List reachable hosts/shares</td><td class="c3">net view /domain</td></tr>
+          <tr><td class="c1">TBD</td><td class="c2">More LOTL enumeration</td><td class="c3">TBD</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /windows -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 4 — LINUX QUICK REFERENCE
+  ══════════════════════════════════════════════════ -->
+  <div class="tab-pane" id="linux">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#nix-files">Files</a>
+      <a class="nav-pill" href="#nix-hidden">Hidden Files</a>
+      <a class="nav-pill" href="#nix-perms">Permissions</a>
+      <a class="nav-pill" href="#nix-accounts">Accounts</a>
+      <a class="nav-pill" href="#nix-processes">Processes</a>
+      <a class="nav-pill" href="#nix-net">Networking</a>
+      <a class="nav-pill" href="#nix-logs">Logs</a>
+      <a class="nav-pill" href="#nix-recon">Offensive Recon Cmds</a>
+    </div>
+
+    <div class="section" id="nix-files">
+      <div class="section-label"><span class="dot dot-green"></span>File Management</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">📁</span>Navigation &amp; Listing</div>
+          <table class="cmd-table">
+            <tr><td class="c1">ls -la</td><td class="c2">Long list, show hidden</td><td class="c3">ls -la /etc/</td></tr>
+            <tr><td class="c1">pwd</td><td class="c2">Print current directory</td><td class="c3">pwd</td></tr>
+            <tr><td class="c1">find</td><td class="c2">Search files by criteria</td><td class="c3">find / -name "*.conf"</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">📄</span>Create, Copy, Move, Delete</div>
+          <table class="cmd-table">
+            <tr><td class="c1">cp -r</td><td class="c2">Copy recursively</td><td class="c3">cp -r src/ dst/</td></tr>
+            <tr><td class="c1">mv</td><td class="c2">Move or rename</td><td class="c3">mv a.txt b.txt</td></tr>
+            <tr><td class="c1">rm -rf</td><td class="c2">Delete recursively, force</td><td class="c3">rm -rf /tmp/junk/</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="nix-hidden">
+      <div class="section-label"><span class="dot dot-red"></span>Hidden Files</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕳️</span>Finding dotfiles &amp; hidden dirs</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ls -la</td><td class="c2">Show all entries incl. dotfiles</td><td class="c3">ls -la ~</td></tr>
+          <tr><td class="c1">find / -name ".*"</td><td class="c2">Search whole filesystem for dotfiles</td><td class="c3">find / -name ".*" -type f 2&gt;/dev/null</td></tr>
+          <tr><td class="c1">locate</td><td class="c2">Fast search using prebuilt index</td><td class="c3">locate .bash_history</td></tr>
+          <tr><td class="c1">find / -mtime -1</td><td class="c2">Files modified in the last day (recently dropped tools)</td><td class="c3">find / -mtime -1 2&gt;/dev/null</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-perms">
+      <div class="section-label"><span class="dot dot-yellow"></span>Permissions &amp; Ownership</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🔒</span>chmod</div>
+          <table class="cmd-table">
+            <tr><td class="c1">chmod 755</td><td class="c2">rwx r-x r-x</td><td class="c3">chmod 755 script.sh</td></tr>
+            <tr><td class="c1">chmod 4755</td><td class="c2">SUID + rwx r-x r-x</td><td class="c3">chmod 4755 binary</td></tr>
+          </table>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">👤</span>Ownership</div>
+          <table class="cmd-table">
+            <tr><td class="c1">chown user:grp</td><td class="c2">Change owner/group</td><td class="c3">chown alice:dev file</td></tr>
+            <tr><td class="c1">sudo -l</td><td class="c2">List allowed sudo commands</td><td class="c3">sudo -l</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="nix-accounts">
+      <div class="section-label"><span class="dot dot-blue"></span>Accounts</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span class="icon">👤</span>User Management</div>
+        <table class="cmd-table">
+          <tr><td class="c1">whoami / id</td><td class="c2">Current user / UID, GID, groups</td><td class="c3">id alice</td></tr>
+          <tr><td class="c1">last / lastb</td><td class="c2">Login history / failed logins</td><td class="c3">last -n 20</td></tr>
+          <tr><td class="c1">cat /etc/passwd</td><td class="c2">List local accounts</td><td class="c3">cat /etc/passwd</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-processes">
+      <div class="section-label"><span class="dot dot-cyan"></span>Processes</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">⚙️</span>View &amp; Control</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ps aux</td><td class="c2">List all running processes</td><td class="c3">ps aux | grep ssh</td></tr>
+          <tr><td class="c1">kill / kill -9</td><td class="c2">Terminate a process</td><td class="c3">kill -9 1234</td></tr>
+          <tr><td class="c1">top / htop</td><td class="c2">Live process monitor</td><td class="c3">htop</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-net">
+      <div class="section-label"><span class="dot dot-blue"></span>Networking</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-blue"><span class="icon">🌐</span>Core Commands</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ip a</td><td class="c2">Show interfaces &amp; IPs</td><td class="c3">ip a</td></tr>
+          <tr><td class="c1">ss -tulpn</td><td class="c2">Listening ports + process</td><td class="c3">ss -tulpn</td></tr>
+          <tr><td class="c1">ssh</td><td class="c2">Remote shell</td><td class="c3">ssh user@host</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-logs">
+      <div class="section-label"><span class="dot dot-red"></span>Log Locations</div>
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">Key log paths</div>
+        <table class="ref-table">
+          <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">/var/log/auth.log</td><td class="fd">Authentication events (Debian)</td></tr>
+            <tr><td class="fp">/var/log/secure</td><td class="fd">Authentication events (RHEL)</td></tr>
+            <tr><td class="fp">/var/log/syslog</td><td class="fd">General system log (Debian)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-recon">
+      <div class="section-label"><span class="dot dot-red"></span>Offensive-Angle Recon Commands <span class="needs-detail">needs detail</span></div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>Native Linux commands commonly used for local enumeration and privesc hunting — expand once tooling/course focus is set.</div>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕵️</span>Enumeration with native tools</div>
+        <table class="cmd-table">
+          <tr><td class="c1">find / -perm -4000</td><td class="c2">Hunt SUID binaries</td><td class="c3">2&gt;/dev/null</td></tr>
+          <tr><td class="c1">uname -a</td><td class="c2">Kernel version (exploit lookup)</td><td class="c3">uname -a</td></tr>
+          <tr><td class="c1">TBD</td><td class="c2">More enumeration scripts</td><td class="c3">TBD</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /linux -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 5 — MY NOTES (private, per-browser)
+  ══════════════════════════════════════════════════ -->
+  <div class="tab-pane" id="notes">
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">🔒</span>
+      <div><strong>Private to this browser only.</strong> Notes are saved locally on this device (not synced, not visible to anyone else opening this same page) — that's what keeps your box notes from mixing with other students'. Clearing browser data or switching devices/browsers will lose them, so export/copy anything important before you do.</div>
+    </div>
+
+    <div class="notes-layout">
+      <div class="box-list-wrap">
+        <div class="box-list-title">Target Boxes <button id="add-box-btn" onclick="addBox()" title="Add box">+</button></div>
+        <ul id="box-list"></ul>
+      </div>
+
+      <div class="notes-editor">
+        <div class="notes-editor-header">
+          <input id="box-name-input" type="text" placeholder="Box name / IP" oninput="renameActiveBox(this.value)">
+          <span id="save-indicator"></span>
+          <button class="nav-pill" onclick="deleteActiveBox()" style="color:var(--red);border-color:var(--red);">Delete box</button>
+        </div>
+        <textarea id="notes-textarea" placeholder="Notes for this box — recon findings, creds, ports, privesc path, whatever you need..." oninput="saveActiveNotes()"></textarea>
+      </div>
+    </div>
+
+  </div><!-- /notes -->
+
+</div><!-- end .shell -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this tab</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    if (current === 'dark') html.setAttribute('data-theme', 'light');
+    else html.setAttribute('data-theme', 'dark');
+  }
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+    if (id === 'notes') renderBoxList();
+  }
+
+  let observer = null;
+  function buildTOC() {
+    const activePane = document.querySelector('.tab-pane.active');
+    const tocList = document.getElementById('toc-list');
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activePane.querySelectorAll('.section-label');
+    items.forEach((el, i) => {
+      const parentSection = el.closest('.section');
+      if (!parentSection) return;
+      if (!parentSection.id) parentSection.id = 'toc-anchor-' + i;
+      const anchorId = parentSection.id;
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + anchorId;
+      a.textContent = el.textContent.replace('needs detail', '').trim();
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(anchorId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const sections = activePane.querySelectorAll('.section');
+    const links = tocList.querySelectorAll('a');
+    if (sections.length) {
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('toc-active'));
+            const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('toc-active');
+          }
+        });
+      }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+      sections.forEach(s => observer.observe(s));
+    }
+  }
+
+  const backBtn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+  backBtn.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  const NOTES_KEY = 'ucwt_offcyber_notes_v1';
+  let notesState = { boxes: [], activeId: null };
+
+  function loadNotes() {
+    try {
+      const raw = localStorage.getItem(NOTES_KEY);
+      if (raw) notesState = JSON.parse(raw);
+    } catch (e) { console.warn('Could not load notes', e); }
+    if (!notesState.boxes || notesState.boxes.length === 0) {
+      notesState = { boxes: [{ id: 'box1', name: 'Target 1', text: '' }], activeId: 'box1' };
+    }
+    if (!notesState.activeId) notesState.activeId = notesState.boxes[0].id;
+  }
+
+  function persistNotes() {
+    try {
+      localStorage.setItem(NOTES_KEY, JSON.stringify(notesState));
+      const ind = document.getElementById('save-indicator');
+      ind.textContent = 'saved ' + new Date().toLocaleTimeString();
+    } catch (e) {
+      const ind = document.getElementById('save-indicator');
+      ind.textContent = 'save failed — storage unavailable';
+    }
+  }
+
+  function getActiveBox() {
+    return notesState.boxes.find(b => b.id === notesState.activeId);
+  }
+
+  function renderBoxList() {
+    const list = document.getElementById('box-list');
+    list.innerHTML = '';
+    notesState.boxes.forEach(b => {
+      const li = document.createElement('li');
+      li.className = b.id === notesState.activeId ? 'active' : '';
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = b.name || '(unnamed)';
+      nameSpan.style.overflow = 'hidden';
+      nameSpan.style.textOverflow = 'ellipsis';
+      nameSpan.style.whiteSpace = 'nowrap';
+      li.appendChild(nameSpan);
+      const del = document.createElement('span');
+      del.className = 'del-box';
+      del.textContent = '✕';
+      del.title = 'Delete';
+      del.addEventListener('click', ev => { ev.stopPropagation(); deleteBox(b.id); });
+      li.appendChild(del);
+      li.addEventListener('click', () => { notesState.activeId = b.id; persistNotes(); renderBoxList(); renderEditor(); });
+      list.appendChild(li);
+    });
+  }
+
+  function renderEditor() {
+    const box = getActiveBox();
+    document.getElementById('box-name-input').value = box ? box.name : '';
+    document.getElementById('notes-textarea').value = box ? box.text : '';
+  }
+
+  function addBox() {
+    const id = 'box_' + Date.now();
+    notesState.boxes.push({ id, name: 'New Box', text: '' });
+    notesState.activeId = id;
+    persistNotes();
+    renderBoxList();
+    renderEditor();
+    document.getElementById('box-name-input').focus();
+  }
+
+  function deleteBox(id) {
+    if (notesState.boxes.length === 1) { alert("Can't delete the last remaining box."); return; }
+    notesState.boxes = notesState.boxes.filter(b => b.id !== id);
+    if (notesState.activeId === id) notesState.activeId = notesState.boxes[0].id;
+    persistNotes();
+    renderBoxList();
+    renderEditor();
+  }
+
+  function deleteActiveBox() { if (notesState.activeId) deleteBox(notesState.activeId); }
+
+  function renameActiveBox(newName) {
+    const box = getActiveBox();
+    if (box) { box.name = newName; persistNotes(); renderBoxList(); }
+  }
+
+  let saveTimer = null;
+  function saveActiveNotes() {
+    const box = getActiveBox();
+    if (!box) return;
+    box.text = document.getElementById('notes-textarea').value;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persistNotes, 400);
+  }
+
+  loadNotes();
+  buildTOC();
+</script>
+
+</body>
+</html>
