@@ -394,7 +394,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
               <div class="step-num">2</div>
               <div class="step-body">
                 <div class="step-text">You can explicitly force John to target NTLM/NT hashes as well as use previously cracked passwords stored in your john.pot file::</div>
-                <div class="step-cmd">john --format=nt <hash_file> --loopback</div>
+                <div class="step-cmd">john --format=nt &lt;hash_file&gt; --loopback</div>
               </div>
             </div>
             <div class="setup-step">
@@ -402,6 +402,28 @@ setg Proxies socks5:127.0.0.1:9050</div>
               <div class="step-body">
                 <div class="step-text">Delete state files before cracking a new hash file, or John will resume the old session instead of starting fresh:</div>
                 <div class="step-cmd">rm ~/.john/john.pot ~/.john/john.rec</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <div class="setup-block">
+          <div class="setup-title">📡 Scanline</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text">Find sl.exe on your attack platform</div>
+                <div class="step-cmd">locate sl.exe</div>
+              </div>
+            </div>
+             <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-text">Move sl.exe to your current directory to simplify the meterpreter upload command</div>
+                <div class="step-cmd">mv &lt;filepath to sl.exe&gt; .
               </div>
             </div>
           </div>
