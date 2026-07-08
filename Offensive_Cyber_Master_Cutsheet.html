@@ -602,10 +602,10 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3"> meterpreter &gt; upload sl.exe C:\Windows\Temp\</td></tr>
           <tr><td class="c1">search</td><td class="c2">Search for a file (can also limit yourself to a specific directory)</td><td class="c3">meterpreter &gt; search -d "C:\\Documents and Settings\\student\\" -f "*.jpg*"</td></tr>
           <tr><td class="c1">migrate</td><td class="c2">Move your active payload from the initial compromised process into a different running process on the target system</td><td class="c3">meterpreter &gt; migrate &lt;PID&gt;  </td></tr>
-                <div class="callout callout-info">
-        <span class="callout-icon">ℹ</span>
-        <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
-      </div>
+            <div class="callout callout-info" style="margin-bottom:0;">
+              <span class="callout-icon">ℹ</span>
+              <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
+            </div>
           
         </table>
       </div>
