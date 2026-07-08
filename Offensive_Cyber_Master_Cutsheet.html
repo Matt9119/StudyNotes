@@ -537,6 +537,26 @@ setg Proxies socks5:127.0.0.1:9050</div>
         </table>
       </div>
 
+<div class="cmd-block">
+  <div class="cmd-block-header hdr-red"><span class="icon">🛰️</span>route add — pivoting through a session</div>
+  <table class="cmd-table">
+    <tr><td class="c1">route add &lt;subnet&gt; &lt;netmask&gt; &lt;sessionID&gt;</td><td class="c2">Route traffic for a subnet through a compromised session so other modules/scans can reach it</td><td class="c3">route add 10.10.20.0 255.255.255.0 1</td></tr>
+    <tr><td class="c1">route print</td><td class="c2">Show all currently active routes</td><td class="c3">route print</td></tr>
+    <tr><td class="c1">route delete &lt;subnet&gt; &lt;netmask&gt; &lt;sessionID&gt;</td><td class="c2">Remove a specific route</td><td class="c3">route delete 10.10.20.0 255.255.255.0 1</td></tr>
+    <tr><td class="c1">route flush</td><td class="c2">Clear all active routes</td><td class="c3">route flush</td></tr>
+    <tr><td class="c1">post/multi/manage/autoroute</td><td class="c2">Post module alternative — same effect, run against a session instead of typing route manually</td><td class="c3">use post/multi/manage/autoroute</td></tr>
+  </table>
+  <div style="padding: 0 12px 12px;">
+    <div class="step-cmd">route add 10.10.20.0 255.255.255.0 1</div>
+  </div>
+  <div style="padding: 0 12px 12px;">
+    <div class="callout callout-info" style="margin-bottom:0;">
+      <span class="callout-icon">ℹ</span>
+      <div>Once a route is added, other modules (scanners, exploits, proxies) can target hosts on that subnet as if directly reachable — this is what lets you pivot deeper into a network from one compromised box. Pair with <code>set Proxies</code> / <code>auxiliary/server/socks_proxy</code> if you want to route external tools (nmap, browser, etc.) through the same pivot.</div>
+    </div>
+  </div>
+</div>
+      
       <div class="cmd-block">
         <div class="cmd-block-header hdr-red"><span class="icon">🧰</span>Useful auxiliary/scanner modules</div>
         <table class="cmd-table">
