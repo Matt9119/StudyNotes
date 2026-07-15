@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCO Written Study Guide — UCWT</title>
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── TOKENS ── */
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    --accent:       #6d28d9;
+    --accent-light: #EDE9FE;
+    --accent-text:  #3B0764;
+    --accent-btn:   #5B21B6;
+    --accent-btn-text: #EDE9FE;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.10);
+      --border-strong: rgba(255,255,255,0.20);
+      --accent-light: #2D1B69;
+      --accent-text:  #C4B5FD;
+      --accent-btn:   #5B21B6;
+      --accent-btn-text: #EDE9FE;
+    }
+    .badge-purple { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .badge-teal   { background:#042A22 !important; color:#67E8C4 !important; }
+    .badge-yellow { background:#2A1E00 !important; color:#FCD34D !important; }
+    .badge-orange { background:#2A1000 !important; color:#FCA46A !important; }
+    .badge-blue   { background:#0A1A2E !important; color:#93C5FD !important; }
+    .badge-red    { background:#3A0A0A !important; color:#FCA5A5 !important; }
+    .callout-tip  { background:#0A3322 !important; border-color:#16A34A !important; }
+    .callout-trap { background:#3A1500 !important; border-color:#EA580C !important; }
+    .callout-key  { background:#2D1B69 !important; border-color:#7C3AED !important; }
+    .callout-tip  .callout-label { color:#86EFAC !important; }
+    .callout-trap .callout-label { color:#FCA46A !important; }
+    .callout-key  .callout-label { color:#C4B5FD !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .phase-num  { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .layer-num  { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .ref-table thead th { background:#2c2c2e !important; }
+    .day-btn.active { background: var(--accent-btn) !important; color: var(--accent-btn-text) !important; border-color: var(--accent-btn) !important; }
+    #toc-list a.toc-active { color:#C4B5FD !important; background:#2D1B69 !important; }
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
+
+  .page-layout { display: flex; align-items: flex-start; max-width: 780px; margin: 0 auto; padding: 0 1.25rem; gap: 1.5rem; }
+  .guide { flex: 1; min-width: 0; padding: 1.25rem 0 5rem; }
+
+  .guide-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border-strong); }
+  .guide-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+  .guide-header p  { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-family: var(--mono); }
+
+  .day-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .day-btn { padding:5px 13px; border:0.5px solid var(--border-strong); border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; background:var(--bg); color:var(--text-muted); transition:all 0.15s; font-family:var(--font); }
+  .day-btn.active { background: var(--accent-btn); color: var(--accent-btn-text); border-color: var(--accent-btn); }
+  .day-btn:hover:not(.active) { background:var(--bg-secondary); }
+
+  .day-section { display:none; }
+  .day-section.active { display:block; }
+
+  .section-badge { display:inline-block; font-size:11px; font-weight:500; padding:2px 10px; border-radius:20px; margin-bottom:8px; }
+  .badge-purple { background:#EDE9FE; color:#3B0764; }
+  .badge-teal   { background:#CCFBF1; color:#0F4C3A; }
+  .badge-yellow { background:#FEF9C3; color:#713F0C; }
+  .badge-orange { background:#FFEDD5; color:#7C2D12; }
+  .badge-blue   { background:#DBEAFE; color:#1E3A8A; }
+  .badge-red    { background:#FEE2E2; color:#7F1D1D; }
+
+  .topic-title { font-size:17px; font-weight:500; margin-bottom:4px; }
+
+  .card { background:var(--bg); border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1rem; }
+
+  .callout { border-radius:var(--radius-md); padding:.75rem 1rem; margin-bottom:1rem; border-left:3px solid; }
+  .callout-tip  { background:#F0FDF4; border-color:#16A34A; }
+  .callout-trap { background:#FFF7ED; border-color:#EA580C; }
+  .callout-key  { background:#F5F3FF; border-color:#7C3AED; }
+  .callout-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .callout-tip  .callout-label { color:#16A34A; }
+  .callout-trap .callout-label { color:#EA580C; }
+  .callout-key  .callout-label { color:#6D28D9; }
+  .callout p, .callout li { font-size:13px; }
+  .callout ul { padding-left:1rem; margin-top:4px; }
+  .callout li { margin-bottom:2px; }
+
+  ul.guide-list { padding-left:1.1rem; margin:.5rem 0; }
+  ul.guide-list li { margin-bottom:5px; font-size:14px; }
+
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; margin:.75rem 0; }
+  .cmp-table th { padding:7px 10px; text-align:left; font-weight:500; font-size:12px; border-bottom:0.5px solid var(--border-strong); color:var(--text-muted); }
+  .cmp-table td { padding:7px 10px; border-bottom:0.5px solid var(--border); vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+
+  .cmd { display:inline-block; font-family:var(--mono); font-size:12px; background:var(--bg-secondary); border:0.5px solid var(--border); border-radius:4px; padding:1px 6px; color:var(--text); }
+  .cmd-block { display:block; font-family:var(--mono); font-size:11.5px; background:var(--bg-secondary); border:0.5px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); white-space:pre-wrap; word-break:break-word; margin-top:6px; line-height:1.5; }
+  .ck-red   { color:#DC2626; font-weight:600; }
+  .ck-blue  { color:#2563EB; font-weight:600; }
+  .ck-green { color:#16A34A; font-weight:600; }
+  @media (prefers-color-scheme: dark) {
+    .ck-red   { color:#F87171; }
+    .ck-blue  { color:#93C5FD; }
+    .ck-green { color:#86EFAC; }
+  }
+
+  h3.sh { font-size:14px; font-weight:500; margin:1rem 0 .5rem; border-bottom:.5px solid var(--border); padding-bottom:4px; }
+  h4.sh4 { font-size:13px; font-weight:500; margin:.75rem 0 .25rem; color:var(--text-muted); }
+  .kt { font-weight:500; }
+  .divider { height:.5px; background:var(--border); margin:1.5rem 0; }
+
+  .perm-row { padding:6px 0; border-bottom:.5px solid var(--border); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-label { font-weight:500; font-size:12px; margin-bottom:2px; }
+
+  .layer-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:.5px solid var(--border); }
+  .layer-row:last-child { border-bottom:none; }
+  .layer-num { min-width:26px; height:26px; border-radius:50%; background: #EDE9FE; color: #3B0764; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; }
+  .layer-body { flex:1; }
+  .layer-name { font-size:13px; font-weight:500; }
+  .layer-meta { font-size:11.5px; color:var(--text-muted); margin-top:2px; }
+
+  .ref-section { margin-top:1.75rem; }
+  .ref-section-title { font-family:var(--mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); margin-bottom:.6rem; display:flex; align-items:center; gap:.5rem; }
+  .ref-section-title::after { content:''; flex:1; height:.5px; background:var(--border-strong); }
+  .ref-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:1.25rem; }
+  .ref-table thead th { padding:6px 10px; text-align:left; font-weight:500; font-size:11px; background:var(--bg-secondary); color:var(--text-muted); border-bottom:.5px solid var(--border-strong); }
+  .ref-table thead th:first-child { border-radius:6px 0 0 0; }
+  .ref-table thead th:last-child  { border-radius:0 6px 0 0; }
+  .ref-table tbody td { padding:6px 10px; border-bottom:.5px solid var(--border); vertical-align:top; }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
+  .ref-table .rd { font-size:12px; color:var(--text-muted); }
+
+  .toc-sidebar { width: 155px; flex-shrink: 0; position: sticky; top: 1.25rem; max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.25rem 0 1rem; scrollbar-width: none; }
+  .toc-sidebar::-webkit-scrollbar { display: none; }
+  .toc-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.6rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border-strong); font-family: var(--mono); }
+  #toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+  #toc-list a { display: block; font-size: 11px; line-height: 1.4; text-decoration: none; border-radius: 4px; color: var(--text-muted); padding: 4px 6px; transition: all 0.15s; }
+  #toc-list a:hover { color: var(--text); background: var(--bg-secondary); }
+  #toc-list a.toc-active { color: #3B0764; background: #EDE9FE; font-weight: 500; }
+  #toc-list a.toc-main   { font-size: 11px; font-weight: 500; }
+  #toc-list a.toc-sub    { font-size: 10.5px; padding-left: 14px; opacity: 0.8; }
+
+  #back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0 14px; height: 38px; border-radius: 20px; background: var(--accent-btn); color: var(--accent-btn-text); font-size: 13px; font-family: var(--mono); text-decoration: none; display: none; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
+  #back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 640px) {
+    .page-layout  { padding: 0 0.85rem; gap: 0; }
+    .toc-sidebar  { display: none; }
+    #back-to-top  { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+<div class="guide">
+
+<div class="guide-header">
+  <h1>OCO Written Study Guide</h1>
+  <p>// UCWT — Days 1–3 | Methodology · Tradecraft · Exploitation · Active Directory</p>
+</div>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     DAY 1 — Intro to Attacking & Exploiting Cyber Networks
+══════════════════════════════════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-blue">Cyber Ops in the DoD</div>
+  <div class="topic-title">Title 50 vs. Title 10</div>
+
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Title 50 — War &amp; National Defense / Intelligence Community Activities</div>
+      Cyber <strong>Exploitation</strong> falls here. Military intelligence activity that supports OPE/positioning for future ops. Can happen in Gray or Red space. <strong>Covert</strong> in nature. Does <strong>NOT</strong> create cyberspace effects.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Title 10 — Armed Forces / Military Operations</div>
+      Cyber <strong>Attack</strong> falls here. Actions that create noticeable D4M effects (in cyberspace or physical domains). A form of fires — typically <strong>overt</strong>, since it's meant to be noticed. Red space.
+    </div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Key takeaway</div>
+    <p>"DoD and IC Interagency Support" and "Covert Actions" can fall under <strong>both</strong> titles.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">Cyber Mission Force (CMF)</div>
+  <div class="topic-title">Structure &amp; Lines of Effort</div>
+
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Cyber National Mission Force (CNMF) — "Defend the Nation"</div>
+      National Mission Teams (NMT) and National Support Teams (NST).
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Cyber Protection Force (CPF) — "Operate &amp; Defend DODIN"</div>
+      Cyber Protection Teams (CPT).
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Cyber Combat Mission Force (CCMF) — Combatant Command Support</div>
+      Combat Mission Teams (CMT) and Combat Support Teams (CST).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">3 Lines of Effort</div>
+    <ul class="guide-list">
+      <li>DODIN Operations</li>
+      <li>Defensive Cyberspace Operations (DCO)</li>
+      <li>Offensive Cyberspace Operations (OCO)</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">D4M</div>
+  <div class="topic-title">Effects Terminology</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Deny</div>Prevent access to, operation of, or availability of a target.</div>
+    <div class="perm-row"><div class="perm-label">Degrade</div>Deny to a level represented as a percentage of capacity.</div>
+    <div class="perm-row"><div class="perm-label">Disrupt</div>Deny completely, but temporarily, for a specified amount of time.</div>
+    <div class="perm-row"><div class="perm-label">Destroy</div>Deny completely and irreparably.</div>
+    <div class="perm-row"><div class="perm-label">Manipulate</div>Control or change information/computers/systems/networks to create physical denial effects.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Hacker Methodology — Tradecraft</div>
+  <div class="topic-title">Why Tradecraft Matters</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Tradecraft is skill acquired through experience — being professional and deliberate. It matters because of:</div>
+    <ul class="guide-list">
+      <li>International/political implications of cyberspace ops</li>
+      <li>Collateral effects</li>
+      <li>Intel gain/loss</li>
+      <li>Technical gain/loss</li>
+      <li>Jail</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">How effective operations employ tradecraft:</div>
+    <ul class="guide-list">
+      <li>Accountability</li>
+      <li>Plan</li>
+      <li>Conduct sandboxing / ROC drills</li>
+      <li>Understand the target environment</li>
+      <li>Minimize errors</li>
+      <li>Leave the target as you found it</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Redirectors</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Used for the following reasons:</div>
+    <ul class="guide-list">
+      <li>To get around an obstacle</li>
+      <li>Maneuvering from one host to another</li>
+      <li>Obfuscating the source of an attack</li>
+      <li>No direct route to the target</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">Hacker Methodology — 6 Phases</div>
+  <div class="topic-title">The Full Cycle</div>
+
+  <div class="card">
+    <div class="layer-row">
+      <div class="layer-num">1</div>
+      <div class="layer-body">
+        <div class="layer-name">Reconnaissance</div>
+        <div class="layer-meta">Collecting info about the target — usually no direct interaction, often just public tools like Google. The single most important phase.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">2</div>
+      <div class="layer-body">
+        <div class="layer-name">Enumeration / Scanning</div>
+        <div class="layer-meta">Start interacting with the target to find vulnerabilities and determine overall attack surface — i.e. WHAT the target might be vulnerable to.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">3</div>
+      <div class="layer-body">
+        <div class="layer-name">Gaining Access (Exploitation)</div>
+        <div class="layer-meta">The "glamorous" part — but only as good as the recon/enumeration before it. Primary tool: Metasploit.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">4</div>
+      <div class="layer-body">
+        <div class="layer-name">Privilege Escalation (Exploitation)</div>
+        <div class="layer-meta">Target account depends on OS — Administrator/System (Windows) or root (Linux). Includes cracking passwords, post-exploitation modules, local exploits/scripts, and installing backdoors.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">5</div>
+      <div class="layer-body">
+        <div class="layer-name">Covering Tracks</div>
+        <div class="layer-meta">Erase digital signs left during earlier stages — restoring modified files, deleting tools/files placed on target, closing opened ports. Think about this the whole way through, not just at the end.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">6</div>
+      <div class="layer-body">
+        <div class="layer-name">Reporting</div>
+        <div class="layer-meta">The "paperwork" phase — document findings, criticality, how found, and remediation. Includes the Mission Summary and Mission Report (MISREP).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Don't skip ahead</div>
+    <p>If you don't enumerate thoroughly you may miss an opportunity — and if you didn't look hard enough at the target, the exploit you chose may fail entirely. Access is only as good as the work that came before it.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-yellow">Helping Yourself</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>OS</th><th>Command</th></tr>
+      <tr><td>Windows</td><td><span class="cmd">&lt;command&gt; /?</span></td></tr>
+      <tr><td rowspan="4">Linux</td><td><span class="cmd">man &lt;command&gt;</span></td></tr>
+      <tr><td><span class="cmd">man -k &lt;keyword&gt;</span></td></tr>
+      <tr><td><span class="cmd">apropos &lt;keyword&gt;</span></td></tr>
+      <tr><td><span class="cmd">&lt;command&gt; --help</span> / <span class="cmd">&lt;command&gt; -h</span></td></tr>
+    </table>
+    <p style="font-size:12.5px; color:var(--text-muted); margin-top:4px;">If all else fails — use Google.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Tunneling, Proxies &amp; Port Redirection</div>
+  <div class="topic-title">Why Tunnel</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Tunneling forwards traffic through a redirection. Reasons to tunnel:</div>
+    <ul class="guide-list">
+      <li>Getting around obstacles like firewalls</li>
+      <li>Obfuscating the source of the operator's attack platform</li>
+      <li>No direct route to the target</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">SSH Tunnels</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Basic SSH login</div>
+      <div class="cmd-block">ssh &lt;username&gt;@&lt;<span class="ck-blue">remote_IP</span>&gt;
+ssh &lt;username&gt;@&lt;<span class="ck-blue">remote_IP</span>&gt; -i ~/&lt;identity_key&gt;</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Local Port Forward</div>
+      Listens on your local machine and forwards traffic to a specific remote destination.
+      <div class="cmd-block">ssh -i ~/&lt;identity_key&gt; -L &lt;<span class="ck-red">local_bind_port</span>&gt;:&lt;<span class="ck-green">target_IP</span>&gt;:&lt;<span class="ck-green">target_port</span>&gt; &lt;username&gt;@&lt;<span class="ck-blue">ssh_server_IP</span>&gt;</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Remote Port Forward</div>
+      Listens on the remote server and forwards traffic back to a specific local destination.
+      <div class="cmd-block">ssh -i ~/&lt;identity_key&gt; -R &lt;<span class="ck-blue">ssh_server_IP</span>&gt;:&lt;<span class="ck-blue">ssh_server_bind_port</span>&gt;:&lt;<span class="ck-red">attack_platform_IP</span>&gt;:&lt;<span class="ck-red">listening_port</span>&gt; &lt;username&gt;@&lt;<span class="ck-blue">ssh_server_IP</span>&gt;</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Dynamic Port Forward</div>
+      Listens on your local machine and creates a SOCKS proxy to route traffic to any destination reached via the remote server.
+      <div class="cmd-block">ssh -i ~/&lt;identity_key&gt; -D &lt;<span class="ck-red">local_proxy_port</span>&gt; &lt;username&gt;@&lt;<span class="ck-blue">ssh_server_IP</span>&gt;</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Combining Tunnels</div>
+      Combine Dynamic + Remote port forwarding for full target interaction.
+      <div class="cmd-block">ssh -i ~/&lt;identity_key&gt; -D &lt;<span class="ck-red">local_proxy_port</span>&gt; -R &lt;<span class="ck-blue">ssh_server_IP</span>&gt;:&lt;<span class="ck-blue">ssh_server_bind_port</span>&gt;:&lt;<span class="ck-red">attack_platform_IP</span>&gt;:&lt;<span class="ck-red">listening_port</span>&gt; &lt;username&gt;@&lt;<span class="ck-blue">ssh_server_IP</span>&gt;</div>
+    </div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Color key (as taught)</div>
+    <p><strong style="color:#DC2626;">Red</strong> = our attack platform / host machine &nbsp;·&nbsp; <strong style="color:#2563EB;">Blue</strong> = SSH server / redirector &nbsp;·&nbsp; <strong style="color:#16A34A;">Green</strong> = target machine</p>
+  </div>
+
+  <h3 class="sh">Proxychains</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it's for</div>Forces connections through a proxy — used to make use of an SSH dynamic port forward or any other local proxy.</div>
+    <div class="perm-row"><div class="perm-label">SOCKS5 vs SOCKS4</div>SOCKS5 allows UDP/auth. SOCKS4 does not allow UDP traffic.</div>
+    <div class="perm-row"><div class="perm-label">Config file</div><span class="cmd">/etc/proxychains4.conf</span></div>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-label">Rule of thumb</div>
+    <p>You should always be using SOCKS5.</p>
+  </div>
+
+  <h3 class="sh">Netsh Port Relays</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">What it is</div>A Windows command-line scripting utility — can display and modify network configs, locally or remotely. Included since Windows 2000.</div>
+    <div class="perm-row"><div class="perm-label">Use here</div>Can do tunneling via port forwarding — functionally the same as <span class="cmd">ssh -L</span>.</div>
+  </div>
+
+</div><!-- /day1 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 2 — Recon/Scanning/Enum, Gaining Access, Post-Exploitation
+══════════════════════════════════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="section-badge badge-purple">Reconnaissance</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Target development stage — not throwing any packets at the target yet.</div>
+    <ul class="guide-list">
+      <li>Getting registration information (e.g. whois)</li>
+      <li>DNS records — nslookup, dig, host, etc.</li>
+      <li>DNS zone transfers</li>
+      <li>Public webpages, blogs, social media, etc.</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">Scanning</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Passive</div>Monitors existing network traffic without interacting with targets.</div>
+    <div class="perm-row"><div class="perm-label">Active</div>Directly interacts with targets.</div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Active scanning process (3 steps)</div>
+    <div class="layer-row">
+      <div class="layer-num">1</div>
+      <div class="layer-body">
+        <div class="layer-name">Host Discovery</div>
+        <div class="layer-meta">ICMP Echo Request (PING) or ARP scan — watch the TTL value on ping responses.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">2</div>
+      <div class="layer-body">
+        <div class="layer-name">Port Scan</div>
+        <div class="layer-meta">Find open ports.</div>
+      </div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">3</div>
+      <div class="layer-body">
+        <div class="layer-name">Banner Grab</div>
+        <div class="layer-meta">Identify services and versions.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Default TTL values (helps fingerprint the OS from a ping response)</div>
+    <table class="cmp-table">
+      <tr><th>OS</th><th>Default TTL</th></tr>
+      <tr><td>Windows</td><td>128</td></tr>
+      <tr><td>Linux</td><td>64</td></tr>
+      <tr><td>Unix / Cisco</td><td>255</td></tr>
+    </table>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Scanning Tools</div>
+    <table class="ref-table">
+      <thead><tr><th>Tool</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">ping / fping</td><td class="rd">Basic host liveness check</td></tr>
+        <tr><td class="rc">traceroute / tracert</td><td class="rd">Map the path to a target</td></tr>
+        <tr><td class="rc">Netcat</td><td class="rd">Swiss-army-knife networking tool</td></tr>
+        <tr><td class="rc">Nmap</td><td class="rd">Full-featured port/service scanner</td></tr>
+        <tr><td class="rc">scanline</td><td class="rd">Lightweight port scanner</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sh">Enumeration</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Passive Enumeration</div>Similar to passive scanning — tools like p0f, Wireshark, tcpdump, etc.</div>
+    <div class="perm-row"><div class="perm-label">Active Enumeration</div>Service scan, banner grabbing, OS scan, share discovery, interacting with available services.</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Gaining Access — Exploitation</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Exploit</div>Code or technique used to take advantage of a vulnerability.</div>
+    <div class="perm-row"><div class="perm-label">Vulnerability</div>Must exist for a system to be exploited — can be present in a specific service or in the OS itself.</div>
+  </div>
+
+  <h3 class="sh">Metasploit Framework</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li>Free, open-source exploitation framework — standardized environment for deploying/managing exploits</li>
+      <li>Runs on Windows, Linux, and macOS</li>
+      <li>Start from Kali with <span class="cmd">msfconsole</span></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Module variables</div>
+    <ul class="guide-list">
+      <li>RHOST &amp; RPORT</li>
+      <li>LHOST &amp; LPORT</li>
+      <li>Payload</li>
+      <li>Target</li>
+      <li>Proxies*</li>
+      <li>ReverseListenerBindAddress*</li>
+      <li>ReverseListenerBindPort*</li>
+      <li>ReverseAllowProxy*</li>
+    </ul>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">* Advanced settings — configure with <span class="cmd">setg</span> or <span class="cmd">set</span>.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Worked example — SSH tunnel + matching msf variables</div>
+    <div class="cmd-block">ssh -i ~/.ssh/redirector_key -D 9050 -R *:8080:77.16.45.130:8080 na@64.12.72.94
+
+setg LHOST 64.12.72.94
+setg LPORT 8080
+setg Proxies socks5:127.0.0.1:9050
+setg ReverseListenerBindAddress 77.16.45.130
+setg ReverseListenerBindPort 8080
+setg ReverseAllowProxy true</div>
+  </div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Reverse Shell</div>Listener runs on the attack device — target connects back to the attacker.</div>
+    <div class="perm-row"><div class="perm-label">Bind Shell</div>Listener runs on the target machine — attacker connects to it.</div>
+  </div>
+
+  <h3 class="sh">Alternate Access Methods (Masquerades)</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Social Engineering / Spear Phishing</div>msfvenom — a Metasploit tool for building payloads.</div>
+    <div class="perm-row">
+      <div class="perm-label">Legitimate Remote Logon/Management Services</div>
+      Terminal-based: SSH, Telnet, WinRM, WMIC, DCOM, etc.<br>
+      GUI/File-system based: RDP (TCP 3389), VNC (TCP 5900), SMB (TCP 445)
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Situational Awareness — Surveys</div>
+
+  <div class="card">
+    Actions you take to secure the battlespace — ensures everything on the remote system matches what you expect, and surfaces what you might not have expected.
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Survey Commands by Platform</div>
+    <table class="cmp-table">
+      <tr><th>Windows</th><th>Meterpreter</th><th>Linux</th></tr>
+      <tr><td><span class="cmd">systeminfo</span></td><td><span class="cmd">getuid</span></td><td><span class="cmd">w / who</span></td></tr>
+      <tr><td><span class="cmd">tasklist</span></td><td><span class="cmd">getpid</span></td><td><span class="cmd">hostname</span></td></tr>
+      <tr><td><span class="cmd">schtasks</span></td><td><span class="cmd">idletime</span></td><td><span class="cmd">uname</span></td></tr>
+      <tr><td><span class="cmd">ipconfig</span></td><td><span class="cmd">sysinfo</span></td><td><span class="cmd">ps</span></td></tr>
+      <tr><td><span class="cmd">netstat</span></td><td><span class="cmd">ps</span></td><td><span class="cmd">route</span></td></tr>
+      <tr><td><span class="cmd">route</span></td><td><span class="cmd">route</span></td><td><span class="cmd">ifconfig / ip</span></td></tr>
+      <tr><td><span class="cmd">arp</span></td><td><span class="cmd">ipconfig</span></td><td><span class="cmd">netstat / ss</span></td></tr>
+      <tr><td><span class="cmd">net</span></td><td><span class="cmd">resolve</span></td><td><span class="cmd">arp</span></td></tr>
+      <tr><td><span class="cmd">ver</span></td><td><span class="cmd">arp</span></td><td><span class="cmd">route</span></td></tr>
+      <tr><td><span class="cmd">set</span></td><td><span class="cmd">crontab</span></td><td>—</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">Post-Exploitation Methodologies</div>
+
+  <h3 class="sh">Migration &amp; User Tokens</h3>
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Migration serves a few purposes:</div>
+    <ul class="guide-list">
+      <li>Hide what process you're in, to avoid detection</li>
+      <li>Stability</li>
+      <li>Change user privileges</li>
+    </ul>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Note: you can go <strong>down</strong> in privilege level when migrating, but not up.</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-label">Good meterpreter TTP</div>
+    <p>1) Get SYSTEM if you don't already have it (<span class="cmd">getsystem</span>) → 2) Migrate to a stable SYSTEM-level process → 3) Kill the application that was exploited → 4) Restart the executable in a clean state. This lets you re-exploit the target if your session dies, and restores the service's functionality — reducing suspicion.</p>
+  </div>
+
+  <h3 class="sh">Collecting &amp; Cracking Credentials</h3>
+  <div class="ref-section">
+    <div class="ref-section-title">Collecting Credentials, by Tool</div>
+    <table class="ref-table">
+      <thead><tr><th>Platform</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Meterpreter</td><td class="rd"><span class="cmd">hashdump</span> &nbsp;/&nbsp; <span class="cmd">load kiwi</span> &nbsp;/&nbsp; <span class="cmd">creds_all</span></td></tr>
+        <tr><td class="rc">Windows</td><td class="rd"><span class="cmd">fgdump.exe</span> &nbsp;/&nbsp; <span class="cmd">mimikatz.exe</span></td></tr>
+        <tr><td class="rc">Linux</td><td class="rd"><span class="cmd">cat /etc/shadow</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Keep in mind</div>
+    <ul>
+      <li>Requires SYSTEM / Administrator / root privileges</li>
+      <li><span class="cmd">hashdump</span> only gives local system credentials — not domain credentials</li>
+      <li>Kiwi is Mimikatz — it can get domain users and hashes</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Cracking with John the Ripper (JTR)</div>
+    <div class="cmd-block">john &lt;hash_file&gt;</div>
+    <p style="font-size:12.5px; margin-top:6px;">Common switches: <span class="cmd">--format</span> · <span class="cmd">--rules</span> · <span class="cmd">--wordlist</span></p>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Remove <span class="cmd">~/.john/john.pot</span> and <span class="cmd">~/.john/john.rec</span> before cracking a new set of hashes.</p>
+  </div>
+
+  <h3 class="sh">Finding Interesting Files</h3>
+  <div class="ref-section">
+    <div class="ref-section-title">Searching Within Files</div>
+    <table class="ref-table">
+      <thead><tr><th>Platform</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Windows</td><td class="rd">findstr /i /s "keyword" C:\*.*</td></tr>
+        <tr><td class="rc">Linux</td><td class="rd">grep -ir "keyword" /home/kali/</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ref-section">
+    <div class="ref-section-title">Searching for Files</div>
+    <table class="ref-table">
+      <thead><tr><th>Platform</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Meterpreter</td><td class="rd">search -f *keyword*</td></tr>
+        <tr><td class="rc">Windows</td><td class="rd">dir /a /b /s *keyword*</td></tr>
+        <tr><td class="rc">Linux</td><td class="rd">find / -iname *keyword*</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sh">Collecting / Transferring Files</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Meterpreter</div><span class="cmd">cd</span> / <span class="cmd">ls</span> / <span class="cmd">lcd</span> / <span class="cmd">lls</span> &nbsp;·&nbsp; <span class="cmd">download</span> / <span class="cmd">upload</span> &nbsp;·&nbsp; <span class="cmd">edit</span></div>
+    <div class="perm-row"><div class="perm-label">Linux</div>scp · netcat · ftp · tftp · Python simple HTTP servers · curl · wget</div>
+    <div class="perm-row"><div class="perm-label">Windows</div>netcat · tftp · SMB shares · Invoke-WebRequest</div>
+  </div>
+
+</div><!-- /day2 -->
+
+
+<!-- ══════════════════════════════════════════
+     DAY 3 — Sustaining Access, Web Exploitation, AD SA
+══════════════════════════════════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="section-badge badge-purple">Sustaining Access, Expanding Access &amp; Covering Tracks</div>
+
+  <h3 class="sh">Persistence</h3>
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Can be set up as readily-available access or timed callbacks. Achieved via:</div>
+    <ul class="guide-list">
+      <li>Meterpreter persistence</li>
+      <li>Windows mechanisms — schtasks, registry, service (typically needs a backdoor placed manually via msfvenom)</li>
+      <li>Cron jobs (Linux)</li>
+      <li>Adding a user</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">Lateral Movement</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Routing</div>Route through your initial foothold to talk to other internal devices — within Metasploit only.</div>
+    <div class="perm-row"><div class="perm-label">Pivot via Service Exploitation</div></div>
+    <div class="perm-row"><div class="perm-label">Pivot via Alternate Access Methods</div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Common Web Exploitation Methods</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Directory Traversal</div>Access files/directories outside the web root by manipulating a path parameter.</div>
+    <div class="perm-row">
+      <div class="perm-label">Command Injection</div>
+      Application passes unsafe user-supplied data to the system shell — a result of OS task handling and, directly, of not validating user input.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">SQL Injection</div>
+      Data entered from an untrusted source gets used to dynamically construct a SQL query — can modify, delete, or add to SQL tables.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Cross Site Scripting (XSS)</div>
+      Scripts execute within a user's browser under the security context of the site they're visiting — the browser believes the script is trusted. Can steal victim cookies (session hijack on an authenticated site) or redirect to a malicious domain.
+      <br><br>
+      <strong>Three categories:</strong> Reflected (via email/chat/redirection) · Stored (uploaded/embedded) · DOM-Based (client-side scripts write user data to the DOM)
+    </div>
+  </div>
+
+  <h3 class="sh">Common Web Enumeration/Exploitation Tools</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Website Browsing / View Source Code</div>
+      Can reveal links to unknown folders/directories/sites, and sensitive info: API tokens, usernames/passwords, application version info, etc.
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Tools</div>
+    <table class="ref-table">
+      <thead><tr><th>Tool</th><th>What it's for</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Nikto / Nuclei</td><td class="rd">CLI webserver vulnerability scanner — common vulns, outdated software, misconfigured services</td></tr>
+        <tr><td class="rc">Dirbuster / Gobuster / wfuzz / dotdotpwn</td><td class="rd">CLI directory/subdomain fuzzing — feed in a target + wordlist</td></tr>
+        <tr><td class="rc">Burp Suite / ZAP</td><td class="rd">Web interception/proxy — intercept, view, and modify packets before they hit the server; automated brute force, scanning, and repeat-request functions</td></tr>
+        <tr><td class="rc">SQLMap</td><td class="rd">Automated SQLi testing/detection/exploitation across most DB types — can enumerate data or establish a shell/meterpreter session</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Active Directory Situational Awareness</div>
+
+  <h3 class="sh">AD Refresher Protocols</h3>
+  <div class="ref-section">
+    <table class="ref-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">88</td><td class="rc">Kerberos</td><td class="rd">Default auth protocol for domain accounts</td></tr>
+        <tr><td class="rc">53</td><td class="rc">DNS</td><td class="rd">Resolves hostnames to IP addresses</td></tr>
+        <tr><td class="rc">389 / 636</td><td class="rc">LDAP</td><td class="rd">Cross-platform protocol used for auth within directory services like AD</td></tr>
+        <tr><td class="rc">135</td><td class="rc">MSRPC</td><td class="rd">Inter-process communication within Windows/AD — key protocol for talking to auth &amp; security interfaces</td></tr>
+        <tr><td class="rc">5985 / 5986</td><td class="rc">WinRM</td><td class="rd">Access/exchange management info across a common network</td></tr>
+        <tr><td class="rc">No dedicated port</td><td class="rc">NTLM Auth</td><td class="rd">Encompasses LM, NTLM, NTLMv1, NTLMv2 — usable alongside Kerberos/LDAP within AD</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sh">Hunting Users/Credentials</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Enum4Linux</div>Tool for enumerating information from Windows and Samba systems.</div>
+    <div class="perm-row"><div class="perm-label">RPC-Client</div>Linux Samba-suite tool for debugging and troubleshooting Windows-Samba configurations.</div>
+  </div>
+
+</div><!-- /day3 -->
+
+</div><!-- end .guide -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this page</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  function showDay(n) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('day' + n).classList.add('active');
+    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  let observer = null;
+
+  function buildTOC() {
+    const activeDay = document.querySelector('.day-section.active');
+    const tocList   = document.getElementById('toc-list');
+
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
+    if (items.length === 0) return;
+
+    items.forEach((el, i) => {
+      el.id = 'toc-anchor-' + i;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href        = '#toc-anchor-' + i;
+      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
+      a.textContent = el.textContent.trim();
+
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const links = tocList.querySelectorAll('a');
+
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('toc-active'));
+          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('toc-active');
+            active.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      });
+    }, {
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0
+    });
+
+    items.forEach(el => observer.observe(el));
+  }
+
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  buildTOC();
+</script>
+
+</body>
+</html>
