@@ -552,10 +552,11 @@ setg Proxies socks5:127.0.0.1:9050</div>
         <table class="ref-table">
           <thead><tr><th>Cmdlet</th><th>What it does</th></tr></thead>
           <tbody>
-            <tr><td class="fp">Get-NetDomain</td><td class="fd">Basic info about the current domain</td></tr>
+            <tr><td class="fp">Get-NetDomain | select name</td><td class="fd">Basic info about the current domain</td></tr>
             <tr><td class="fp">Get-NetUser</td><td class="fd">List all domain user objects</td></tr>
+            <tr><td class="fp">Get-NetLocalGroupMember -GroupName &lt;Group Name&gt;</td><td class="fd">List local members of a specific group</td></tr>
             <tr><td class="fp">Get-NetGroup</td><td class="fd">List domain groups</td></tr>
-            <tr><td class="fp">Get-NetGroupMember -GroupName "Domain Admins"</td><td class="fd">List members of a specific group</td></tr>
+            <tr><td class="fp">Get-NetGroupMember -GroupName &lt;Group Name&gt; -Domain &lt;Domain Name&gt;</td><td class="fd">List members of a specific group and a specific domain</td></tr>
             <tr><td class="fp">Get-NetComputer</td><td class="fd">List domain-joined computers</td></tr>
             <tr><td class="fp">Get-NetOU</td><td class="fd">List Organizational Units</td></tr>
             <tr><td class="fp">Get-NetGPO</td><td class="fd">List Group Policy Objects</td></tr>
@@ -656,6 +657,7 @@ setg Proxies socks5:127.0.0.1:9050</div>
           <tr><td class="c1">sessions -i &lt;ID&gt;</td><td class="c2">Interact with a session</td><td class="c3">sessions -i 1</td></tr>
           <tr><td class="c1">background / bg</td><td class="c2">Push session to background</td><td class="c3">background</td></tr>
           <tr><td class="c1">sessions -C "&lt;cmd&gt;"</td><td class="c2">Run a command across ALL active sessions at once — e.g. search every session for a process to check who's logged in</td><td class="c3">sessions -C "ps -U bob"</td></tr>
+          <tr><td class="c1">sessions -i &lt;session or session range&gt; -C "&lt;cmd&gt;"</td><td class="c2">Run a command across a single or range of active sessions at once — e.g. search every session for a file</td><td class="c3">sessions -i 1-5 -C "search -f '*flag.txt*'"</td></tr>
         </table>
       </div>
 
@@ -895,7 +897,7 @@ proxychains -f ./proxychains4.conf xfreerdp3 /v:10.10.20.5 /u:bob /p:pass /cert:
         <div style="padding: 0 12px 12px;">
           <div class="callout callout-warn" style="margin-bottom:0;">
             <span class="callout-icon">⚠</span>
-            <div>Set a matching listener (<code>exploit/multi/handler</code> with the same payload/LHOST/LPORT) before executing the payload on target, or the callback has nothing to connect to.</div>
+            <div>Set a matching listener (<code>exploit/multi/handler</code> with the same payload/LHOST/LPORT) before executing the payload on target, or the callback has nothing to connect to. Also, use "bind tcp" payloads for domain controllers.</div>
           </div>
         </div>
       </div>
@@ -1278,11 +1280,11 @@ proxychains -f ./proxychains4.conf xfreerdp3 /v:10.10.20.5 /u:bob /p:pass /cert:
         <table class="ref-table">
           <thead><tr><th>Command</th><th>What it does</th></tr></thead>
           <tbody>
-            <tr><td class="fp">Get-DomainComputer</td><td class="fd">List computer objects in the domain (PowerView-style cmdlet)</td></tr>
+            <tr><td class="fp">Get-DomainComputer -domain &lt;Domain Name&gt; | select cn |</td><td class="fd">List computer objects in a specific domain</td></tr>
             <tr><td class="fp">Get-IPAddress</td><td class="fd">Resolve a hostname to its IP address</td></tr>
             <tr><td class="fp">Get-DomainUser</td><td class="fd">List domain user objects</td></tr>
             <tr><td class="fp">Get-DomainGroup</td><td class="fd">List domain groups</td></tr>
-            <tr><td class="fp">Get-DomainGroupMember</td><td class="fd">List members of a specific group</td></tr>
+            <tr><td class="fp">Get-DomainGroupMember -Identity &lt;Group Name&gt; | select membername | sort-object membername </td><td class="fd">List members of a specific group, list the member names only and sort them</td></tr>
             <tr><td class="fp">Get-DomainOU</td><td class="fd">List Organizational Units</td></tr>
           </tbody>
         </table>
