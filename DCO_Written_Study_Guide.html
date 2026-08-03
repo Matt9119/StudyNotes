@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCO Written Study Guide — UCWT</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    --accent-btn:   #1D4ED8;
+    --accent-btn-text: #EFF6FF;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --text: #f2f2f7;
+      --text-muted: #aeaeb2;
+      --border: rgba(255,255,255,0.10);
+      --border-strong: rgba(255,255,255,0.20);
+    }
+    .badge-purple { background:#2D1B69 !important; color:#C4B5FD !important; }
+    .badge-teal   { background:#042A22 !important; color:#67E8C4 !important; }
+    .badge-yellow { background:#2A1E00 !important; color:#FCD34D !important; }
+    .badge-orange { background:#2A1000 !important; color:#FCA46A !important; }
+    .badge-blue   { background:#0A1A2E !important; color:#93C5FD !important; }
+    .badge-red    { background:#3A0A0A !important; color:#FCA5A5 !important; }
+    .callout-tip  { background:#0A3322 !important; border-color:#16A34A !important; }
+    .callout-trap { background:#3A1500 !important; border-color:#EA580C !important; }
+    .callout-key  { background:#0A1A3A !important; border-color:#2563EB !important; }
+    .callout-tip  .callout-label { color:#86EFAC !important; }
+    .callout-trap .callout-label { color:#FCA46A !important; }
+    .callout-key  .callout-label { color:#93C5FD !important; }
+    .callout p, .callout li { color: var(--text) !important; }
+    .layer-num  { background:#0A1A3A !important; color:#93C5FD !important; }
+    .ref-table thead th { background:#2c2c2e !important; }
+    .day-btn.active { background: var(--accent-btn) !important; color: var(--accent-btn-text) !important; border-color: var(--accent-btn) !important; }
+    #toc-list a.toc-active { color:#93C5FD !important; background:#0A1A3A !important; }
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  .page-layout { display: flex; align-items: flex-start; max-width: 780px; margin: 0 auto; padding: 0 1.25rem; gap: 1.5rem; }
+  .guide { flex: 1; min-width: 0; padding: 1.25rem 0 5rem; }
+
+  .guide-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border-strong); }
+  .guide-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+  .guide-header p  { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-family: var(--mono); }
+
+  .day-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .day-btn { padding:5px 13px; border:0.5px solid var(--border-strong); border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; background:var(--bg); color:var(--text-muted); transition:all 0.15s; font-family:var(--font); }
+  .day-btn.active { background: var(--accent-btn); color: var(--accent-btn-text); border-color: var(--accent-btn); }
+  .day-btn:hover:not(.active) { background:var(--bg-secondary); }
+
+  .day-section { display:none; }
+  .day-section.active { display:block; }
+
+  .section-badge { display:inline-block; font-size:11px; font-weight:500; padding:2px 10px; border-radius:20px; margin-bottom:8px; }
+  .badge-purple { background:#EDE9FE; color:#3B0764; }
+  .badge-teal   { background:#CCFBF1; color:#0F4C3A; }
+  .badge-yellow { background:#FEF9C3; color:#713F0C; }
+  .badge-orange { background:#FFEDD5; color:#7C2D12; }
+  .badge-blue   { background:#DBEAFE; color:#1E3A8A; }
+  .badge-red    { background:#FEE2E2; color:#7F1D1D; }
+
+  .topic-title { font-size:17px; font-weight:500; margin-bottom:4px; }
+
+  .card { background:var(--bg); border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1rem; }
+
+  .callout { border-radius:var(--radius-md); padding:.75rem 1rem; margin-bottom:1rem; border-left:3px solid; }
+  .callout-tip  { background:#F0FDF4; border-color:#16A34A; }
+  .callout-trap { background:#FFF7ED; border-color:#EA580C; }
+  .callout-key  { background:#EFF6FF; border-color:#2563EB; }
+  .callout-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .callout-tip  .callout-label { color:#16A34A; }
+  .callout-trap .callout-label { color:#EA580C; }
+  .callout-key  .callout-label { color:#1D4ED8; }
+  .callout p, .callout li { font-size:13px; }
+  .callout ul { padding-left:1rem; margin-top:4px; }
+  .callout li { margin-bottom:2px; }
+
+  ul.guide-list { padding-left:1.1rem; margin:.5rem 0; }
+  ul.guide-list li { margin-bottom:5px; font-size:14px; }
+  ul.guide-list ul { padding-left:1.1rem; margin:.3rem 0; }
+  ul.guide-list ul li { font-size:13px; margin-bottom:3px; }
+
+  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; margin:.75rem 0; }
+  .cmp-table th { padding:7px 10px; text-align:left; font-weight:500; font-size:12px; border-bottom:0.5px solid var(--border-strong); color:var(--text-muted); }
+  .cmp-table td { padding:7px 10px; border-bottom:0.5px solid var(--border); vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+
+  .cmd { display:inline-block; font-family:var(--mono); font-size:12px; background:var(--bg-secondary); border:0.5px solid var(--border); border-radius:4px; padding:1px 6px; color:var(--text); }
+  .cmd-block { display:block; font-family:var(--mono); font-size:11.5px; background:var(--bg-secondary); border:0.5px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); white-space:pre-wrap; word-break:break-word; margin-top:6px; line-height:1.5; }
+
+  h3.sh { font-size:14px; font-weight:500; margin:1rem 0 .5rem; border-bottom:.5px solid var(--border); padding-bottom:4px; }
+  h4.sh4 { font-size:13px; font-weight:500; margin:.75rem 0 .25rem; color:var(--text-muted); }
+  .divider { height:.5px; background:var(--border); margin:1.5rem 0; }
+
+  .perm-row { padding:6px 0; border-bottom:.5px solid var(--border); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-label { font-weight:500; font-size:12px; margin-bottom:2px; }
+
+  .layer-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:.5px solid var(--border); }
+  .layer-row:last-child { border-bottom:none; }
+  .layer-num { min-width:26px; height:26px; border-radius:50%; background: #EFF6FF; color: #1D4ED8; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; }
+  .layer-body { flex:1; }
+  .layer-name { font-size:13px; font-weight:500; }
+  .layer-meta { font-size:11.5px; color:var(--text-muted); margin-top:2px; }
+
+  .ref-section { margin-top:1.75rem; }
+  .ref-section-title { font-family:var(--mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); margin-bottom:.6rem; display:flex; align-items:center; gap:.5rem; }
+  .ref-section-title::after { content:''; flex:1; height:.5px; background:var(--border-strong); }
+  .ref-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:1.25rem; }
+  .ref-table thead th { padding:6px 10px; text-align:left; font-weight:500; font-size:11px; background:var(--bg-secondary); color:var(--text-muted); border-bottom:.5px solid var(--border-strong); }
+  .ref-table thead th:first-child { border-radius:6px 0 0 0; }
+  .ref-table thead th:last-child  { border-radius:0 6px 0 0; }
+  .ref-table tbody td { padding:6px 10px; border-bottom:.5px solid var(--border); vertical-align:top; }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table .rc { font-family:var(--mono); font-size:11.5px; color:var(--text); white-space:nowrap; }
+  .ref-table .rd { font-size:12px; color:var(--text-muted); }
+
+  .toc-sidebar { width: 155px; flex-shrink: 0; position: sticky; top: 1.25rem; max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.25rem 0 1rem; scrollbar-width: none; }
+  .toc-sidebar::-webkit-scrollbar { display: none; }
+  .toc-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.6rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border-strong); font-family: var(--mono); }
+  #toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+  #toc-list a { display: block; font-size: 11px; line-height: 1.4; text-decoration: none; border-radius: 4px; color: var(--text-muted); padding: 4px 6px; transition: all 0.15s; }
+  #toc-list a:hover { color: var(--text); background: var(--bg-secondary); }
+  #toc-list a.toc-active { color: #1D4ED8; background: #EFF6FF; font-weight: 500; }
+  #toc-list a.toc-main   { font-size: 11px; font-weight: 500; }
+  #toc-list a.toc-sub    { font-size: 10.5px; padding-left: 14px; opacity: 0.8; }
+
+  #back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0 14px; height: 38px; border-radius: 20px; background: var(--accent-btn); color: var(--accent-btn-text); font-size: 13px; font-family: var(--mono); text-decoration: none; display: none; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
+  #back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 640px) {
+    .page-layout  { padding: 0 0.85rem; gap: 0; }
+    .toc-sidebar  { display: none; }
+    #back-to-top  { display: flex; }
+    .guide-header h1 { font-size: 18px; }
+    .card { padding: .85rem 1rem; }
+    .cmp-table, .ref-table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+<div class="guide">
+
+<div class="guide-header">
+  <h1>DCO Written Study Guide</h1>
+  <p>// UCWT — Days 1–5 | Authorities · Threat Hunting · Network Devices · IOC Hunting · SIEM/SOAR</p>
+</div>
+
+<div class="day-nav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+  <button class="day-btn" onclick="showDay(2)">Day 2</button>
+  <button class="day-btn" onclick="showDay(3)">Day 3</button>
+  <button class="day-btn" onclick="showDay(4)">Day 4</button>
+  <button class="day-btn" onclick="showDay(5)">Day 5</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DAY 1 — Unit 1: DCO Authorities & AF Systems | Unit 2: Orders & Weapon Systems
+══════════════════════════════════════════ -->
+<div class="day-section active" id="day1">
+
+  <div class="section-badge badge-blue">What is DCO?</div>
+  <div class="topic-title">Policy, Strategy &amp; Guidance</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Policy</div>Minimize disruptions to critical info infrastructure — focus on protecting people, economy, essential services, and national security.</div>
+    <div class="perm-row"><div class="perm-label">Strategy</div>Comprehensive military cyberspace ops (offensive &amp; defensive); build a skilled cyber workforce.</div>
+    <div class="perm-row">
+      <div class="perm-label">Joint / AF Guidance</div>
+      <span class="cmd">JP 3-12</span> Cyberspace Ops doctrine for CCDRs &nbsp;·&nbsp; <span class="cmd">JP 3-0</span> Joint Campaigns/Ops &nbsp;·&nbsp; <span class="cmd">JP 5-0</span> Joint Op Planning<br>
+      <span class="cmd">AFDD 3-12</span> AF cyberspace doctrine &nbsp;·&nbsp; <span class="cmd">AFPD 17-2</span> AF/joint cyber policy &nbsp;·&nbsp; <span class="cmd">AFPD 5-0</span> Planning
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Defensive Cyberspace Operations (DCO)</div>
+    <ul class="guide-list">
+      <li>Conducted in response to specific threats of attack, exploitation, or malicious activity</li>
+      <li>Leverages info from maneuver, intel collection, CI, LE, and other sources</li>
+      <li>Goal: defeat the threat of a specific adversary and/or return a compromised network to a secure, functional state</li>
+    </ul>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Internal Defense Measures vs. Response Actions</div>
+    <table class="ref-table">
+      <thead><tr><th>DCO — Internal Defense Measures</th><th>DCO — Response Actions</th></tr></thead>
+      <tbody>
+        <tr><td class="rd">Title 10 authority</td><td class="rd">Title 50 authority</td></tr>
+        <tr><td class="rd">Most DCO missions fall here</td><td class="rd">Actions occur external to the defended network, without owner permission</td></tr>
+        <tr><td class="rd">Actions within the defended portion of cyberspace</td><td class="rd">Normally in foreign cyberspace</td></tr>
+        <tr><td class="rd">On DODIN — reconfirm/reestablish security of degraded/compromised/threatened DoD cyberspace</td><td class="rd">Includes proactive/aggressive threat hunting for APT</td></tr>
+        <tr><td class="rd">—</td><td class="rd">May include use of force / physical damage or destruction of systems</td></tr>
+        <tr><td class="rd">—</td><td class="rd">Requires some degree of attribution certainty, plus coordinated military order, ROE, and measurable objectives</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Non-DoD Cyberspace Defense</div>
+    <ul class="guide-list">
+      <li>DoD ops rely on non-DoD segments: private sector networks, CI/KR, mission partner networks</li>
+      <li>Coordination with DHS or other USG departments required</li>
+      <li>Includes DCO-RA and DCO-IDM missions</li>
+      <li>Can be supported by National Guard (Title 32/10), USCG (Title 14), Reserve components</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">DISA (Defense Information Systems Agency)</div>
+    <ul class="guide-list">
+      <li>Provides IT/comms support to POTUS, VPOTUS, SecDef, military services</li>
+      <li>All cyber units coordinate with DISA for scheduled/unscheduled outages affecting AF mission systems</li>
+      <li>Manages the JIE transition; owns JRSS equipment — <strong>JRSS will be replaced by Zero Trust Architecture</strong></li>
+      <li>Delivers SATCOM; is the DoDIN backbone, enabling Army/Navy/Marines/Air Force networking</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">DoDIN (Department of Defense Information Network)</div>
+    <p style="font-size:13px;">Globally interconnected, end-to-end set of info capabilities and processes for collecting/processing/storing/disseminating/managing information. Each branch has a dedicated portion. Provided by DISA.</p>
+    <div style="margin-top:6px;"><strong style="font-size:12.5px;">DoDIN Operations:</strong> standing mission executed by DCDC — secure/configure/operate/extend/maintain DoD cyberspace; network-focused &amp; threat-agnostic.</div>
+    <div style="margin-top:6px;"><strong style="font-size:12.5px;">3 mission areas:</strong> Defend the nation · Secure/Operate/Defend the DoDIN · Support CCMDs</div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Air Force Information Network (AFIN)</div>
+    <table class="ref-table">
+      <thead><tr><th>Network</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">AFNET (NIPR)</td><td class="rd">Unclassified AF ops. Enterprise-level admin privileges, standardized flat design.</td></tr>
+        <tr><td class="rc">AFNET-S (SIPR)</td><td class="rd">Classified AF ops. Architecture/funding vary by MAJCOM, difficult to administer, no separate base network (rides AFNET), traffic encrypted by TACLANEs, requires separate SIPR token (2FA).</td></tr>
+        <tr><td class="rc">PIT</td><td class="rd">Platform IT — special purpose systems (weapon systems, ICS, test systems, simulators), often not connected to AFNET.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Cyber Protection Teams (CPTs)</div>
+    <ul class="guide-list">
+      <li>Conduct threat-focused, intel-driven DCO on specified cyber terrain in response to ongoing/imminent threats</li>
+      <li>Conduct Hunt ops to illuminate Malicious Cyber Activity (MCA); clear terrain by targeting/engaging MCA</li>
+      <li>Recommend hardening; assess effectiveness of clearing/hardening actions</li>
+      <li>Confirm the friendly network environment for an accurate network picture</li>
+      <li>USA/USN/USMC have CPTs, but not defensive cyber weapon systems</li>
+    </ul>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">USCYBERCOM Work Roles</div>
+    <table class="ref-table">
+      <thead><tr><th>Role</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Network Analyst (NA)</td><td class="rd">Defense against logical access to network components, incl. wireless</td></tr>
+        <tr><td class="rc">Host Analyst (HA)</td><td class="rd">Defense of specific OSs — forensics/server admin emphasis</td></tr>
+        <tr><td class="rc">Network Technician (NT)</td><td class="rd">Network infrastructure — network defense infrastructure support</td></tr>
+        <tr><td class="rc">All Source Analyst (ASA)</td><td class="rd">J2 link for intel coverage — understanding adversary tactics</td></tr>
+        <tr><td class="rc">Cyber Ops Planner (COP)</td><td class="rd">Coordinates/plans ops — scheduling, accesses, scoping lines of effort</td></tr>
+        <tr><td class="rc">Analytic Support Officer (ASO)</td><td class="rd">Collects/analyzes/responds to data for SA gain/exploitation</td></tr>
+        <tr><td class="rc">Data Engineer (DE)</td><td class="rd">Ensures data is correctly formatted/structured for analysis/ingest</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">Cyber Mission Orders &amp; Weapon Systems</div>
+  <div class="topic-title">Tasking Authorities &amp; Crew Admin</div>
+
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">Stan/Eval Documentation</div>
+      CSCS, AFINC, CDA/ACD use <span class="cmd">4418s/4419s/4420s</span>. CVA/H and CPTs use <span class="cmd">Form 8s</span>.
+    </div>
+    <div class="perm-row"><div class="perm-label">AF Form 4418</div>Records results of cybercrew evals.</div>
+    <div class="perm-row"><div class="perm-label">AF Form 4420</div>Index providing info from all AF 4418s for a member.</div>
+    <div class="perm-row"><div class="perm-label">Individual Qualification Folder (IQF)</div>Contains source docs constituting a member's certification history — AF 4418 is the source document.</div>
+  </div>
+
+  <h3 class="sh">Types of Orders</h3>
+  <div class="ref-section">
+    <table class="ref-table">
+      <thead><tr><th>Order</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">WARNORD</td><td class="rd">Preliminary notice / essential planning guidance. Issued by CJCS/commander, starts COA development, SecDef authorizes force deployment.</td></tr>
+        <tr><td class="rc">PLANORD</td><td class="rd">Directive for essential planning guidance — directs plan development before COA approval.</td></tr>
+        <tr><td class="rc">EXORD</td><td class="rd">Directive to execute an approved plan. From President/SecDef; CJCS issues to start ops.</td></tr>
+        <tr><td class="rc">OPORD</td><td class="rd">Directive for coordinated execution of an operation — issued by a commander to subordinates.</td></tr>
+        <tr><td class="rc">TASKORD</td><td class="rd">Disseminates subordinate unit/mission instructions — objectives, effects, tasks.</td></tr>
+        <tr><td class="rc">CTO</td><td class="rd">AFCYBER-issued, published daily — tactical unit execution orders (mission ID, priority, unit, time, AO, comments).</td></tr>
+        <tr><td class="rc">FRAGORD</td><td class="rd">Incremental/supplemental order — modifies only the changed parts of a prior order.</td></tr>
+        <tr><td class="rc">SPINS</td><td class="rd">Amplifying instructions — codifies procedures; published by 616 OC (standing weekly + op-specific).</td></tr>
+        <tr><td class="rc">GENADMIN</td><td class="rd">General info &amp; SA — replaced NOTAM.</td></tr>
+        <tr><td class="rc">POA&amp;Ms</td><td class="rd">Identifies tasks for accomplishment / scheduled milestones.</td></tr>
+        <tr><td class="rc">TO (Technical Orders)</td><td class="rd">CSAF/SECAF orders — compliance mandatory.</td></tr>
+        <tr><td class="rc">CyOP</td><td class="rd">Published semiannually — overarching strategy for CDR AFCYBER, guides full-spectrum cyber capabilities.</td></tr>
+        <tr><td class="rc">CyOD</td><td class="rd">Published weekly — guidance for planning, execution, assessment (more frequent than CyOP).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sh">Cyber Tasking Cycle</h3>
+  <div class="card">
+    <div class="layer-row">
+      <div class="layer-num">1</div>
+      <div class="layer-body"><div class="layer-name">Strategy Development</div><div class="layer-meta">SRD — inputs: CEB, OPORD. Begins CyOD development.</div></div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">2</div>
+      <div class="layer-body"><div class="layer-name">Target Development</div><div class="layer-meta">SRD creates CyOD / initial targeting; CPD completes detailed targeting.</div></div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">3</div>
+      <div class="layer-body"><div class="layer-name">Master Cyber Planning</div><div class="layer-meta">CPD — effects consideration, deconfliction.</div></div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">4</div>
+      <div class="layer-body"><div class="layer-name">Orders Production</div><div class="layer-meta">CPD — produces CTO and CCO.</div></div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">5</div>
+      <div class="layer-body"><div class="layer-name">Execution</div><div class="layer-meta">COD — monitors CTO/CCO execution.</div></div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num">6</div>
+      <div class="layer-body"><div class="layer-name">Assessments</div><div class="layer-meta">COD initiates BDA/MOP; SRD completes MOE.</div></div>
+    </div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Balancing Gain &amp; Loss</div>
+    <p><strong>IGL (Intelligence Gain/Loss):</strong> ops could compromise intel collection — assessed before CO execution, complicated by non-DoD/multinational partners.</p>
+    <p style="margin-top:4px;"><strong>TGL (Technical Gain/Loss):</strong> intel gathered vs. risk of technology exposure — determines if a capability can operate without interference or increased detection risk.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">Air Force Cyber Weapon Systems</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">AF Weapon Systems</div>
+    <p style="font-size:13px;">A combination of weapon(s) with related equipment/materials/services/personnel/delivery means required for self-sufficiency (JP 3-0). Implements a regimented process for IST/IQT/MQT and being MR'd.</p>
+    <div style="margin-top:8px;">
+      <span class="cmd">Vol 1</span> Training &nbsp;·&nbsp; <span class="cmd">Vol 2</span> Evaluation Procedures &nbsp;·&nbsp; <span class="cmd">Vol 3</span> Crew Operations
+    </div>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Epubs: Cybercrew Vols ACCI17-202 (v1-3) &nbsp;·&nbsp; WS Vols ACCMAN17-2 (ACD, CDA, CSCS, AFINC, CVA/H)</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label">Joint Cyber Command &amp; Control (JCC2)</div>
+    <p style="font-size:13px; margin-top:4px;">USCYBERCOM-directed joint system providing 24/7 SA, cyber battle management, and C2 of the DoD cyberspace domain. Establishes/directs/coordinates OCO, DCO, DoDIN ops; develops/disseminates orders. Located at 616 OC, JBSA-Lackland, TX.</p>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;"><strong>Important:</strong> JCC2 is NOT a weapon system.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label">AFIN Mission Assurance Center (AMAC)</div>
+    <p style="font-size:13px; margin-top:4px;">Ensures health/availability of the AF network through C2 of maintenance ops, providing freedom of maneuver in/through cyberspace. Located at Lackland AFB, TX.</p>
+    <div style="margin-top:6px;"><strong style="font-size:12.5px;">3 key responsibilities:</strong> Incident response &amp; problem management · Global mission assurance · Vulnerability management</div>
+  </div>
+
+  <h3 class="sh">Cyber Weapon Systems</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">AFINC — Air Force Intranet Control</div>
+      26 NOS &amp; 689 NOS (Gunter Annex, AL). Conducts DCO-IDM at the AFNET/AFNET-S enterprise boundary — AF's first/last line of defense. 24/7/365 ops floor. Tools: Next-Gen Firewalls (Palo Alto), DNS/web proxies, Solarwinds, InfoBlox, ACAS, Wireshark.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">CSCS — Cyberspace Security &amp; Control Systems</div>
+      561 NOS, 83 NOS, 690 COS, 691 COS, 299 NOSS (Guard), 960/860 NOS (Reserve). Enforces security of traffic entering/exiting AF base-level enclaves. Tools: Domain Controllers, ACAS, Palo Alto/Panorama, vCenter.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">ACD — Air Force Cyberspace Defense</div>
+      33 COS, 426 NWS (JBSA), 102 COS (RI). AF-CSSP mission — 24/7/365 DCO, operates 354 sensors at 122 global sites, runs the AFIN SOC. Tools: EnCase, event correlation, Valkerie, Stealth Watch, Fidelis. Capabilities: DiD, Active Defense, Enterprise Hunt (Tanium/ARAD), MDE.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">CDA — Cyberspace Defense Analysis</div>
+      33 COS, 860 NWF, 960 NWF (JBSA). Monitors/analyzes Blue Force comms — protects CC's critical info requirements, detects sensitive disclosures/insider threats. Tools: Fidelis DLP sensors, keyword-based tailoring, VPS/COAST.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">CVA/H — Cyberspace Vulnerability Assessment/Hunter</div>
+      834/92 COS (JBSA), 835/837 COS (Scott AFB), Guard bases. Identifies vulnerabilities, provides risk assessments. Used by CPTs/MDTs on behalf of USCYBERCOM/AFCYBER. Hunt-clear-enable-harden-assess; F2T2EA the APT.
+      <div style="margin-top:6px; font-size:12.5px;">
+        <strong>Components:</strong> MIP (mobile laptop, remote IOC hunting) · GIP (closed network, powerful data processing) · DIP (passive data collection, protected boundary, site-to-site execution)
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Network Management Units — Communications Squadrons (CS)</div>
+    <p style="font-size:13px;">Every AF base/GSU has a dedicated CS or CS element.</p>
+    <div class="perm-row" style="border-top:.5px solid var(--border); margin-top:6px; padding-top:6px;">
+      <div class="perm-label">Operations (SCO)</div>
+      CST (on-site end-user maintenance) · CFP (C2/coordinate comms actions) · Server &amp; Vuln Management · Infrastructure/Cable/Telephony · Land Mobile Radio/Spectrum Mgmt
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Plans &amp; Programs (SCX)</div>
+      Plans &amp; Programs (long-term projects, upgrades/migrations) · Cybersecurity (COMSEC, investigations, accreditations)
+    </div>
+  </div>
+
+</div><!-- /day1 -->
+
+<!-- ══════════════════════════════════════════
+     DAY 2 — Unit 3: Threat Hunting & Incident Response
+══════════════════════════════════════════ -->
+<div class="day-section" id="day2">
+
+  <div class="section-badge badge-purple">DCO Missions &amp; Goals</div>
+
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Defend</div>Networks, systems, information (DoDIN) — AF cyber units defend the DoDIN with quick response.</div>
+    <div class="perm-row"><div class="perm-label">Prepare</div>US &amp; interests from significant attacks — if directed by POTUS/SecDef, DoD may conduct cyber ops to counter imminent attacks, synchronized with other agencies.</div>
+    <div class="perm-row"><div class="perm-label">Provide</div>Integrated capabilities for military ops — ensure an open/secure/prosperous internet under a doctrine of restraint.</div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">5 Strategic DCO Goals</div>
+    <ul class="guide-list">
+      <li><strong>Ready Forces</strong> — build cyber workforce &amp; capabilities</li>
+      <li><strong>Defend DoDIN</strong> — secure data &amp; mitigate risks (JIE)</li>
+      <li><strong>Defend U.S.</strong> — prepare for disruptive/destructive attacks</li>
+      <li><strong>Control Conflict</strong> — build viable cyber options</li>
+      <li><strong>International Partnerships</strong> — deter shared threats, increase stability</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">IR vs. Threat Hunting</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Incident Response</th><th>Threat Hunting</th></tr>
+      <tr><td>Systematic approach to prepare for, detect, contain, and recover from a suspected breach (CrowdStrike)</td><td>Proactively searching for threats lurking undetected in a network — digs past initial endpoint defenses (CrowdStrike)</td></tr>
+      <tr><td>Can use the PICERL process</td><td>Hypothesis-driven detection</td></tr>
+      <tr><td><strong>Reactive</strong></td><td><strong>Proactive, iterative</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Threat Hunting Methodology</div>
+    <p style="font-size:13px;">Hunt hypotheses are classified 3 ways:</p>
+    <ul class="guide-list">
+      <li><strong>Intel Driven</strong> — given intel to focus on</li>
+      <li><strong>Enemy TTP Driven</strong> — uses the MITRE ATT&amp;CK Matrix</li>
+      <li><strong>Anomalous Driven</strong> — uses NIST or best practices</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">Remember</div>
+    <p>If you don't have a hypothesis, you're not threat hunting.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Ultimate goals</div>
+    <ul class="guide-list">
+      <li>Lower the average dwell time of adversaries</li>
+      <li>Impose cost on adversaries — make them change their TTPs</li>
+      <li>Detect malicious behavior quicker and more frequently</li>
+    </ul>
+    <p style="font-size:12.5px; color:var(--text-muted); margin-top:6px;">Downtime between hunts generates lessons learned: What could you do better? Alternate detection capabilities? Can this be signaturized? How often should it be performed?</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Incident Response: PICERL</div>
+  <div class="topic-title">6 Steps</div>
+
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">1 · Prepare</div>
+      The most crucial step — defines how your org manages threats. Proactive defense: define the OE, planning, OSINT research, signature development, hardening, DiD.
+      <div style="margin-top:5px;">Know your OE — physical location, logical layout, security safeguards, users. Understanding it leads to <strong>Key Terrain</strong>: locality/area whose seizure or retention affords a marked advantage (JP 2-01.3). "Key Terrain Cyber" = critical enablers for mission success.</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">2 · Identify</div>
+      Determine if an event <em>is</em> an incident, then its scope. An <strong>event</strong> is any observable occurrence (e.g. user connects to a share). An <strong>incident</strong> is a violation/imminent threat of violation of security policy (e.g. botnet DDoS, phishing malware, data extortion).
+      <div style="margin-top:5px;">Key questions: What happened (who/what/where/when/why/how)? What makes this an incident? What's the scope? Does it impact ops? Does it match known adversary TTPs?</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">3 · Containment</div>
+      "Stop the bleeding" — limit and prevent further damage.
+      <div style="margin-top:5px;"><strong>Short term:</strong> immediate quarantine, remove the infected system from the network — <strong>don't pull the power plug</strong>. <strong>Long term:</strong> affected device can sometimes stay in service while investigation continues.</div>
+      <div style="margin-top:5px;">Use OCO methodologies (MITRE ATT&amp;CK) to anticipate/react. Forensically image the system; sandbox the malware for analysis.</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">4 · Eradicate</div>
+      Remove the root cause — every source of malware removed, every affected system cleaned/hardened: re-image drives, patch, run vuln scans.
+      <div style="margin-top:5px;">Forensic process: standardize ops, know your data resources, be proactive in data collection, use a standard/methodical process, constantly review procedures. Config/infrastructure changes here are DODIN Ops' responsibility — DCO typically investigates/identifies only.</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">5 · Recover</div>
+      Restore affected systems to normal ops. Validate: confirm vital systems operational, verify no further compromise signs, optionally test defenses (Cyber Threat Emulation) if time/partner allows. Then restore operations.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">6 · Lessons Learned</div>
+      Document and discuss what was learned — what worked, what needs improvement. Produces: After Action Report, MISREP, case notes, deliverables to mission partners (fix recommendations, security improvements).
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">Common Malware Types</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Code-Based Threats</div>
+    <ul class="guide-list">
+      <li><strong>Viruses</strong> — attaches to existing files, spreads via file sharing, requires a host program</li>
+      <li><strong>Worms</strong> — self-replicating, autonomous spread, network propagation</li>
+      <li><strong>Logic Bombs</strong> — dormant until triggered, time- or event-based activation</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Surveillance Threats</div>
+    <ul class="guide-list">
+      <li><strong>Spyware</strong> — covert installation, data tracking, custom collection</li>
+      <li><strong>Rootkits</strong> — system-level control, deep system integration, privileged access abuse</li>
+    </ul>
+  </div>
+
+  <h3 class="sh">Malware Analysis</h3>
+  <div class="card">
+    <div class="perm-row"><div class="perm-label">Static Analysis</div>Content examination — text files, web scripts, source code, binary reverse engineering.</div>
+    <div class="perm-row"><div class="perm-label">Surface Analysis</div>Quick checks — strings in binaries, hashes, file sizes, file type ID, AV detection status.</div>
+    <div class="perm-row"><div class="perm-label">Run-Time / Behavioral Analysis</div>Controlled environment monitoring — file/registry activity, service interactions, network comms, runtime vulns, remediation effectiveness, adversarial intent indicators.</div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Tools for Malware Triage/Analysis</div>
+    <table class="ref-table">
+      <thead><tr><th>Tool</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">PowerShell</td><td class="rd">Scripting/analysis on Windows</td></tr>
+        <tr><td class="rc">Sysinternals Suite</td><td class="rd">Windows admin/analysis toolset</td></tr>
+        <tr><td class="rc">Sandbox (Cuckoo)</td><td class="rd">Controlled detonation environment</td></tr>
+        <tr><td class="rc">CyberChef</td><td class="rd">Self-contained web app for encoding/decoding/data analysis</td></tr>
+        <tr><td class="rc">VirusTotal</td><td class="rd">Upload hashes/URLs/files to check against known malware records</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sh">Obfuscation Techniques</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">What is obfuscation?</div>
+      Concealing data/files/processes/actions on a system. Methods: encoding (ciphertext, packers), steganography, phishing, jargon, adding meaningless code.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Decoding it</div>
+      Look for oddly-colored images, off audio, encoded text. Tools: <span class="cmd">strings</span> (embedded text), <span class="cmd">Steghide</span> (extract hidden data from images), <span class="cmd">CyberChef</span> (decrypt/decode by format — BASE64↔ASCII, HEX↔Dec, media input support).
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Defense in Depth (DiD)</div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">CIA Triad</div>
+    <table class="ref-table">
+      <thead><tr><th>Principle</th><th>Industry Example</th><th>Military Example</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Confidentiality / Disclosure</td><td class="rd">Hospitals</td><td class="rd">OPSEC</td></tr>
+        <tr><td class="rc">Integrity / Alteration</td><td class="rd">Banks</td><td class="rd">C2 Orders</td></tr>
+        <tr><td class="rc">Availability / Destruction &amp; Denial</td><td class="rd">E-Commerce</td><td class="rd">E-mail</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Risk Management (NIST SP 800-30)</div>
+    <p style="font-size:13px;">Risk = a function of the likelihood of a threat event's occurrence and its potential adverse impact.</p>
+    <ul class="guide-list" style="margin-top:6px;">
+      <li><strong>Threat-source</strong> — natural (hurricane), human (internal/external), environmental (power/HVAC)</li>
+      <li><strong>Threat</strong> — potential for a source to exploit a vulnerability</li>
+      <li><strong>Vulnerability</strong> — a flaw that can present a security breach</li>
+      <li><strong>Likelihood</strong> — probability of threat + vulnerability combining</li>
+      <li><strong>Management Controls</strong> — safeguards/countermeasures that reduce risk</li>
+    </ul>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">At a high level: balance risk exposure against mitigation cost, then implement countermeasures.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">DiD Approaches</div>
+    <ul class="guide-list">
+      <li><strong>Uniform Protection</strong> — treat all systems as equally important; most common approach</li>
+      <li><strong>Protected Enclaves</strong> — subdivide/separate networks (VLANs, VPNs, host/internal firewalls)</li>
+      <li><strong>Information Centric</strong> — prioritize protecting information over systems; layer protection around the data</li>
+      <li><strong>Vector-Oriented</strong> — ID threat vectors, secure each: identify the asset → rank by value → brainstorm attack paths → place controls on each vector</li>
+    </ul>
+  </div>
+
+</div><!-- /day2 -->
+
+<!-- ══════════════════════════════════════════
+     DAY 3 — Unit 4: Network Devices and Theory
+══════════════════════════════════════════ -->
+<div class="day-section" id="day3">
+
+  <div class="section-badge badge-blue">AFIN Functional Relationships</div>
+  <div class="card">
+    <p style="font-size:13px;">AFIN — globally interconnected, end-to-end set of AF info capabilities and processes for collecting/processing/storing/disseminating/managing information on-demand to AF warfighters, policy makers, and support personnel; includes owned/leased systems, software, data, and security services.</p>
+    <p style="font-size:12.5px; color:var(--text-muted); margin-top:6px;">AFIN includes: AFNET, AFNET-S, JWICS, SIBRS, GPS, F35, AFSCN, etc.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-purple">Virtual Machines &amp; Containers</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">What are VMs?</div>
+    <ul class="guide-list">
+      <li>Software that emulates a hardware system; runs on a system or server</li>
+      <li>Each VM runs a unique OS — multiple VMs can run on one server (e.g. Windows + Linux + macOS VM on one box)</li>
+      <li>The <strong>hypervisor</strong> creates and runs VMs</li>
+    </ul>
+    <table class="cmp-table" style="margin-top:6px;">
+      <tr><th>Type 1</th><th>Type 2</th></tr>
+      <tr><td>Installed directly on hardware (e.g. ESXi)</td><td>Runs on top of an existing OS (e.g. VMWorkstation, VirtualBox)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">VMs in DCO</div>
+    <ul class="guide-list">
+      <li>Virtual Desktop Environments — users log into a VM; segmentation adds security; easy to shut down during an incident</li>
+      <li>Windows/Linux VMs used on AF Weapon Systems</li>
+      <li>Used in malware analysis — sandboxes are purpose-built VMs emulating real machines</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">What are Containers?</div>
+    <ul class="guide-list">
+      <li>Standard unit of software packaging code + dependencies to run reliably across environments</li>
+      <li>Multiple containers can run on a single OS instance</li>
+      <li>Lighter/more portable than VMs — fast spin-up, less storage</li>
+    </ul>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">When a container stops, everything inside it is lost and resources return to the system.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Containers in DCO</div>
+    <p style="font-size:13px;">Used for several DCO programs (ELK, Arkime).</p>
+    <div style="margin-top:6px;"><strong style="font-size:12.5px;">Kubernetes:</strong> automates deployment of multiple containers on AF Weapon Systems — open source, automated rollouts/rollbacks, self-healing (auto restarts/fixes failing containers).</div>
+    <div style="margin-top:6px; font-size:12.5px;"><strong>Concerns:</strong> error handling, team continuity of knowledge, expanded attack surface, log storage (in/outside container), vulnerabilities (outdated images, misconfig, insecure APIs).</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Network Services</div>
+
+  <div class="ref-section">
+    <table class="ref-table">
+      <thead><tr><th>Service</th><th>Port</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">DNS</td><td class="rc">UDP 53 (queries) / TCP 53 (zone transfer)</td><td class="rd">Resolves domain names to IPs. Recursive = works up the chain via previous server; Iterative = host works up the chain itself. Root Name Servers are the final stop.</td></tr>
+        <tr><td class="rc">NTP</td><td class="rc">UDP 123</td><td class="rd">Accurate network clock — stratum levels = hops from Atomic Clock/GPS. Important for AAA.</td></tr>
+        <tr><td class="rc">DHCP</td><td class="rc">UDP 67 (server) / UDP 68 (client)</td><td class="rd">Leases IPs from a pool; configures host IP, subnet mask, gateway, DNS server, lease time (default 86,400s).</td></tr>
+        <tr><td class="rc">HTTP</td><td class="rc">80, 8080</td><td class="rd">Application layer, unencrypted, foundation of the web.</td></tr>
+        <tr><td class="rc">HTTPS</td><td class="rc">443 (alt 8443)</td><td class="rd">HTTP + encryption. Formerly SSL, now TLS.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">DNS Resource Records</div>
+    <table class="cmp-table">
+      <tr><td><span class="cmd">A</span></td><td>Host → IPv4</td></tr>
+      <tr><td><span class="cmd">AAAA</span></td><td>Host → IPv6</td></tr>
+      <tr><td><span class="cmd">PTR</span></td><td>IP → Host</td></tr>
+      <tr><td><span class="cmd">CNAME</span></td><td>Alias / nickname</td></tr>
+      <tr><td><span class="cmd">MX</span></td><td>Mail transport server address</td></tr>
+      <tr><td><span class="cmd">NS</span></td><td>Name server</td></tr>
+      <tr><td><span class="cmd">SRV</span></td><td>Like MX, but for other services</td></tr>
+      <tr><td><span class="cmd">TXT</span></td><td>Machine-readable/informational data</td></tr>
+    </table>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Query with <span class="cmd">nslookup</span> or <span class="cmd">dig</span>.</p>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">DNS Sinkhole / Blackhole</div>
+    <p>Redirects DNS responses to prevent clients from reaching malware/spyware/spam destinations — traffic is sent to a non-routable IP (e.g. 0.0.0.0) or controlled environment. Can be built with a forward lookup zone using the malicious site's name, or via a blackhole list of known-offending servers.</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">Firewalls</div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">5 Firewall Security Designs</div>
+    <table class="ref-table">
+      <thead><tr><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">1. Packet (L3)</td><td class="rd">Simplest — filters on IP/port criteria. High performance, but no protection against spoofing, fragmentation, or app-layer attacks.</td></tr>
+        <tr><td class="rc">2. Stateful Inspection (L4)</td><td class="rd">Tracks TCP session state — only passes packets valid for the connection's state; prevents IP spoofing since packets must belong to a valid session.</td></tr>
+        <tr><td class="rc">3. Application Layer (L7)</td><td class="rd">Understands app protocols (HTTP headers, FTP sequences); terminates/originates separate connections on each side; can restrict specific commands (e.g. FTP GET-only).</td></tr>
+        <tr><td class="rc">4. Hybrid</td><td class="rd">Combines all three — can balance fast packet-level throughput with app-level security.</td></tr>
+        <tr><td class="rc">5. Next-Generation (NGFW)</td><td class="rd">Highest class — deep packet inspection, app awareness, integrated IPS, cloud threat intel. Best against APTs. USAF uses Palo Alto NGFWs.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">pfSense</div>
+    <ul class="guide-list">
+      <li>Free, open-source, multifunctional (router/firewall/proxy/DNS/DHCP/VPN)</li>
+      <li>Filters at L3/L4/L7 — has NGFW capabilities</li>
+      <li>Runs a customized FreeBSD; managed entirely via web GUI</li>
+    </ul>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Rule tips: make rules as close to the user as possible; explicit Deny-All should be your last rule.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Host-Based Firewalls (Native)</div>
+    <table class="cmp-table">
+      <tr><th>OS</th><th>Tool</th></tr>
+      <tr><td>Windows</td><td>Windows Defender Firewall</td></tr>
+      <tr><td>Linux / macOS</td><td>IPtables</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Windows Defender Firewall</div>
+    <p style="font-size:13px;">Stateful inspection, host-based, since Vista/Server 2008. Supports IPsec (auth + optional encryption of traffic). Managed via CLI or GUI.</p>
+    <table class="cmp-table" style="margin-top:6px;">
+      <tr><th>Profile</th><th>Use</th></tr>
+      <tr><td>Domain</td><td>Domain-joined systems (must auth to a DC)</td></tr>
+      <tr><td>Private</td><td>Home/private networks</td></tr>
+      <tr><td>Public</td><td>Higher security — hotspots, coffee shops, airports</td></tr>
+    </table>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Default: moderate security, blocks inbound/allows outbound. Rule types: Program, Port, Predefined, Custom.</p>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">IPtables — Options &amp; Values</div>
+    <table class="ref-table">
+      <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">-A, --append</td><td class="rd">Append to bottom of the chain</td></tr>
+        <tr><td class="rc">-I, --insert</td><td class="rd">Insert at top of the chain</td></tr>
+        <tr><td class="rc">-C, --check</td><td class="rd">Check if a rule exists (0=present, 1=not)</td></tr>
+        <tr><td class="rc">-D, --delete</td><td class="rd">Delete a rule from the chain</td></tr>
+        <tr><td class="rc">-p, --proto</td><td class="rd">Protocol (tcp, udp, icmp, ssh, etc.)</td></tr>
+        <tr><td class="rc">-s, --source</td><td class="rd">Match source address</td></tr>
+        <tr><td class="rc">-d, --destination</td><td class="rd">Match destination address</td></tr>
+        <tr><td class="rc">-j, --jump</td><td class="rd">Action to take on a match</td></tr>
+      </tbody>
+    </table>
+    <div class="card" style="margin-top:-.5rem;">
+      <div class="perm-label">Values (used with -j)</div>
+      <span class="cmd">ACCEPT</span> · <span class="cmd">DROP</span> (silent) · <span class="cmd">REJECT</span> (notifies sender) · <span class="cmd">QUEUE</span> (userspace) · <span class="cmd">RETURN</span> (stop chain for this packet)
+      <div class="perm-label" style="margin-top:10px;">Useful commands</div>
+      <div class="cmd-block">sudo iptables --flush
+sudo iptables-save
+sudo iptables-restore</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Proxy</div>
+    <p style="font-size:13px;">Content filter — intermediary between web client/server, monitors and regulates internet/intranet resources.</p>
+    <div style="margin-top:6px; font-size:12.5px;"><strong>Common uses:</strong> content filtering (allow/block lists, keyword filtering), bypassing censorship, access control, anonymizing traffic, NAT-based security.</div>
+    <table class="cmp-table" style="margin-top:6px;">
+      <tr><th>Deployment</th><th>Notes</th></tr>
+      <tr><td>Intercepting / Transparent</td><td>Client unaware, no config needed, saves bandwidth via caching</td></tr>
+      <tr><td>Explicit / Non-transparent</td><td>Requires client-side config; used for HTTPS filtering or user auth</td></tr>
+      <tr><td>Reverse</td><td>Fronts a web server — load balancing, SSL cert consolidation</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-red">Intrusion Detection &amp; Prevention</div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>IDS</th><th>IPS</th></tr>
+      <tr><td>Passively monitors traffic</td><td>Placed inline with traffic</td></tr>
+      <tr><td>Not inline (not recommended if it is)</td><td>Analyzes via signature matching</td></tr>
+      <tr><td>Alerts/logs on a match</td><td>Alerts/logs AND can act on traffic</td></tr>
+      <tr><td><strong>Not capable of stopping traffic</strong></td><td><strong>Can prevent or allow traffic</strong></td></tr>
+    </table>
+  </div>
+
+  <h3 class="sh">Snort</h3>
+  <div class="card">
+    <div class="perm-row">
+      <div class="perm-label">What is Snort?</div>
+      A NIDS (can also run as IPS). Built in 1998 as a sniffer on top of tcpdump. Rule/signature based, with preprocessor engines for fragmentation and initial packet analysis. Latest: Snort 3.9.2 (multi-threading, reworked TCP handling).
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">3 operational modes</div>
+      <strong>Sniffer</strong> — decodes and dumps packets like tcpdump (<span class="cmd">snort -d -v -a -e</span>).<br>
+      <strong>Packet Logger</strong> — saves packets in flat ASCII/tcpdump/XML/DB formats (<span class="cmd">snort -b -l /var/log/snort</span>).<br>
+      <strong>NIDS</strong> — full analysis with plugins: portscan detection, IP defrag, TCP reassembly, app-layer analysis (<span class="cmd">snort -i eth0 -c /etc/snort/snort.lua</span>). Default mode if no switches given.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">snort.lua</div>
+      Operational config file (was <span class="cmd">snort.conf</span> in 2.x). Sets logging/alerting/rules/paths/variables. Default path: <span class="cmd">/usr/local/etc/snort/snort.lua</span>. Variable suffixes identify type: <span class="cmd">_PATH</span>, <span class="cmd">_NET</span>, <span class="cmd">_PORT</span>.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">"include" keyword</div>
+      Pulls in other rule files: <span class="cmd">include &lt;file path/name&gt;</span>. Default path <span class="cmd">RULES_PATH = '/etc/snort/rules/'</span>.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Placement</div>
+      Internet interface, DMZ, server farms, inter-subnet connections. Must be inline for Reject/Drop/Sdrop (NIPS); can run off SPAN ports if only listening (NIDS).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Snort Rules</div>
+    <p style="font-size:13px;">A rule picks out matching traffic and takes an action. Usually a single line. Two sections: <strong>Rule Header</strong> (action, protocol, source/dest ports+IPs) and <strong>Rule Options</strong> (what to inspect, alert message).</p>
+    <div class="cmd-block" style="margin-top:8px;">action protocol source direction destination ( options )</div>
+    <div style="margin-top:8px; font-size:12.5px;">
+      <strong>IP addresses:</strong> must be IP (no hostname lookup), CIDR notation, negation with <span class="cmd">!</span>, variables with <span class="cmd">$</span> (e.g. <span class="cmd">EXTERNAL_NET !$HOME_NET</span>).<br><br>
+      <strong>Direction operators:</strong> <span class="cmd">-&gt;</span> (one-way) · <span class="cmd">&lt;&gt;</span> (bidirectional). Range operator <span class="cmd">:</span> — <span class="cmd">[n1]:[n2]</span> range, <span class="cmd">:[n]</span> ≤n, <span class="cmd">[n]:</span> ≥n.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Rule Options</div>
+    <p style="font-size:13px;">Options separated by <span class="cmd">;</span>; keyword/argument separated by <span class="cmd">:</span>. 4 categories: General, Payload, Non-payload, Post-detection.</p>
+    <ul class="guide-list" style="margin-top:6px;">
+      <li><strong>msg</strong> — message for the alert/log: <span class="cmd">msg: "External SMB connection attempt";</span></li>
+      <li><strong>reference</strong> — links to external ID systems (e.g. CVE)</li>
+      <li><strong>sid</strong> — unique rule ID (&lt;100 reserved, 100–1,000,000 = Snort distro rules, &gt;1,000,000 = local rules)</li>
+      <li><strong>rev</strong> — revision number for tracking rule updates</li>
+    </ul>
+    <div class="cmd-block" style="margin-top:8px;">alert tcp any any -&gt; any 80 (content:"BOB"; sid:1000983; rev:1;)</div>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Tip: use VIM to highlight incorrect rule syntax. View live alerts: <span class="cmd">tail -f /var/log/snort/alert</span>.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label">TCPDump</div>
+    <p style="font-size:13px; margin-top:4px;">Free (BSD-licensed), on most Linux/Unix systems. Command-line packet capture — basis for most network-based defense tools. Useful for proving your own tool didn't cause an MP network outage (run TCPDump on yourself).</p>
+  </div>
+
+</div><!-- /day3 -->
+
+<!-- ══════════════════════════════════════════
+     DAY 4 — Unit 5: Network Mapping and IOC Hunting
+══════════════════════════════════════════ -->
+<div class="day-section" id="day4">
+
+  <div class="section-badge badge-red">Indicators of Compromise</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">What is an IOC?</div>
+    <p style="font-size:13px;">An artifact observed on a network/OS that, with high confidence, indicates a computer intrusion. Often used after-the-fact — improves early detection, generates IDS/IPS rules, creates AV signatures.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Types of IOCs</div>
+    <ul class="guide-list">
+      <li><strong>Atomic</strong> — a single data fragment that alone indicates adversary activity (e.g. a known bad IP, domain, or executable)</li>
+      <li><strong>Computed</strong> — developed from incident material (e.g. a file hash matching a known-malicious executable)</li>
+      <li><strong>Behavioral</strong> — atomic + computed combined into a behavior profile (e.g. a malicious Word macro spawns cmd.exe and connects to a known-bad domain to pull files matching a known malware hash)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Common IOCs</div>
+    <ul class="guide-list">
+      <li>Unusual outbound or internal network traffic</li>
+      <li>Changes in / suspicious behavior of privileged accounts</li>
+      <li>Excessive failed logins followed by a success</li>
+      <li>Mismatched port-application traffic</li>
+      <li>Suspicious registry or file system changes</li>
+      <li>Uncommon DNS requests</li>
+      <li>Processes running outside their expected location</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label">Traditional Detection &amp; Prevention Methods</div>
+    <p style="font-size:13px; margin-top:4px;">Allow &amp; deny lists · IOCs · Network security monitoring · Anomaly-based detection · Host-based event data · TTP-based detection</p>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Network Mapping</div>
+
+  <div class="card">
+    <p style="font-size:13px;">Identifying what computers/devices are on your network — to defend a network, you must first know what's on it. Conducted during Functional Mission Analysis-Cyber (FMAC).</p>
+    <div style="margin-top:6px; font-size:12.5px;"><strong>Importance to DCO:</strong> maps are the basis for defensive strategy; needed to determine weak points/vulnerabilities (part of Environment Characterization).</div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Information Gathered</div>
+    <p style="font-size:13px;">IP addresses · open ports · network services · hostnames · OS types · data flow · communication links</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Methods of Network Mapping</div>
+    <ul class="guide-list">
+      <li><strong>Windows PowerShell</strong> — ping-sweep a subnet, use cmdlets to portscan a host/subnet</li>
+      <li><strong>Linux</strong> — for-loops to ping-sweep or portscan</li>
+      <li><strong>Nmap</strong> — free/open-source, CLI or GUI (Zenmap, which can also generate network maps)</li>
+    </ul>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Nmap Special Scan Types</div>
+    <table class="ref-table">
+      <thead><tr><th>Scan</th><th>Flag</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">Null</td><td class="rc">nmap -sN</td><td class="rd">Sets no bits in the TCP packet</td></tr>
+        <tr><td class="rc">FIN</td><td class="rc">nmap -sF</td><td class="rd">Sets just the FIN bit</td></tr>
+        <tr><td class="rc">XMAS</td><td class="rc">nmap -sX</td><td class="rd">Sets FIN, PSH, and URG bits</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--text-muted);">These take advantage of how TCP responds to certain flag combinations to determine if a port is open.</p>
+  </div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Active Scanning</th><th>Passive Scanning</th></tr>
+      <tr><td>Nmap, PowerShell scripts, Bash scripts</td><td>Already-gathered info — no new traffic sent/received</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-teal">Network Traffic Analysis</div>
+
+  <div class="card">
+    <p style="font-size:13px;">Network traffic capture = intercepting packets crossing a point on the network — how traffic is saved for scanning/analysis; a source for spotting malicious/unwanted traffic.</p>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">TCPDump is the fallback tool if Arkime/Wireshark are inoperable — generally pre-installed on most Linux distros.</p>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">TCPDump — Useful Options</div>
+    <table class="ref-table">
+      <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">-i</td><td class="rd">Interface</td></tr>
+        <tr><td class="rc">-D</td><td class="rd">List available interfaces</td></tr>
+        <tr><td class="rc">-n</td><td class="rd">Don't resolve hostnames</td></tr>
+        <tr><td class="rc">-nn</td><td class="rd">Don't resolve hostnames OR port names</td></tr>
+        <tr><td class="rc">-v</td><td class="rd">Verbose output</td></tr>
+        <tr><td class="rc">-E</td><td class="rd">Decrypt IPSEC traffic with a provided key</td></tr>
+        <tr><td class="rc">-s0</td><td class="rd">Capture everything (full packet)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">TCPDump Keywords &amp; Booleans</div>
+    <table class="cmp-table">
+      <tr><td><span class="cmd">host</span></td><td>Traffic in/out of a specified host</td></tr>
+      <tr><td><span class="cmd">src</span></td><td>Traffic from a particular source IP</td></tr>
+      <tr><td><span class="cmd">dst</span></td><td>Traffic to a specific destination IP</td></tr>
+      <tr><td><span class="cmd">net</span></td><td>Network of interest (CIDR) — combine with src/dst</td></tr>
+      <tr><td><span class="cmd">port</span></td><td>Src/dst port(s) — range with <span class="cmd">:</span>, e.g. 161:163; protocols too (icmp/udp/tcp)</td></tr>
+    </table>
+    <p style="font-size:12.5px; margin-top:6px;">Combine with: <span class="cmd">and</span> / <span class="cmd">&amp;&amp;</span> &nbsp;·&nbsp; <span class="cmd">or</span> / <span class="cmd">||</span> &nbsp;·&nbsp; <span class="cmd">not</span> / <span class="cmd">!</span></p>
+  </div>
+
+  <h3 class="sh">Wireshark</h3>
+  <div class="card">
+    <ul class="guide-list">
+      <li>Gathers/stores network packet data — a microscopic snapshot of TCP/IP traffic</li>
+      <li>De facto standard across industry/education</li>
+      <li>Not an IDS — won't alert you to strange activity, but can help you investigate it after the fact</li>
+    </ul>
+    <div style="margin-top:8px; font-size:12.5px;">
+      <strong>Capture:</strong> Capture → Interfaces → choose your interface → Start<br>
+      <strong>Stop/Save:</strong> Capture → Stop, then File → Save As<br>
+      <strong>Load:</strong> File → Open → select file
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label">Arkime</div>
+    <ul class="guide-list" style="margin-top:4px;">
+      <li>Large-scale, open-source, indexed packet capture and search tool</li>
+      <li>Handles multiple Gbps of traffic; view metadata AND content</li>
+      <li>PCAP retention depends on available disk space; can export to PCAP for other tools</li>
+      <li>Interacted with via a web application</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Network Miner</div>
+    <p style="font-size:13px;">GUI for sniffing live traffic (available in CVA/H). Primary purpose: parse captured pcaps — can aggregate multiple files, retrieve pcaps/live traffic from remote machines.</p>
+    <ul class="guide-list" style="margin-top:6px;">
+      <li><strong>Host tab</strong> — IPs seen, fingerprinted OS icon, hostname, geolocation, open ports; color-code hosts to trace a user's actions</li>
+      <li><strong>Files tab</strong> — reassembled/extracted files (from HTTP, SMB, FTP, TFTP, SSL, TLS)</li>
+      <li><strong>Message tab</strong> — emails, IRC/IM chats, social media</li>
+      <li><strong>Credentials tab</strong> — sniffed usernames/passwords</li>
+      <li><strong>Parameters tab</strong> — name/value data extracted from traffic (e.g. HTTP query strings)</li>
+      <li><strong>Keywords tab</strong> — search captured traffic (case-sensitive), shows frame + source/dest</li>
+    </ul>
+  </div>
+
+</div><!-- /day4 -->
+
+<!-- ══════════════════════════════════════════
+     DAY 5 — Unit 6: SIEMs, SOARs, and Host Analysis
+══════════════════════════════════════════ -->
+<div class="day-section" id="day5">
+
+  <div class="section-badge badge-purple">SIEM &amp; SOAR</div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">SIEM — Security Information &amp; Event Management</div>
+    <p style="font-size:13px;">Used across DODIN Ops and DCO for a centralized log repository. Common AF SIEMs: ArcSight, ELK (Elastic Stack), Splunk.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">ELK (Elastic Stack)</div>
+    <p style="font-size:13px;">Open-source component pipeline to collect/store/analyze/search data at enterprise scale (thousands of sources, large volumes, multiple assessors).</p>
+    <div class="perm-row" style="border-top:.5px solid var(--border); margin-top:6px; padding-top:6px;">
+      <div class="perm-label">Beats</div>
+      Lightweight executables that ship raw data from the source machine to the stack for parsing/indexing.
+      <table class="cmp-table" style="margin-top:6px;">
+        <tr><td><span class="cmd">Winlogbeat</span></td><td>Windows event logs</td></tr>
+        <tr><td><span class="cmd">Packetbeat</span></td><td>Network traffic metadata</td></tr>
+        <tr><td><span class="cmd">Filebeat</span></td><td>Generic file/log collector</td></tr>
+        <tr><td><span class="cmd">Metricbeat</span></td><td>CPU/memory/disk/network stats</td></tr>
+        <tr><td><span class="cmd">Auditbeat</span></td><td>Linux audit framework data, file integrity monitoring</td></tr>
+      </table>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Elasticsearch</div>
+      Collects/indexes large data volumes for efficient real-time search — a distributed system (via clustering) that scales to enterprise infrastructure.
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Kibana</div>
+      Open-source analytics/visualization front-end for Elasticsearch. Works with <em>metadata</em> only — you cannot view the actual payload/data in Kibana. Supports queries, visualizations, and timeline analysis.
+    </div>
+  </div>
+
+  <div class="callout callout-key">
+    <div class="callout-label">SIEM vs. SOAR</div>
+    <p>Both collect data from sensors, firewalls, IDS/IPS, etc. <strong>SIEM</strong> aggregates/correlates data across systems to generate alerts. <strong>SOAR</strong> (Security Orchestration, Automation and Response) integrates 3rd-party threat feeds and acts as the remediation/response engine for those alerts.</p>
+  </div>
+
+  <h3 class="sh">Windows Event Logs</h3>
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Log</th><th>Records</th></tr>
+      <tr><td>Application</td><td>Windows system components — drivers, built-in UI elements</td></tr>
+      <tr><td>System</td><td>Events related to installed programs</td></tr>
+      <tr><td>Security</td><td>Logon attempts, resource access — <strong>often the most useful for identifying attacker actions</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-section-title">Common Event IDs to Hunt</div>
+    <table class="ref-table">
+      <thead><tr><th>Event ID</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="rc">4624</td><td class="rd">Successful logon</td></tr>
+        <tr><td class="rc">4672</td><td class="rd">Admin-equivalent account logon</td></tr>
+        <tr><td class="rc">4673</td><td class="rd">A privileged service was called</td></tr>
+        <tr><td class="rc">4688</td><td class="rd">A program/process was executed</td></tr>
+        <tr><td class="rc">4697</td><td class="rd">A new service was installed</td></tr>
+        <tr><td class="rc">4698</td><td class="rd">A scheduled task was created</td></tr>
+        <tr><td class="rc">4699</td><td class="rd">A scheduled task was deleted</td></tr>
+        <tr><td class="rc">4702</td><td class="rd">A scheduled task was updated</td></tr>
+        <tr><td class="rc">4720</td><td class="rd">A user account was created</td></tr>
+        <tr><td class="rc">201</td><td class="rd">Task Scheduler successfully completed a task</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Kibana Analytics Tabs</div>
+    <ul class="guide-list">
+      <li><strong>Discover</strong> — most recently received logs, filterable by search query + time filter</li>
+      <li><strong>Visualize Library</strong> — create/modify/view custom visualizations based on Elasticsearch queries</li>
+      <li><strong>Dashboard</strong> — create/modify/view dashboards (collections of visualizations viewed together)</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-orange">Host Survey &amp; Host-Based Security</div>
+
+  <div class="card">
+    <p style="font-size:13px;">A Host Survey gathers detailed information about what's happening on your devices — establishes an "Environment Characterization" snapshot, ideally before exploitation occurs. Anything questionable found must be validated as stay/go.</p>
+    <div style="margin-top:6px; font-size:12.5px;"><strong>Importance to DCO:</strong> known baseline understanding, "pattern of life" research, avoids re-investigating already-validated items, enables proactive vuln discovery, basis for defensive measures.</div>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Types of Info Gathered</div>
+    <p style="font-size:13px;">Process list · users (admin &amp; non-admin) · installed software · auto-running programs · network connections · shared folders · installed/running services</p>
+  </div>
+
+  <div class="card">
+    <table class="cmp-table">
+      <tr><th>Local Collection</th><th>Remote Collection</th></tr>
+      <tr><td>Physically log into each host — time/effort scales badly with enclave size</td><td>Interact with all hosts from a central location; scalable given appropriate accesses</td></tr>
+    </table>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">Remote collection is favored operationally for its scalability.</p>
+  </div>
+
+  <div class="callout callout-trap">
+    <div class="callout-label">Trusted Tools</div>
+    <p>Software tested/verified to safely interact with or retrieve info from a host. Never fully trust tools already on the network you're monitoring/hunting — use binaries from your own system instead.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Sysinternals Suite</div>
+    <p style="font-size:13px;">Windows admin toolset (docs.microsoft.com/sysinternals) — run as Administrator.</p>
+    <ul class="guide-list" style="margin-top:6px;">
+      <li><strong>Process Explorer</strong> — hierarchy of processes, open windows/files, per-process data, CPU tracking, find which process loaded a DLL (DLL injection hunting), kill process trees, suspend processes. <em>Cannot run remotely.</em></li>
+      <li><strong>Autoruns</strong> — exhaustive list of auto-start processes; disable by unchecking; verifies executable signatures; can diff against a previous saved list</li>
+      <li><strong>Handle</strong> — see what programs have a file/directory open, and the object types involved</li>
+      <li><strong>ListDLLs</strong> — reports DLLs loaded into a process (or which processes have a given DLL loaded); shows digital signatures</li>
+      <li><strong>Strings</strong> — finds human-readable text in apps/DLLs (e.g. an unusual URL); usage: <span class="cmd">strings &lt;file&gt;</span></li>
+      <li><strong>Streams</strong> — reveals Alternate Data Streams (ADS), which can be used to hide data in the Windows file system</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-badge badge-blue">Endpoint Security</div>
+
+  <div class="card">
+    <p style="font-size:13px;">Endpoints are physical devices that connect to and exchange info with a network — mobile devices, desktops, VMs, embedded devices, servers, and IoT (cameras, thermostats, smart speakers, etc).</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">EDR — Endpoint Detection &amp; Response</div>
+    <p style="font-size:13px;">Agents placed on end-user devices to monitor/protect them — varying capability levels: AV, host IDS/IPS, info gathering (memory, processes, network connections). The Air Force uses <strong>Windows Defender Enterprise</strong>.</p>
+  </div>
+
+  <div class="card">
+    <div class="perm-label" style="margin-bottom:6px;">Windows Defender Enterprise</div>
+    <p style="font-size:13px;">Prevent/detect/investigate/respond to advanced threats.</p>
+    <div class="perm-row" style="border-top:.5px solid var(--border); margin-top:6px; padding-top:6px;">
+      <div class="perm-label">Vulnerability Management</div>
+      Continuously prioritizes the biggest risks on critical assets. Continuous asset discovery/monitoring (benchmark compliance, authenticated scanning, hardware/firmware assessment). Risk-based prioritization (emerging threats, active breaches, high-value assets). Remediation/tracking (block vulnerable apps, config insight, real-time status).
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Automated Investigation &amp; Response (AIR)</div>
+      Alert → incident created → automated investigation begins → related alerts tied together → verdict generated (malicious / suspicious / no threat).
+      <div style="margin-top:5px;">Device group config: <strong>Full</strong> (auto-remediate) · <strong>Semi</strong> (needs approval) · <strong>No automated response</strong>.</div>
+      <div style="margin-top:5px;">Remediation actions: quarantine file, remove registry key, kill process, stop a service.</div>
+    </div>
+    <div class="perm-row">
+      <div class="perm-label">Threat Analytics</div>
+      Helps teams stay ahead of active threat actors/campaigns, popular/new attack techniques, critical vulnerabilities, common attack surfaces, and prevalent malware.
+    </div>
+  </div>
+
+</div><!-- /day5 -->
+
+</div><!-- end .guide -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this page</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  function showDay(n) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('day' + n).classList.add('active');
+    document.querySelectorAll('.day-btn')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  let observer = null;
+
+  function buildTOC() {
+    const activeDay = document.querySelector('.day-section.active');
+    const tocList   = document.getElementById('toc-list');
+
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activeDay.querySelectorAll('.section-badge, h3.sh');
+    if (items.length === 0) return;
+
+    items.forEach((el, i) => {
+      el.id = 'toc-anchor-' + i;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href        = '#toc-anchor-' + i;
+      a.className   = el.classList.contains('sh') ? 'toc-sub' : 'toc-main';
+      a.textContent = el.textContent.trim();
+
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const links = tocList.querySelectorAll('a');
+
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('toc-active'));
+          const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('toc-active');
+            active.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      });
+    }, {
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0
+    });
+
+    items.forEach(el => observer.observe(el));
+  }
+
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  buildTOC();
+</script>
+
+</body>
+</html>
