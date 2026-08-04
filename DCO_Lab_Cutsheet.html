@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCO Lab Cutsheet — UCWT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0e1117;
+  --bg2:         #161b22;
+  --bg3:         #1c2128;
+  --bg4:         #21262d;
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+  --text:        #e6edf3;
+  --muted:       #7d8590;
+  --green:       #3fb950;
+  --green-dim:   rgba(63,185,80,0.12);
+  --cyan:        #56d364;
+  --yellow:      #d29922;
+  --yellow-dim:  rgba(210,153,34,0.12);
+  --orange:      #f0883e;
+  --orange-dim:  rgba(240,136,62,0.12);
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.12);
+  --red:         #f85149;
+  --red-dim:     rgba(248,81,73,0.12);
+  --purple:      #bc8cff;
+  --purple-dim:  rgba(188,140,255,0.12);
+  --teal:        #2dd4bf;
+  --teal-dim:    rgba(45,212,191,0.12);
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:#ffffff; --bg2:#f5f5f3; --bg3:#ececea; --bg4:#e4e4e1;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+    --text:#1a1a1a; --muted:#6b6b6b;
+    --green-dim:rgba(63,185,80,0.14); --yellow-dim:rgba(210,153,34,0.14);
+    --orange-dim:rgba(240,136,62,0.14); --blue-dim:rgba(88,166,255,0.14);
+    --red-dim:rgba(248,81,73,0.14); --purple-dim:rgba(188,140,255,0.14);
+    --teal-dim:rgba(45,212,191,0.16);
+  }
+}
+html[data-theme="dark"] {
+  --bg: #0e1117; --bg2:#161b22; --bg3:#1c2128; --bg4:#21262d;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+  --text:#e6edf3; --muted:#7d8590;
+  --green-dim:rgba(63,185,80,0.12); --yellow-dim:rgba(210,153,34,0.12);
+  --orange-dim:rgba(240,136,62,0.12); --blue-dim:rgba(88,166,255,0.12);
+  --red-dim:rgba(248,81,73,0.12); --purple-dim:rgba(188,140,255,0.12);
+  --teal-dim:rgba(45,212,191,0.12);
+}
+html[data-theme="light"] {
+  --bg:#ffffff; --bg2:#f5f5f3; --bg3:#ececea; --bg4:#e4e4e1;
+  --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+  --text:#1a1a1a; --muted:#6b6b6b;
+  --green-dim:rgba(63,185,80,0.14); --yellow-dim:rgba(210,153,34,0.14);
+  --orange-dim:rgba(240,136,62,0.14); --blue-dim:rgba(88,166,255,0.14);
+  --red-dim:rgba(248,81,73,0.14); --purple-dim:rgba(188,140,255,0.14);
+  --teal-dim:rgba(45,212,191,0.16);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; min-height: 100vh; }
+
+.page-layout { display: flex; align-items: flex-start; max-width: 1200px; margin: 0 auto; gap: 1.5rem; padding: 0 1.25rem; }
+.shell { flex: 1; min-width: 0; padding: 1.5rem 0 5rem; }
+
+.header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.header-title { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; color: var(--blue); letter-spacing: -0.01em; }
+.header-title span { color: var(--muted); font-weight: 300; }
+.header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.header-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); letter-spacing: .04em; }
+#theme-toggle { font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 5px; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted); cursor: pointer; }
+#theme-toggle:hover { color: var(--text); border-color: var(--blue); }
+
+.tab-nav { display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab-btn { font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted); cursor: pointer; transition: all .15s; letter-spacing: .02em; }
+.tab-btn:hover:not(.active) { color: var(--text); border-color: var(--blue); }
+.tab-btn.active { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.nav-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.nav-pill { font-family: var(--mono); font-size: 10.5px; font-weight: 500; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted); background: var(--bg2); cursor: pointer; text-decoration: none; transition: all .15s; letter-spacing: .02em; }
+.nav-pill:hover { color: var(--text); border-color: var(--blue); }
+
+.section { margin-bottom: 2rem; }
+.section-label { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .75rem; display: flex; align-items: center; gap: .5rem; }
+.section-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.dot-green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.dot-blue   { background: var(--blue);  box-shadow: 0 0 6px var(--blue); }
+.dot-yellow { background: var(--yellow);}
+.dot-orange { background: var(--orange);}
+.dot-red    { background: var(--red);   box-shadow: 0 0 6px var(--red); }
+.dot-purple { background: var(--purple);}
+.dot-teal   { background: var(--teal); box-shadow: 0 0 6px var(--teal); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.cmd-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cmd-block-header { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 6px 12px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--blue); letter-spacing: .04em; display: flex; align-items: center; gap: 6px; }
+.cmd-block-header.hdr-green { color: var(--green); }
+.cmd-block-header.hdr-orange { color: var(--orange); }
+.cmd-block-header.hdr-purple { color: var(--purple); }
+.cmd-table { width: 100%; border-collapse: collapse; }
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table tr:hover { background: rgba(127,127,127,0.05); }
+.cmd-table td { padding: 6px 10px; vertical-align: top; }
+.cmd-table .c1 { font-family: var(--mono); font-size: 11.5px; color: var(--blue); white-space: nowrap; width: 1%; padding-right: 12px; font-weight: 500; }
+.cmd-table .c2 { font-size: 12px; color: var(--muted); width: 38%; }
+.cmd-table .c3 { font-family: var(--mono); font-size: 11px; color: var(--green); opacity: .9; }
+
+.ref-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.ref-wrap-title { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 7px 14px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .04em; }
+.ref-table { width:100%; border-collapse: collapse; font-size: 12px; }
+.ref-table thead th { background: var(--bg4); padding: 6px 12px; text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--border2); letter-spacing: .03em; }
+.ref-table tbody td { padding: 6px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:hover { background: rgba(127,127,127,0.05); }
+.fp { font-family: var(--mono); font-size: 11px; color: var(--blue); white-space: nowrap; }
+.fd { font-size: 11.5px; color: var(--muted); }
+
+.callout { border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; border-left: 3px solid; font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
+.callout-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.callout-tip  { background: var(--green-dim);  border-color: var(--green);  }
+.callout-warn { background: var(--orange-dim); border-color: var(--orange); }
+.callout-info { background: var(--blue-dim);   border-color: var(--blue);   }
+
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; color: var(--blue); }
+.step-cmd { font-family: var(--mono); font-size: 11px; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 6px 10px; color: var(--green); overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+
+.decision-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1.1rem; margin-bottom: .85rem; }
+.decision-card-title { font-family: var(--mono); font-size: 13px; font-weight: 600; margin-bottom: 5px; display:flex; align-items:center; gap:8px; }
+.decision-card-body { font-size: 12.5px; color: var(--muted); }
+
+.toc-sidebar { width: 165px; flex-shrink: 0; position: sticky; top: 1.25rem; max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.5rem 0 1rem; scrollbar-width: none; }
+.toc-sidebar::-webkit-scrollbar { display: none; }
+.toc-title { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: .6rem; padding-bottom: .5rem; border-bottom: 1px solid var(--border2); }
+#toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1px; }
+#toc-list a { display: block; font-size: 11px; line-height: 1.4; text-decoration: none; border-radius: 4px; color: var(--muted); padding: 4px 6px; transition: all .15s; }
+#toc-list a:hover { color: var(--text); background: var(--bg2); }
+#toc-list a.toc-active { color: var(--blue); background: var(--blue-dim); font-weight: 500; }
+
+#back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0 14px; height: 38px; border-radius: 20px; background: var(--blue); color: #0e1117; font-size: 13px; font-family: var(--mono); font-weight: 600; text-decoration: none; display: none; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 999; }
+#back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 900px) {
+  .toc-sidebar { display: none; }
+  #back-to-top { display: flex; }
+}
+</style>
+</head>
+<body>
+<div class="page-layout">
+<div class="shell">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">defensive<span>/</span>cutsheet</div>
+      <div class="header-sub">// DCO lab quick reference — tool selection · Windows/Linux survey · Arkime · Kibana · Snort</div>
+    </div>
+    <div class="header-right">
+      <div class="header-meta">
+        <span class="tag">UCWT · DCO</span>
+      </div>
+      <button id="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('decide', this)">🧭 Choosing a Tool</button>
+    <button class="tab-btn" onclick="showTab('windows', this)">🪟 Windows Survey</button>
+    <button class="tab-btn" onclick="showTab('linux', this)">🐧 Linux Survey</button>
+    <button class="tab-btn" onclick="showTab('network', this)">🦈 TCPDump &amp; Arkime</button>
+    <button class="tab-btn" onclick="showTab('kibana', this)">📊 Kibana</button>
+    <button class="tab-btn" onclick="showTab('snort', this)">🐷 Snort</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 1 — CHOOSING A TOOL
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane active" id="decide">
+
+    <div class="section">
+      <div class="section-label"><span class="dot dot-blue"></span>Local Survey vs. Arkime vs. Kibana</div>
+
+      <div class="decision-card">
+        <div class="decision-card-title">🖥️ Local Survey</div>
+        <div class="decision-card-body">Use when you need <strong>current, up-to-date, host-specific</strong> information — processes, services, local users, registry state, etc. right now on that box.</div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div>If you're checking a specific user's info (e.g. their <code>HKCU</code> registry keys), you need to be signed in <strong>as that user</strong> — <code>HKCU</code> only reflects the currently logged-in user's hive.</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card-title">🦈 Arkime</div>
+        <div class="decision-card-body">Use when you need <strong>network traffic analysis</strong> — searchable sessions, filtering by IP/port/protocol, and PCAP export/download of what was captured.</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card-title">📊 Kibana</div>
+        <div class="decision-card-body">Use when the data you need is already indexed in <strong>Elasticsearch</strong> — visualizing logs, metrics, or SIEM data across hosts/time, rather than raw packet capture.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label"><span class="dot dot-teal"></span>Quick Decision Cheat</div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>You're asked about...</th><th>Reach for</th></tr></thead>
+          <tbody>
+            <tr><td class="fd">"What's running on this box right now?"</td><td class="fp">Local Survey</td></tr>
+            <tr><td class="fd">"Did this host talk to that IP/port?"</td><td class="fp">Arkime</td></tr>
+            <tr><td class="fd">"Was there a file downloaded over HTTP?"</td><td class="fp">Arkime</td></tr>
+            <tr><td class="fd">"Search/correlate logs across multiple hosts or a time range"</td><td class="fp">Kibana</td></tr>
+            <tr><td class="fd">"Write a detection for future traffic"</td><td class="fp">Snort</td></tr>
+            <tr><td class="fd">"Capture traffic live from the CLI, no GUI available"</td><td class="fp">TCPDump</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /decide -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 2 — WINDOWS SURVEY
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="windows">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#win-remote">Remote Connection</a>
+      <a class="nav-pill" href="#win-core">Core Survey</a>
+      <a class="nav-pill" href="#win-domain">Domain Info</a>
+      <a class="nav-pill" href="#win-persist">Persistence Checks</a>
+      <a class="nav-pill" href="#win-utility">Output Utilities</a>
+    </div>
+
+    <div class="section" id="win-remote">
+      <div class="section-label"><span class="dot dot-blue"></span>Remote Connection</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔑</span>Establishing a Remote Session</div>
+        <table class="cmd-table">
+          <tr><td class="c1">$cred=Get-Credential &lt;user&gt;</td><td class="c2">Assign username/password to a $cred variable — prompts for the password</td><td class="c3">$cred=Get-Credential CORP\bob</td></tr>
+          <tr><td class="c1">Enter-PSSession -Credential $cred</td><td class="c2">Connect to a remote IP using the stored credentials</td><td class="c3">Enter-PSSession 192.168.1.50 -Credential $cred</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-core">
+      <div class="section-label"><span class="dot dot-green"></span>Core Survey Commands</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span class="icon">🔍</span>Users, Services, Processes, Network</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Get-LocalUser</td><td class="c2">Enumerate local users</td><td class="c3">Get-LocalUser</td></tr>
+          <tr><td class="c1">Get-Service</td><td class="c2">Check installed/running services</td><td class="c3">Get-Service</td></tr>
+          <tr><td class="c1">Get-Process</td><td class="c2">Check running processes</td><td class="c3">Get-Process</td></tr>
+          <tr><td class="c1">Get-NetTCPConnection</td><td class="c2">Check network connections (or use <code>netstat -a</code>)</td><td class="c3">Get-NetTCPConnection</td></tr>
+          <tr><td class="c1">Get-NetFirewallRule</td><td class="c2">Display firewall rules — filter with <code>-Enabled True/False</code></td><td class="c3">Get-NetFirewallRule -Enabled True</td></tr>
+        </table>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span class="icon">🧰</span>Fundamentals worth adding</div>
+        <table class="cmd-table">
+          <tr><td class="c1">whoami /all</td><td class="c2">Current user, groups, and privileges</td><td class="c3">whoami /all</td></tr>
+          <tr><td class="c1">ipconfig /all</td><td class="c2">Full network adapter configuration</td><td class="c3">ipconfig /all</td></tr>
+          <tr><td class="c1">Get-Hotfix</td><td class="c2">Installed patches — quick patch-level check</td><td class="c3">Get-Hotfix</td></tr>
+          <tr><td class="c1">Get-WinEvent -LogName Security -MaxEvents 20</td><td class="c2">Pull the most recent Security event log entries</td><td class="c3">Get-WinEvent -LogName Security -MaxEvents 20</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-domain">
+      <div class="section-label"><span class="dot dot-purple"></span>Domain Info</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-purple"><span class="icon">🏢</span>Domain / AD Enumeration</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Get-ADUser</td><td class="c2">If on a DC — enumerate domain users</td><td class="c3">Get-ADUser -Filter *</td></tr>
+          <tr><td class="c1">Get-ADTrust</td><td class="c2">If on a DC — enumerate domain trusts</td><td class="c3">Get-ADTrust -Filter *</td></tr>
+          <tr><td class="c1">SystemInfo | select-string domain</td><td class="c2">Quick domain check from basic system info</td><td class="c3">SystemInfo | select-string domain</td></tr>
+          <tr><td class="c1">Get-ADDomain</td><td class="c2">Full domain info (if AD module available)</td><td class="c3">Get-ADDomain</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-persist">
+      <div class="section-label"><span class="dot dot-orange"></span>Persistence Checks</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">🔁</span>Autorun Registry Keys</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Get-ItemProperty -Path ...</td><td class="c2">Check common autorun locations, formatted for readability</td><td class="c3">see below</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">Get-ItemProperty -Path `
+  'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', `
+  'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', `
+  'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce', `
+  'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce', `
+  'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run', `
+  'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\RunOnce' `
+  | Format-Table -AutoSize</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">⏰</span>Scheduled Tasks &amp; File Hashing</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Get-ScheduledTask</td><td class="c2">Check scheduled tasks</td><td class="c3">Get-ScheduledTask</td></tr>
+          <tr><td class="c1">Get-ScheduledJob</td><td class="c2">Check scheduled jobs</td><td class="c3">Get-ScheduledJob</td></tr>
+          <tr><td class="c1">Get-FileHash -Algorithm SHA256</td><td class="c2">Hash a suspicious executable to check against known-bad/good lists</td><td class="c3">Get-FileHash -Algorithm SHA256 .\beacon_x64.exe</td></tr>
+          <tr><td class="c1">Get-CimInstance Win32_StartupCommand</td><td class="c2">Alternate view of startup/autorun programs</td><td class="c3">Get-CimInstance Win32_StartupCommand</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-utility">
+      <div class="section-label"><span class="dot dot-blue"></span>Output Utilities</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📤</span>Making Output Usable</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Out-GridView</td><td class="c2">Pipe any command's output into an interactive, sortable/filterable grid</td><td class="c3">Get-Process | Out-GridView</td></tr>
+          <tr><td class="c1">Export-Csv -Path &lt;file&gt;</td><td class="c2">Pipe output to a CSV file for reporting/handoff</td><td class="c3">Get-LocalUser | Export-Csv -Path C:\users.csv</td></tr>
+        </table>
+      </div>
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div>When a survey command returns a wall of text, pipe it into <code>Out-GridView</code> first — sorting/filtering interactively is much faster than scrolling a console during a timed lab.</div>
+      </div>
+    </div>
+
+  </div><!-- /windows -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 3 — LINUX SURVEY
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="linux">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#nix-core">Core Survey</a>
+      <a class="nav-pill" href="#nix-users">Users &amp; Logins</a>
+      <a class="nav-pill" href="#nix-persist">Persistence Checks</a>
+    </div>
+
+    <div class="section" id="nix-core">
+      <div class="section-label"><span class="dot dot-green"></span>Core Survey Commands</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span class="icon">🖥️</span>Host &amp; Network Info</div>
+        <table class="cmd-table">
+          <tr><td class="c1">hostname; uname -a; ip a</td><td class="c2">Hostname, kernel info, and IP info in one line</td><td class="c3">hostname; uname -a; ip a</td></tr>
+          <tr><td class="c1">ss -puntal</td><td class="c2">Network connections with process info</td><td class="c3">ss -puntal</td></tr>
+          <tr><td class="c1">ps aux</td><td class="c2">Running process info</td><td class="c3">ps aux</td></tr>
+        </table>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-green"><span class="icon">🧰</span>Fundamentals worth adding</div>
+        <table class="cmd-table">
+          <tr><td class="c1">netstat -tulpn</td><td class="c2">Alternate to ss — listening ports + owning process</td><td class="c3">netstat -tulpn</td></tr>
+          <tr><td class="c1">who -a</td><td class="c2">Extended view of logged-in sessions/boot time</td><td class="c3">who -a</td></tr>
+          <tr><td class="c1">journalctl -xe</td><td class="c2">Recent system logs with extra context (systemd)</td><td class="c3">journalctl -xe</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-users">
+      <div class="section-label"><span class="dot dot-blue"></span>Users &amp; Logins</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">👤</span>Accounts &amp; Login History</div>
+        <table class="cmd-table">
+          <tr><td class="c1">cat /etc/passwd</td><td class="c2">User account info</td><td class="c3">cat /etc/passwd</td></tr>
+          <tr><td class="c1">w</td><td class="c2">See who's currently logged in</td><td class="c3">w</td></tr>
+          <tr><td class="c1">last</td><td class="c2">Check successful login history</td><td class="c3">last</td></tr>
+          <tr><td class="c1">sudo lastb</td><td class="c2">Check failed login attempts</td><td class="c3">sudo lastb</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="nix-persist">
+      <div class="section-label"><span class="dot dot-orange"></span>Persistence &amp; Tampering Checks</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">🔁</span>Persistence Mechanisms</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ls -lR /etc/cron.*</td><td class="c2">Check cron directories for persistence</td><td class="c3">ls -lR /etc/cron.*</td></tr>
+          <tr><td class="c1">crontab -l</td><td class="c2">Check current user's crontab specifically</td><td class="c3">crontab -l</td></tr>
+          <tr><td class="c1">sudo find / -type f -perm /4000 2&gt;/dev/null</td><td class="c2">Find unauthorized SUID binaries</td><td class="c3">sudo find / -type f -perm /4000 2&gt;/dev/null</td></tr>
+        </table>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">🕵️</span>Tampering &amp; Suspicious Files</div>
+        <table class="cmd-table">
+          <tr><td class="c1">ls -la /tmp</td><td class="c2">Check /tmp for dropped files</td><td class="c3">ls -la /tmp</td></tr>
+          <tr><td class="c1">sudo find / -name "*.sh" -exec ls -la {} \;</td><td class="c2">Find unexpected shell scripts</td><td class="c3">sudo find / -name "*.sh" -exec ls -la {} \;</td></tr>
+          <tr><td class="c1">sudo grep -r "passwd" /etc</td><td class="c2">Check for password-file manipulation</td><td class="c3">sudo grep -r "passwd" /etc</td></tr>
+          <tr><td class="c1">find / -mtime -1 2&gt;/dev/null</td><td class="c2">Files modified in the last 24 hours — recently dropped tools</td><td class="c3">find / -mtime -1 2&gt;/dev/null</td></tr>
+        </table>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div><code>/etc/shadow</code> holds password hashes and requires root to read — don't forget <code>sudo</code> when checking it, and treat its contents as sensitive.</div>
+      </div>
+    </div>
+
+  </div><!-- /linux -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 4 — TCPDUMP & ARKIME
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="network">
+
+    <div class="nav-pills">
+      <a class="nav-pill" href="#tcpdump">TCPDump</a>
+      <a class="nav-pill" href="#arkime-filters">Arkime Filters</a>
+      <a class="nav-pill" href="#arkime-download">Downloading a File</a>
+    </div>
+
+    <div class="section" id="tcpdump">
+      <div class="section-label"><span class="dot dot-blue"></span>TCPDump Commands</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">📡</span>Core Flags</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-i</td><td class="c2">Capture on a specific interface</td><td class="c3">tcpdump -i eth0</td></tr>
+          <tr><td class="c1">-n</td><td class="c2">Disable hostname and port resolution</td><td class="c3">tcpdump -n</td></tr>
+          <tr><td class="c1">-v, -vv, -vvv</td><td class="c2">Increasing verbosity of output</td><td class="c3">tcpdump -vv</td></tr>
+          <tr><td class="c1">-q</td><td class="c2">Quick/quiet — less protocol detail per line</td><td class="c3">tcpdump -q</td></tr>
+          <tr><td class="c1">-c</td><td class="c2">Stop after capturing a set number of packets</td><td class="c3">tcpdump -c 50</td></tr>
+          <tr><td class="c1">-w</td><td class="c2">Write captured traffic to a .pcap file</td><td class="c3">tcpdump -w capture.pcap</td></tr>
+        </table>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🧰</span>Fundamentals worth adding</div>
+        <table class="cmd-table">
+          <tr><td class="c1">-r</td><td class="c2">Read from a previously saved .pcap file instead of a live interface</td><td class="c3">tcpdump -r capture.pcap</td></tr>
+          <tr><td class="c1">host / src / dst</td><td class="c2">Filter by IP — either direction, source only, or destination only</td><td class="c3">tcpdump host 192.168.1.50</td></tr>
+          <tr><td class="c1">port</td><td class="c2">Filter by port</td><td class="c3">tcpdump port 443</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">tcpdump -i eth0 -n -c 100 -w suspicious.pcap host 192.168.1.50 and port 445</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="arkime-filters">
+      <div class="section-label"><span class="dot dot-teal"></span>Common Arkime Filters</div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Filter</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">ip.src == &lt;ip&gt;</td><td class="fd">Filter for a specific source IP</td></tr>
+            <tr><td class="fp">ip.dst == &lt;ip&gt;</td><td class="fd">Filter for a specific destination IP</td></tr>
+            <tr><td class="fp">port.src / port.dst</td><td class="fd">Filter by a specific source or destination port</td></tr>
+            <tr><td class="fp">http.uri == &lt;path&gt;</td><td class="fd">Look for files/executables downloaded over HTTP — e.g. <code>http.uri == "*.exe"</code> finds anything ending in .exe</td></tr>
+            <tr><td class="fp">!=, &amp;&amp;, ||</td><td class="fd">Operators — not equal, AND, OR</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 8px 14px 12px;">
+          <div class="callout callout-info" style="margin-bottom:0;">
+            <span class="callout-icon">ℹ</span>
+            <div><strong>A couple more that come up often:</strong> <code>dns.host == &lt;domain&gt;</code> for DNS lookups of a specific domain, and <code>protocols == tcp</code> / <code>protocols == udp</code> to narrow by protocol.</div>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div>Always check the <strong>time range picker</strong> in the top corner before you start filtering — a search that returns nothing is often just pointed at the wrong window, not a dead end.</div>
+      </div>
+    </div>
+
+    <div class="section" id="arkime-download">
+      <div class="section-label"><span class="dot dot-orange"></span>Downloading an Executable from a Session</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">⬇️</span>Steps</div>
+        <table class="cmd-table">
+          <tr><td class="c1">1</td><td class="c2">Click the <code>+</code> icon on the session</td><td class="c3">Packet Options</td></tr>
+          <tr><td class="c1">2</td><td class="c2">Select "Display images and files"</td><td class="c3">reveals embedded objects</td></tr>
+          <tr><td class="c1">3</td><td class="c2">Click the executable to download it</td><td class="c3">saved as a defanged file</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-warn" style="margin-bottom:0;">
+            <span class="callout-icon">⚠</span>
+            <div>The file downloads as a <strong>pellet file</strong> so it won't execute automatically — treat it as live/malicious material regardless, and don't rename/run it outside an approved analysis environment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /network -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 5 — KIBANA
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="kibana">
+
+    <div class="section">
+      <div class="section-label"><span class="dot dot-blue"></span>Kibana Workflow Tips</div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div><strong>Check the time filter first.</strong> The single most common reason a search comes back empty is that the time range doesn't cover the window you actually care about.</div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header"><span class="icon">🔎</span>Searching</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Query bar</td><td class="c2">Start here — search depends on what you're looking for (field, keyword, IP, etc.)</td><td class="c3">source.ip: "192.168.1.50"</td></tr>
+          <tr><td class="c1">Hover a field/result</td><td class="c2">"Include" or "Exclude" it from your results — useful for filtering out logs with blank fields</td><td class="c3">hover → include/exclude</td></tr>
+          <tr><td class="c1">Expand arrow on a row</td><td class="c2">Expands the full document — has its own search box to refine further</td><td class="c3">click the arrow</td></tr>
+          <tr><td class="c1">Hover a row</td><td class="c2">Filter for that data and/or toggle that column into your table view</td><td class="c3">hover → filter/toggle column</td></tr>
+          <tr><td class="c1">Disable a filter temporarily</td><td class="c2">Hover the filter pill under the search bar → left-click → "temporarily disable"</td><td class="c3">without deleting the filter</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">Basic KQL (Kibana Query Language) syntax</div>
+        <table class="ref-table">
+          <thead><tr><th>Query</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">field: value</td><td class="fd">Match a field to a value</td></tr>
+            <tr><td class="fp">field: "exact phrase"</td><td class="fd">Match an exact phrase</td></tr>
+            <tr><td class="fp">NOT field: value</td><td class="fd">Exclude a match</td></tr>
+            <tr><td class="fp">field: val1 or field: val2</td><td class="fd">Match either value</td></tr>
+            <tr><td class="fp">field: val*</td><td class="fd">Wildcard match</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div>If you built this study material's <strong>DCO Written Study Guide</strong> — the Discover / Visualize Library / Dashboard tab breakdown there is a good companion to this cutsheet for understanding what each Kibana tab is for.</div>
+      </div>
+    </div>
+
+  </div><!-- /kibana -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 6 — SNORT
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="snort">
+
+    <div class="section">
+      <div class="section-label"><span class="dot dot-red"></span>Snort Essentials</div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">📁</span>Key Files</div>
+        <table class="cmd-table">
+          <tr><td class="c1">snort.lua</td><td class="c2">Defines the global config for Snort</td><td class="c3">/usr/local/etc/snort/snort.lua</td></tr>
+          <tr><td class="c1">local.rules</td><td class="c2">Stores your custom detection rules</td><td class="c3">local.rules</td></tr>
+        </table>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">📝</span>Rule Syntax</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Structure</td><td class="c2" colspan="1">action protocol src_ip src_port -&gt; dest_ip dest_port (options)</td><td class="c3"></td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">alert tcp any any -> 192.168.0.1 80 (msg:"HTTP Traffic Detected"; sid:1000001; rev:1;)</div>
+        </div>
+      </div>
+
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">Common rule actions</div>
+        <table class="ref-table">
+          <thead><tr><th>Action</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">alert</td><td class="fd">Generate an alert, then continue normal packet processing</td></tr>
+            <tr><td class="fp">log</td><td class="fd">Log the packet, no alert generated</td></tr>
+            <tr><td class="fp">pass</td><td class="fd">Ignore the packet</td></tr>
+            <tr><td class="fp">drop</td><td class="fd">Block and log the packet (inline/IPS mode only)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div>Use <strong>VIM</strong> to edit rule files — its syntax color-coding makes it much easier to spot a malformed rule before you try to load it.</div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div><strong>SID quick reference:</strong> under 100 is reserved, 100–1,000,000 ships with Snort itself, and anything above 1,000,000 is for your own local rules — keep custom rule <code>sid</code>s above that line so they don't collide.</div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">✅</span>Sanity-check a rule before relying on it</div>
+        <table class="cmd-table">
+          <tr><td class="c1">snort -T -c &lt;config&gt;</td><td class="c2">Test the configuration/rules for syntax errors without actually running Snort</td><td class="c3">snort -T -c /etc/snort/snort.lua</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /snort -->
+
+</div><!-- end .shell -->
+
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-title">On this tab</div>
+  <ul id="toc-list"></ul>
+</nav>
+
+</div><!-- end .page-layout -->
+
+<a href="#" id="back-to-top" title="Back to top">↑ Top</a>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    if (current === 'dark') html.setAttribute('data-theme', 'light');
+    else html.setAttribute('data-theme', 'dark');
+  }
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildTOC();
+  }
+
+  let observer = null;
+  function buildTOC() {
+    const activePane = document.querySelector('.tab-pane.active');
+    const tocList = document.getElementById('toc-list');
+    tocList.innerHTML = '';
+    if (observer) observer.disconnect();
+
+    const items = activePane.querySelectorAll('.section-label');
+    items.forEach((el, i) => {
+      const parentSection = el.closest('.section');
+      if (!parentSection) return;
+      if (!parentSection.id) parentSection.id = 'toc-anchor-' + i;
+      const anchorId = parentSection.id;
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + anchorId;
+      a.textContent = el.textContent.trim();
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(anchorId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    const sections = activePane.querySelectorAll('.section');
+    const links = tocList.querySelectorAll('a');
+    if (sections.length) {
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('toc-active'));
+            const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('toc-active');
+          }
+        });
+      }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+      sections.forEach(s => observer.observe(s));
+    }
+  }
+
+  const backBtn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+  backBtn.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  buildTOC();
+</script>
+
+</body>
+</html>
