@@ -250,6 +250,7 @@ code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border
       <a class="nav-pill" href="#win-core">Core Survey</a>
       <a class="nav-pill" href="#win-domain">Domain Info</a>
       <a class="nav-pill" href="#win-persist">Persistence Checks</a>
+      <a class="nav-pill" href="#win-events">Event Log Hunting</a>
       <a class="nav-pill" href="#win-utility">Output Utilities</a>
     </div>
 
@@ -325,6 +326,44 @@ code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border
           <tr><td class="c1">Get-ScheduledJob</td><td class="c2">Check scheduled jobs</td><td class="c3">Get-ScheduledJob</td></tr>
           <tr><td class="c1">Get-FileHash -Algorithm SHA256</td><td class="c2">Hash a suspicious executable to check against known-bad/good lists</td><td class="c3">Get-FileHash -Algorithm SHA256 .\beacon_x64.exe</td></tr>
           <tr><td class="c1">Get-CimInstance Win32_StartupCommand</td><td class="c2">Alternate view of startup/autorun programs</td><td class="c3">Get-CimInstance Win32_StartupCommand</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="win-events">
+      <div class="section-label"><span class="dot dot-red"></span>Event Log Hunting</div>
+      <div class="cmd-block">
+        <div class="cmd-block-header hdr-orange"><span class="icon">🔎</span>Searching for Specific Event IDs</div>
+        <table class="cmd-table">
+          <tr><td class="c1">Get-WinEvent -FilterHashtable</td><td class="c2">Search a specific log for specific Event ID(s), returning just the fields you care about</td><td class="c3">see below</td></tr>
+        </table>
+        <div style="padding: 0 12px 12px;">
+          <div class="step-cmd">get-winevent -filterhashtable @{ LogName = "Security"; Id = 4688 } | select-object TimeCreated, Id, Message</div>
+        </div>
+        <div style="padding: 0 12px 12px;">
+          <div class="callout callout-tip" style="margin-bottom:0;">
+            <span class="callout-icon">💡</span>
+            <div>Swap the <code>Id</code> value for any Event ID from the table below, and add more IDs as an array — e.g. <code>Id = 4624,4625</code> — to hunt for several at once.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-wrap">
+        <div class="ref-wrap-title">Common Windows Event IDs to Hunt For</div>
+        <table class="ref-table">
+          <thead><tr><th>Event ID</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">4624</td><td class="fd">Successful logon</td></tr>
+            <tr><td class="fp">4672</td><td class="fd">Admin-equivalent account logon</td></tr>
+            <tr><td class="fp">4673</td><td class="fd">A privileged service was called</td></tr>
+            <tr><td class="fp">4688</td><td class="fd">A program/process was executed</td></tr>
+            <tr><td class="fp">4697</td><td class="fd">A new service was installed</td></tr>
+            <tr><td class="fp">4698</td><td class="fd">A scheduled task was created</td></tr>
+            <tr><td class="fp">4699</td><td class="fd">A scheduled task was deleted</td></tr>
+            <tr><td class="fp">4702</td><td class="fd">A scheduled task was updated</td></tr>
+            <tr><td class="fp">4720</td><td class="fd">A user account was created</td></tr>
+            <tr><td class="fp">201</td><td class="fd">Task Scheduler successfully completed a task</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -425,6 +464,7 @@ code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border
     <div class="nav-pills">
       <a class="nav-pill" href="#tcpdump">TCPDump</a>
       <a class="nav-pill" href="#arkime-filters">Arkime Filters</a>
+      <a class="nav-pill" href="#common-ports">Common Ports</a>
       <a class="nav-pill" href="#arkime-download">Downloading a File</a>
     </div>
 
@@ -473,10 +513,41 @@ code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border
             <div><strong>A couple more that come up often:</strong> <code>dns.host == &lt;domain&gt;</code> for DNS lookups of a specific domain, and <code>protocols == tcp</code> / <code>protocols == udp</code> to narrow by protocol.</div>
           </div>
         </div>
+        <div style="padding: 0 14px 12px;">
+          <div class="callout callout-warn" style="margin-bottom:0;">
+            <span class="callout-icon">⚠</span>
+            <div><strong>Destination port determines the protocol used</strong> — when you're not sure what a session is, check <code>port.dst</code> against the common ports table below before assuming.</div>
+          </div>
+        </div>
       </div>
       <div class="callout callout-tip">
         <span class="callout-icon">💡</span>
         <div>Always check the <strong>time range picker</strong> in the top corner before you start filtering — a search that returns nothing is often just pointed at the wrong window, not a dead end.</div>
+      </div>
+    </div>
+
+    <div class="section" id="common-ports">
+      <div class="section-label"><span class="dot dot-purple"></span>Common Ports to Search By — Kibana / Arkime</div>
+      <div class="ref-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Port</th><th>Service</th></tr></thead>
+          <tbody>
+            <tr><td class="fp">22</td><td class="fd">SSH</td></tr>
+            <tr><td class="fp">25</td><td class="fd">SMTP</td></tr>
+            <tr><td class="fp">53</td><td class="fd">DNS</td></tr>
+            <tr><td class="fp">80</td><td class="fd">HTTP</td></tr>
+            <tr><td class="fp">88</td><td class="fd">Kerberos</td></tr>
+            <tr><td class="fp">389</td><td class="fd">LDAP</td></tr>
+            <tr><td class="fp">443</td><td class="fd">HTTPS</td></tr>
+            <tr><td class="fp">445</td><td class="fd">SMB</td></tr>
+            <tr><td class="fp">3389</td><td class="fd">RDP</td></tr>
+            <tr><td class="fp">5985</td><td class="fd">WinRM</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>These same ports work as search anchors in <strong>both</strong> tools — <code>port.dst == 445</code> in Arkime, or <code>destination.port: 445</code> as a Kibana query — when you're hunting for a specific type of traffic rather than a specific host.</div>
       </div>
     </div>
 
@@ -541,6 +612,11 @@ code { font-family: var(--mono); font-size: 11px; background: var(--bg3); border
       <div class="callout callout-tip">
         <span class="callout-icon">💡</span>
         <div>If you built this study material's <strong>DCO Written Study Guide</strong> — the Discover / Visualize Library / Dashboard tab breakdown there is a good companion to this cutsheet for understanding what each Kibana tab is for.</div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div>Hunting by service instead of by host? See the <strong>Common Ports</strong> table on the TCPDump &amp; Arkime tab — the same port numbers work as Kibana query anchors, e.g. <code>destination.port: 445</code>.</div>
       </div>
     </div>
 
